@@ -2,7 +2,7 @@
 Descriuption: x
 */
 
-module KeypadControllerHost (
+module keypad_controller_host (
 
 
 

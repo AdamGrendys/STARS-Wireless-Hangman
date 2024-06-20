@@ -2,7 +2,7 @@
 Descriuption: x
 */
 
-module top (
+module lcd_controller (
 
 
 
