@@ -3,7 +3,7 @@ Descriuption: x
 */
 
 typedef enum logic [2:0] {
-IDLE = 3'b001, START = 3'b010, DATAIN = 3'b011, STOP = 3'b100, CLEAN = 3'b101
+IDLE = 3'b001, START = 3'b010, DATAIN = 3'b011, STOP = 3'b100, CLEAN = 3'b101, PARITY = 3'b110
 } curr_state;
 
 module uart_tx (
@@ -11,7 +11,7 @@ module uart_tx (
     input logic [7:0] tx_byte, 
     output logic transmit_ready, tx_serial
 );
-    logic [2:0] bit_index, state, next_state;
+    logic [2:0] bit_index, state, next_state, counter;
     logic [7:0] data;
     // curr_state [2:0] state, next_state;
 
@@ -32,17 +32,19 @@ module uart_tx (
                     next_state = START;
                 end else begin  
                     next_state = IDLE;
-                    data = 1;
+                    data = Rx_byte;
                 end
                 end
             START: begin 
                 tx_serial = 0;
                 transmit_ready = 0;
                 bit_index = 0;
+                data = Rx_byte;
                 // WAIT BAUD CYCLE COUNTER HERE
                 next_state = DATAIN;
                 end
             DATAIN: begin   
+                data = Rx_byte;
                 tx_serial = data[bit_index];
                 transmit_ready = 0;
                 if (bit_index < 7) begin
@@ -53,21 +55,27 @@ module uart_tx (
                     next_state = STOP;
                 end
                 end 
+            PARITY: begin   
+                x
+                end
             STOP: begin 
                 tx_serial = 1;
                 bit_index = 0;
+                data = Rx_byte;
                 // WAIT BAUD CYCLE HERE 
                 transmit_ready = 0;
                 next_state = CLEAN;
                 end
             CLEAN: begin 
                 next_state = IDLE;
+                data = Rx_byte;
                 bit_index = 0;
                 transmit_ready = 0;
                 tx_serial = 1;
                 end
             default: begin 
                 next_state = IDLE;
+                data = Rx_byte;
                 bit_index = 0;
                 transmit_ready = 0;
                 tx_serial = 1;
