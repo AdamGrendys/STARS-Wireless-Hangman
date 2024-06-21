@@ -5,7 +5,12 @@ typedef enum logic [2:0] {
 IDLE = 3'b001, START = 3'b010, DATAIN = 3'b011, STOP = 3'b100, CLEAN = 3'b101, PARITY = 3'b110
 } curr_state;
 
-module uart_rx (
+module uart_rx
+#(
+    parameter Clkperbaud = 1250
+)
+
+(
     input logic clk, nRst, rx_serial, rec_ready,
     output logic rx_ready,
     output logic [7:0] rx_byte
@@ -14,14 +19,17 @@ module uart_rx (
 logic [7:0] temp_byte;
 logic [2:0] bit_index;
 curr_state state, next_state;
+logic [10:0] clk_count, next_clk_count;
 
 always_ff @(posedge clk, negedge nRst) begin
     if (~nRst) begin
         rx_byte <= 0;
         state <= IDLE;
+        clk_count <= 0;
     end else begin
         state <= next_state;
         rx_byte <= temp_byte;
+        clk_count <= next_clk_count;
     end
 end
 
@@ -32,6 +40,7 @@ always_comb begin
             bit_index = 0;
             temp_byte = 0;
             bit_index = 0;
+            next_clk_count = 0;
 
             if (rx_serial == 0 && rec_ready)
                 next_state = START;
@@ -39,20 +48,29 @@ always_comb begin
                 next_state = IDLE;
         end
         START: begin
-            // wait half of baud cycle here
             rx_ready = 0;
             temp_byte = 0;
             bit_index = 0;
 
-            if (rx_ready == 0 && rec_ready)
+            if(clk_count == (Clkperbaud - 1)/2) begin
+            if (rx_serial == 0 && rec_ready) begin
+                next_clk_count = 0;
                 next_state = DATAIN;
-            else    
-                next_state = START;
+            end
+            else
+                next_clk_count = clk_count;    
+                next_state = IDLE;
+            end
+            else begin 
+            next_clk_count = clk_count +1 ;
+            next_state = START;
+            end
         end
         DATAIN: begin
             // wait for baud cycle 
             temp_byte[bit_index] = rx_serial;
             rx_ready = 0;
+            next_clk_count = 0;
 
             if (bit_index < 7) begin
                 bit_index = bit_index + 1;
@@ -64,6 +82,7 @@ always_comb begin
         end
         PARITY: begin 
             /// SANDEEEPPPPP HELPPPPPPPPPP
+            next_clk_count = 0;
             rx_ready = 0;
             temp_byte = 0;
             bit_index = 0;
@@ -71,18 +90,21 @@ always_comb begin
         end
         STOP: begin
             // wait for baud cycle
+            next_clk_count = 0;
             rx_ready = 1;
             temp_byte = 0;
             bit_index = 0;
             next_state = CLEAN;
         end
         CLEAN: begin 
+            next_clk_count = 0;
             rx_ready = 0;
             temp_byte = 0;
             bit_index = 0;
             next_state = IDLE;
         end
         default: begin
+            next_clk_count = 0;
             rx_ready = 0;
             temp_byte = 0;
             bit_index = 0;
