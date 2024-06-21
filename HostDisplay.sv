@@ -23,8 +23,6 @@ always_ff @(posedge clk, negedge nRst) begin
 end
 
 
-
-
 always_comb begin
     case(mistake)
         0: begin
