@@ -8,7 +8,8 @@ module tb_buffer ();
 
 // Testbench ports
 localparam CLK_PERIOD = 10; // 100 Hz clk
-logic tb_clk, tb_nRst;
+logic tb_clk, tb_nRst, tb_ready, tb_game_rdy;
+logic [7:0] tb_byte;
 
 // Clock generation block
 always begin
@@ -19,7 +20,8 @@ always begin
 end
 
 // Portmap 
-buffer buffertest (.clk(tb_clk), .nRst(tb_nRst), .ready(tb_ready), .game_rdy(tb_game_rdy), .guess(tb_guess));
+buffer buffertest(.clk(tb_clk), .nRst(tb_nRst), .ready(tb_ready), .Rx_byte(tb_byte), .game_rdy(tb_game_rdy), .guess(tb_guess));
+
 
 initial begin 
     // Signal dump
@@ -28,37 +30,44 @@ initial begin
 
     // Initialize test bench signals
     tb_nRst = 1'b1;
+    tb_byte = 8'd5;
 
     // Wait some time before starting first test case
     #(0.1);
 
-// ***********************************
-// Test Case 0: Power-on-Reset 
-// ***********************************
-#10;
-@(negedge tb_clk);
-tb_nRst = 1'b0; 
-@(negedge tb_clk);
-@(negedge tb_clk);
-tb_nRst = 1'b1;
-@(posedge tb_clk);
-#10;
+    // ***********************************
+    // Test Case 0: Power-on-Reset 
+    // ***********************************
+    #10;
+    @(negedge tb_clk);
+    tb_nRst = 1'b0; 
+    @(negedge tb_clk);
+    @(negedge tb_clk);
+    tb_nRst = 1'b1;
+    @(posedge tb_clk);
+    #10;
 
-// ***********************************
-// Test Case 0: Ready High, Game Ready Low
-// ***********************************
-
-
-
-// ***********************************
-// Test Case 0: Ready Low, Game Ready High
-// ***********************************
+    // ***********************************
+    // Test Case 0: Ready High, Game Ready Low
+    // ***********************************
+    tb_ready = 1;
+    tb_game_rdy = 0;
+    #(CLK_PERIOD * 2);
 
 
-// ***********************************
-// Test Case 0: Ready High, Game Ready High
-// ***********************************
+    // ***********************************
+    // Test Case 0: Ready Low, Game Ready High
+    // ***********************************
+    tb_ready = 0;
+    tb_game_rdy = 1;
+    #(CLK_PERIOD * 2);
 
+    // ***********************************
+    // Test Case 0: Ready High, Game Ready High
+    // ***********************************
+    tb_ready = 1;
+    tb_game_rdy = 1;
+    #(CLK_PERIOD * 2);
 
     $finish;
 end
