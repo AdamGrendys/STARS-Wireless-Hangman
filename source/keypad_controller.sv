@@ -8,7 +8,7 @@ module keypad_controller (
     output logic [7:0] cur_key, // Input for keypad_fsm
     output logic strobe // Input for keypad_fsm
 );
-    logic [3:0] scan_col;
+    logic [3:0] Q0, Q1, Q1_delay, scan_col;
     
     // Synchronizer and rising (positive) edge detector - 3 FFs
     always_ff @(posedge clk, negedge nRst) begin
@@ -17,7 +17,7 @@ module keypad_controller (
             Q1 <= 4'd0;
             Q1_delay <= 4'd0;
         end else begin
-            Q0 <= |read_row;
+            Q0 <= read_row;
             Q1 <= Q0;
             Q1_delay <= Q1;
         end
@@ -37,7 +37,7 @@ module keypad_controller (
         end
     end
 
-    assign strobe = (!Q1_delay && Q1);
+    assign strobe = |((~Q1_delay) & (Q1));
     assign cur_key = {read_row, scan_col};
 
 endmodule

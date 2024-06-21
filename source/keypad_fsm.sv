@@ -9,7 +9,8 @@ module keypad_fsm (
     output logic ready,
     output logic [7:0] data
 );
-    logic [7:0] prev_key;
+    logic [2:0] state, next_state;
+    logic [7:0] prev_key, next_data;
     assign prev_key = 8'd0;
 
     always_ff @(posedge clk, negedge nRst) begin
@@ -21,6 +22,7 @@ module keypad_fsm (
             state <= next_state;
             prev_key <= cur_key;
             ready <= (next_state == DONE);
+            data <= next_data;
         end
     end
 
@@ -35,18 +37,18 @@ module keypad_fsm (
     // localparam key_5 = 8'b0100 0100; // R1 C1
     // localparam key_6 = 8'b0100 0010; // R1 C2
 
-    localparam key_7 = 8'b0010 1000; // R2 C0
+    localparam key_7 = 8'b00101000; // R2 C0
     // localparam key_8 = 8'b0010 0100; // R2 C1
-    localparam key_9 = 8'b0010 0010; // R2 C2
+    localparam key_9 = 8'b00100010; // R2 C2
 
-    localparam submit_letter_key = 8'b0001 1000; // R3 C0
-    localparam clear_key = 8'b0001 0100; // R3 C1
-    localparam submit_word_key = 8'b0001 0010; // R3 C2
+    localparam submit_letter_key = 8'b00011000; // R3 C0
+    localparam clear_key = 8'b00010100; // R3 C1
+    localparam submit_word_key = 8'b00010010; // R3 C2
 
-    localparam invalid_key = 8'b1000 1000; // R0 C0
+    localparam invalid_key = 8'b10001000; // R0 C0
     localparam invalid_col = 4'b0001; // C3
 
-    function logic [7:0] get_ascii_from_key (logic [3:0] row, logic [3:0] col)
+    function logic [7:0] get_ascii_from_key (logic [3:0] row, logic [3:0] col);
         if (row[0]) begin
             return (col[1]) ? (8'd65) : (8'd68);
 
@@ -59,9 +61,13 @@ module keypad_fsm (
     endfunction
     
     always_comb begin
+        // By default
+        next_state = state;
+        next_data = data;
+
         /* 1. Invalid (inactive) or no push button pressed */
-        if ((!strobe) || (input_key == submit_word_key) || 
-            (input_key == invalid_key) || (input_key[3:0] == invalid_col)) begin
+        if ((!strobe) || (cur_key == submit_word_key) || 
+            (cur_key == invalid_key) || (cur_key[3:0] == invalid_col)) begin
             next_state = state;
 
         /* 2. Valid (active) push button pressed */
@@ -75,7 +81,7 @@ module keypad_fsm (
             // Should take priority over other push buttons
             if (cur_key == clear_key) begin
                 next_state = INIT;
-                data = 8'b0;
+                next_data = 8'b0;
 
             /* 2-2. SUBMIT_LETTER */
             end else if ((cur_key == submit_letter_key) && (state != INIT)) begin
@@ -100,10 +106,10 @@ module keypad_fsm (
                     // Because of automatic transition to INIT (reset)
                     next_state = S0;
                 end
-            end
 
-            // Update pre-submission data (current letter) to preview on display each time
-            data = get_ascii_from_key(cur_key[7:4], cur_key[3:0]) + (state - 1);
+                // Update pre-submission data (current letter) to preview on display each time
+                next_data = get_ascii_from_key(cur_key[7:4], cur_key[3:0]) + ({5'd0, state} - 1);
+            end
         end
     end
 
