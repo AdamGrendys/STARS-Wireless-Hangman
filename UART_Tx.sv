@@ -16,7 +16,7 @@ module uart_tx
     input logic [7:0] tx_byte, 
     output logic transmit_ready, tx_serial
 );
-    logic [2:0] bit_index, counter, next_bit_index;  
+    logic [2:0] bit_index, next_bit_index;  
     logic [7:0] data; 
     logic [10:0] clk_count, next_clk_count;
     logic [3:0] pcount, count;
