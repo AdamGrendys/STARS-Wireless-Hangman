@@ -9,7 +9,7 @@ module tb_buffer ();
 // Testbench ports
 localparam CLK_PERIOD = 10; // 100 Hz clk
 logic tb_clk, tb_nRst, tb_ready, tb_game_rdy;
-logic [7:0] tb_byte;
+logic [7:0] tb_byte, tb_guess;
 
 // Clock generation block
 always begin
