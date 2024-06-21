@@ -13,7 +13,8 @@ module uart_rx
 (
     input logic clk, nRst, rx_serial, rec_ready,
     output logic rx_ready,
-    output logic [7:0] rx_byte
+    output logic [7:0] rx_byte,
+    output logic error_led1, error_led2
 );
 
 logic [7:0] temp_byte;
@@ -22,7 +23,6 @@ curr_state state, next_state;
 logic [10:0] clk_count, next_clk_count;
 logic [3:0] pcount, count;
 logic pbit;
-logic error_led1, error_led2;
 
 always_ff @(posedge clk, negedge nRst) begin
     if (~nRst) begin
