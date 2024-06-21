@@ -40,21 +40,21 @@ initial begin
     // ***********************************
     // Test Case 0: Power-on-Reset 
     // ***********************************
-    #10;
+    #(CLK_PERIOD * 2);
     @(negedge tb_clk);
     tb_nRst = 1'b0; 
     @(negedge tb_clk);
     @(negedge tb_clk);
     tb_nRst = 1'b1;
     @(posedge tb_clk);
-    #10;
+    #(CLK_PERIOD * 2);
 
     // ***********************************
     // Test Case 1: Ready High, Game Ready Low
     // ***********************************
     tb_ready = 1;
     tb_game_rdy = 0;
-    #(CLK_PERIOD * 2);
+    #(CLK_PERIOD * 5);
 
 
     // ***********************************
@@ -62,14 +62,26 @@ initial begin
     // ***********************************
     tb_ready = 0;
     tb_game_rdy = 1;
-    #(CLK_PERIOD * 2);
+    #(CLK_PERIOD * 5);
 
     // ***********************************
     // Test Case 3: Ready High, Game Ready High
     // ***********************************
     tb_ready = 1;
     tb_game_rdy = 1;
+    #(CLK_PERIOD * 5);
+
+    // ***********************************
+    // Test Case 4: Ready flip
+    // ***********************************
+    tb_ready = 0; 
+    tb_ready = 1;
+    #(CLK_PERIOD * 0.5);
+    tb_ready = 0;
     #(CLK_PERIOD * 2);
+    tb_ready = 1;
+    #(CLK_PERIOD * 2);
+    tb_ready = 0;
 
     $finish;
 end
