@@ -78,40 +78,40 @@ module Game_logic (
             L1: begin
                 if(guess == setWord[31:24])begin
                     tempcorrect = correct + 1;
-                    indexCorrect[0] = 1;
+                    indexCorrect[1] = 1;
                 end else begin
                     tempcorrect = correct;
-                    indexCorrect[0] = 0;
+                    indexCorrect[1] = 0;
                 end
                 nextState = L2;
             end
             L2: begin
                 if(guess == setWord[23:16])begin
                     tempcorrect = correct + 1;
-                    indexCorrect[0] = 1;
+                    indexCorrect[2] = 1;
                 end else begin
                     tempcorrect = correct;
-                    indexCorrect[0] = 0;
+                    indexCorrect[2] = 0;
                 end
                 nextState = L3;
             end
             L3: begin
                 if(guess == setWord[15:8])begin
                     tempcorrect = correct + 1;
-                    indexCorrect[0] = 1;
+                    indexCorrect[3] = 1;
                 end else begin
                     tempcorrect = correct;
-                    indexCorrect[0] = 0;
+                    indexCorrect[3] = 0;
                 end
                 nextState = L4;
             end
             L4: begin
                 if(guess == setWord[7:0])begin
                     tempcorrect = correct + 1;
-                    indexCorrect[0] = 1;
+                    indexCorrect[4] = 1;
                 end else begin
                     tempcorrect = correct;
-                    indexCorrect[0] = 0;
+                    indexCorrect[4] = 0;
                 end
                 nextState = STOP;
             end

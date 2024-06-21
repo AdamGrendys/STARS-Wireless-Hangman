@@ -13,7 +13,6 @@ module HostDisplay(
     logic [127:0] nextTop;
     logic [127:0] nextBottom;
 
-
 always_ff @(posedge clk, negedge nRst) begin
     if(~nRst) begin
         disp <= 256'b0;
@@ -21,7 +20,6 @@ always_ff @(posedge clk, negedge nRst) begin
         disp[255:0] <= {nextTop, nextBottom};
     end
 end
-
 
 always_comb begin
     case(mistake)
