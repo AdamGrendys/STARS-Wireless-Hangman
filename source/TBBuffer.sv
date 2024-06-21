@@ -54,22 +54,23 @@ initial begin
     // ***********************************
     tb_ready = 1;
     tb_game_rdy = 0;
-    #(CLK_PERIOD * 5);
+    #(CLK_PERIOD * 2);
 
 
     // ***********************************
     // Test Case 2: Ready Low, Game Ready High
     // ***********************************
     tb_ready = 0;
+    #(CLK_PERIOD * 2);
     tb_game_rdy = 1;
-    #(CLK_PERIOD * 5);
+    #(CLK_PERIOD * 2);
 
     // ***********************************
     // Test Case 3: Ready High, Game Ready High
     // ***********************************
     tb_ready = 1;
     tb_game_rdy = 1;
-    #(CLK_PERIOD * 10);
+    #(CLK_PERIOD * 5);
 
     // ***********************************
     // Test Case 4: Ready flips
