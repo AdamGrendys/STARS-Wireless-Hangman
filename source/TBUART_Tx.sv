@@ -14,7 +14,18 @@ module TBUART_Tx ();
 localparam CLK_PERIOD = 10; // 100 Hz clk
 logic tb_clk, tb_nRst, tb_tx_ctrl, tb_transmit_rdy, tb_tx_serial;
 logic [7:0] tb_byte;
-logic exp_serial, exp_rdy;
+logic exp_serial, exp_rdy, exp_bit;
+
+task reset_dut;
+    #1;
+    @(negedge tb_clk);
+    tb_nRst = 1'b0; 
+    @(negedge tb_clk);
+    @(negedge tb_clk);
+    tb_nRst = 1'b1;
+    @(posedge tb_clk);
+    #1;
+endtask
 
 // Clock generation block
 always begin
@@ -39,26 +50,54 @@ initial begin
     // Test Case 0: Power-on-Reset 
     // ***********************************
     // Reset DUT Task
+    #(CLK_PERIOD);
     @(negedge tb_clk);
     tb_nRst = 1'b0; 
     @(negedge tb_clk);
     @(negedge tb_clk);
     tb_nRst = 1'b1;
     @(posedge tb_clk);
+    #(CLK_PERIOD);
 
     // ***********************************
-    // Test Case 0: Idle state of the transmitter 
+    // Test Case 1: Idle state of the transmitter 
     // ***********************************
+    reset_dut();
+
     tb_nRst = 1'b1;
     tb_tx_ctrl = 1'b0;
     tb_byte = 8'b10011101;
     #(0.1);
 
-    #30;
+    #(CLK_PERIOD * 10);
 
     // ***********************************
-    // Test Case 0: Idle state of the transmitter 
+    // Test Case 2: succesful start state transition 
     // ***********************************
+
+    reset_dut();
+
+    tb_nRst = 1'b1;
+    tb_tx_ctrl = 1'b0;
+    tb_byte = 8'b10011101;
+    exp_bit = 1;
+    #(CLK_PERIOD * 2);
+    exp_bit = 0;
+    tb_tx_ctrl = 1'b1;
+    #(CLK_PERIOD *10);
+    
+    tb_tx_ctrl = 1'b0;
+    exp_bit = 1;
+    #(CLK_PERIOD *2);
+
+    // ***********************************
+    // Test Case 3: succesful data transmission 
+    // ***********************************
+
+
+    
+
+
 
 
 
