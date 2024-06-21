@@ -12,8 +12,10 @@ module lcd1602 #(parameter clk_div = 24_000)(
     output reg [7:0] lcd_data
     );
 
-    reg [5:0] currentState;
-    reg [5:0] nextState;
+    logic lcd_ctrl; // added declaration
+
+    reg [7:0] currentState; // updated bits from 6 to 8
+    reg [7:0] nextState; // updated bits from 6 to 8
     reg [17:0] cnt_20ms;
     reg [14:0] cnt_500hz;
     wire delay_done;
