@@ -241,7 +241,7 @@ initial begin
 
     check_mistake(1,"1");
 
-
+    $finish;
 end
 
 endmodule

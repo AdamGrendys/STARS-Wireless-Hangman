@@ -23,8 +23,6 @@ module Game_logic (
     logic [4:0] indexCorrect;
     state_t state;
 
-    assign numMistake = 0;
-    assign correct = 0;
 
     always_ff @(posedge clk, negedge nRst) begin
         if(~nRst) begin
