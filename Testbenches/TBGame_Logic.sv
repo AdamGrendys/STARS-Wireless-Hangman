@@ -80,7 +80,7 @@ endtask
 
 //task to check if the letter guess changed
 task guess_change;
-input logic[2:0] expected_guess;
+input logic[7:0] expected_guess;
 input string string_guess;
 begin
     @(negedge tb_clk);
@@ -98,6 +98,18 @@ always begin
     tb_clk = 1'b1;
     #(CLK_PERIOD / 2.0);
 end
+
+//DUT Portmap
+Game_logic DUT(.clk(tb_clk),
+            .nRst(tb_nRst),
+            .guess(tb_guess),
+            .setWord(tb_setWord),
+            .toggle_state(tb_toggle_state),
+            .letter(tb_letter),
+            .red(tb_red), .green(tb_green),
+            .mistake(tb_mistake), .red_busy(tb_red_busy),
+            .game_rdy(tb_game_rdy), .numMistake(tb_numMistake),
+            .correct(tb_correct));
 
 //Main test bench process
 initial begin
@@ -134,39 +146,103 @@ initial begin
     tb_toggle_state = 1'b0;
 
     //****************************************************
-    //Test Case 1: Testing incorrect guesses
+    //Test Case 1: Testing incorrect guesses and loss
     //****************************************************
     tb_test_num += 1;
+    reset_dut();
     tb_test_case = "Test Case 1: Testing incorrect guesses";
     $display("/n/n%s", tb_test_case);
 
+    tb_setWord = 40'b0100000101010000010100000100110001000101; //Word: APPLE
+    tb_guess = 8'b01000011; //Guess: "C"
+
+    single_button_press();
+    #(CLK_PERIOD * 50);
+    check_mistake(1, "1");
+
+    tb_guess = 8'b01001010; //Guess: "J"
+    #(CLK_PERIOD * 50);
+
+    check_mistake(2, "2");
+
+    tb_guess = 8'b01010001; //Guess: "Q"
+    #(CLK_PERIOD * 50);
+
+    check_mistake(3, "3");
+
+    tb_guess = 8'b01010010; //Guess: "R"
+    #(CLK_PERIOD * 50);
+
+    check_mistake(4, "4");
+
+    tb_guess = 8'b01001011; //Guess: "K"
+    #(CLK_PERIOD * 50);
+
+    check_mistake(5, "5");
+
+    tb_guess = 8'b01001101; //Guess: "M"
+    #(CLK_PERIOD * 50);
+
+    check_mistake(6, "6");
+
+    check_correct(0, "0");
+
     //****************************************************
-    //Test Case 2: Testing correct guesses
+    //Test Case 2: Testing correct guesses and win
     //****************************************************
     tb_test_num += 1;
+    reset_dut();
     tb_test_case = "Test Case 2: Testing correct guesses";
     $display("/n/n%s", tb_test_case);
 
+    tb_setWord = 40'b0100000101010000010100000100110001000101; //Word: APPLE
+    tb_guess = 8'b01000001; //Guess: "A"
+
+    single_button_press();
+    #(CLK_PERIOD * 50);
+
+    check_correct(1, "1");
+
+    tb_guess = 8'b01010000; //Guess: "P"
+    #(CLK_PERIOD * 50);
+
+    check_correct(3, "3");
+
+    tb_guess = 8'b01001100; //Guess: "L"
+    #(CLK_PERIOD * 50);
+
+    check_correct(4, "4");
+
+    tb_guess = 8'b01000101; //Guess: "E"
+    #(CLK_PERIOD * 50);
+
+    check_correct(5, "5");
+
+    check_mistake(0, "0");
+
     //****************************************************
-    //Test Case 3: Testing Guess Change
+    //Test Case 3: Testing Guess Change and correct/incorrect
     //****************************************************
     tb_test_num += 1;
-    tb_test_case = "Test Case 3: Testing Guess Change";
+    reset_dut();
+    tb_test_case = "Test Case 3: Testing Guess Change with incorrect/correct answers";
     $display("/n/n%s", tb_test_case);
 
-end
+    tb_setWord = 40'b0100110101001111010011110101001001000101; //Word: MOORE
+    tb_guess = 8'b01001101; //Guess: "M"
 
-//DUT Portmap
-Game_logic DUT(.clk(tb_clk),
-            .nRst(tb_nRst),
-            .guess(tb_guess),
-            .setWord(tb_setWord),
-            .toggle_state(tb_toggle_state),
-            .letter(tb_letter),
-            .red(tb_red), .green(tb_green),
-            .mistake(tb_mistake), .red_busy(tb_red_busy),
-            .game_rdy(tb_game_rdy), .numMistake(tb_numMistake),
-            .correct(tb_correct));
+    single_button_press();
+    #(CLK_PERIOD * 50);
+
+    check_correct(1, "1");
+
+    tb_guess = 8'b01000001; //Guess: "A"
+    #(CLK_PERIOD * 50);
+
+    check_mistake(1,"1");
+
+
+end
 
 endmodule
 
