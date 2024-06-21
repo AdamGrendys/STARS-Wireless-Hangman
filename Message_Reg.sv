@@ -16,7 +16,7 @@ module msg_reg (
 logic [7:0] msg, msg_rdy;
 curr_state state, next_state;
 
-always_ff @(posedge clk, negedge nRst)
+always_ff @(posedge clk, negedge nRst) begin
     if (~nRst) begin 
         msg <= 8'b0;
         state <= IDLE;
@@ -24,6 +24,7 @@ always_ff @(posedge clk, negedge nRst)
         msg <= msg_rdy;
         state <= next_state;
     end
+end
 
 always_comb begin 
     case (state)
