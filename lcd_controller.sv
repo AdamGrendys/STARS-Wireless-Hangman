@@ -127,7 +127,7 @@ module lcd1602 #(parameter clk_div = 24_000)(
             ROW1_C: nextState = ROW1_D;
             ROW1_D: nextState = ROW1_E;
             ROW1_E: nextState = ROW1_F;
-            ROW1_F: nextState = ROW2_ADDR    ;
+            ROW1_F: nextState = ROW2_ADDR;
             ROW2_ADDR: nextState = ROW2_0;
             ROW2_0: nextState = ROW2_1;
             ROW2_1: nextState = ROW2_2;
@@ -218,7 +218,7 @@ module lcd1602 #(parameter clk_div = 24_000)(
             endcase                     
         end
         else
-            lcd_data <= lcd_data ;
+            lcd_data <= lcd_data;
     end
 
 endmodule
