@@ -30,6 +30,7 @@ initial begin
 
     // Initialize test bench signals
     tb_nRst = 1'b1;
+    tb_ready = 0;
     tb_msg = 8'd5;
 
     // Wait some time before starting first test case
@@ -47,6 +48,17 @@ initial begin
     @(posedge tb_clk);
     #10;
 
-end
+    // ***********************************
+    // Test Case 1: Ready Low
+    // ***********************************
+    tb_ready = 0;
+    #(CLK_PERIOD * 2);
 
+    // ***********************************
+    // Test Case 2: Ready High
+    // ***********************************
+    tb_ready = 1;
+    #(CLK_PERIOD * 2);
+
+end
 endmodule

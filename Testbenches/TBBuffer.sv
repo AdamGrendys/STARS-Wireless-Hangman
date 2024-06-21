@@ -31,6 +31,8 @@ initial begin
     // Initialize test bench signals
     tb_nRst = 1'b1;
     tb_byte = 8'd5;
+    tb_ready = 0;
+    tb_game_rdy = 0;
 
     // Wait some time before starting first test case
     #(0.1);
