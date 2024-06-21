@@ -44,7 +44,6 @@ module uart_tx
                 pcount = 0;
                 next_clk_count = 0;
 
-
                 if (tx_ctrl == 1) begin //state transition logic
                     next_state = START;
                 end else begin  

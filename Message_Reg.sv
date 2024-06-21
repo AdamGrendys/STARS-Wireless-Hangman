@@ -38,9 +38,12 @@ always_comb begin
             end 
         end
         WAIT: begin 
+            tx_ctrl = 1;
             msg_rdy = msg;
             if (transmit_ready)
                 next_state = TRANSMIT;
+            else  
+                next_state = WAIT;
         end
         TRANSMIT: begin
             tx_ctrl = 1;
