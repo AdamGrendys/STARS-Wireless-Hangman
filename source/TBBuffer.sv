@@ -72,14 +72,21 @@ initial begin
     #(CLK_PERIOD * 10);
 
     // ***********************************
-    // Test Case 4: Ready flip
+    // Test Case 4: Ready flips
     // ***********************************
+    tb_nRst = 0;
+    #CLK_PERIOD;
+    tb_nRst = 1;
+    #CLK_PERIOD;
+    
     tb_ready = 0; 
-    tb_ready = 1;
-    #(CLK_PERIOD * 0.5);
-    tb_ready = 0;
+    #(CLK_PERIOD);
+    tb_game_rdy = 1;
     #(CLK_PERIOD * 2);
     tb_ready = 1;
+    #(CLK_PERIOD);
+    tb_ready = 0;
+    #(CLK_PERIOD);
 
     tb_nRst = 0;
     #(CLK_PERIOD);
@@ -87,6 +94,9 @@ initial begin
 
     #(CLK_PERIOD * 2);
     tb_ready = 0;
+    tb_game_rdy = 1;
+    #(CLK_PERIOD * 2);
+    tb_ready = 1;
     #(CLK_PERIOD * 2);
 
     $finish;
