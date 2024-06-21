@@ -14,7 +14,7 @@ module msg_reg (
 );
 
 logic [7:0] msg, msg_rdy;
-logic [1:0] state, next_state;
+curr_state state, next_state;
 
 always_ff @(posedge clk, negedge nRst)
     if (~nRst) begin 
