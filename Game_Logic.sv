@@ -12,7 +12,7 @@ module Game_logic (
     input logic clk, nRst,
     input logic [7:0] guess,
     input logic [39:0] setWord,
-    input logic enable, toggle_state,
+    input logic toggle_state,
     output logic [7:0] letter,
     output logic red, green, mistake, red_busy, game_rdy,
     output logic [2:0] numMistake, correct

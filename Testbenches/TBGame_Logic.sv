@@ -4,15 +4,177 @@ Then the next state compares the user input with the different letters in the wo
 Finally, once the user either guesses the word, or gets 6 wrong questions, the game
 ends. 
 */
+
+module TBGame_Logic ();
+
 typedef enum logic [2:0] { 
-    SET = 0, L0 = 1, L1 = 2, L2 = 3, L3 = 4, L4 = 5, STOP = 6
+    SET = 0, L0 = 1, 
+    L1 = 2, L2 = 3, 
+    L3 = 4, L4 = 5, 
+    STOP = 6
 } state_t;
+
+//Testbench parameters
+localparam CLK_PERIOD = 10; //100 hz clk
+logic tb_checking_outputs;
+integer tb_test_num;
+string tb_test_case;
+
+//DUT ports
+logic tb_clk, tb_nRst;
+logic [7:0] tb_guess;
+logic [39:0] tb_setWord;
+logic tb_toggle_state;
+logic [7:0] tb_letter;
+logic tb_red, tb_green, tb_mistake, tb_red_busy, tb_game_rdy;
+logic [2:0] tb_numMistake, tb_correct;
+
+//Reset DUT Task
+task reset_dut;
+    @(negedge tb_clk);
+    tb_nRst = 1'b0;
+    @(negedge tb_clk);
+    @(negedge tb_clk);
+    tb_nRst = 1'b1;
+    @(posedge tb_clk);
+endtask
+
+//task that presses the button once
+task single_button_press;
+begin
+    @(negedge tb_clk);
+    tb_toggle_state = 1'b1;
+    @(negedge tb_clk);
+    tb_toggle_state = 1'b0;
+    @(posedge tb_clk);
+end
+endtask
+
+//task to check mistake output
+task check_mistake;
+input logic[2:0] expected_mistakes;
+input string string_mistakes;
+begin
+    @(negedge tb_clk);
+    tb_checking_outputs = 1'b1;
+    if(tb_numMistake == expected_mistakes)
+        $info("Correct Mistakes: %s.", string_mistakes);
+    else
+        $error("Incorrect Mistakes. Expected: %s. Actual: %s.", string_mistakes, tb_numMistake);
+end
+endtask
+
+//task to check correct output
+task check_correct;
+input logic[2:0] expected_correct;
+input string string_correct;
+begin
+    @(negedge tb_clk);
+    tb_checking_outputs = 1'b1;
+    if(tb_correct == expected_correct)
+        $info("Correct guess: %s.", string_correct);
+    else
+        $error("Incorrect Correct value. Expected: %s. Actual: %s.", string_correct, tb_correct);
+end
+endtask
+
+//task to check if the letter guess changed
+task guess_change;
+input logic[2:0] expected_guess;
+input string string_guess;
+begin
+    @(negedge tb_clk);
+    tb_checking_outputs = 1'b1;
+    if(tb_guess == expected_guess)
+        $info("Guess Changed!: %s.", string_guess);
+    else
+        $error("Guess has not changed. Expected: %s. Actual: %s.", string_guess, tb_guess);
+end
+endtask
+
+always begin
+    tb_clk = 1'b0;
+    #(CLK_PERIOD / 2.0);
+    tb_clk = 1'b1;
+    #(CLK_PERIOD / 2.0);
+end
+
+//Main test bench process
+initial begin
+    //Signal dump
+    $dumpfile("dump.vcd");
+    $dumpvars;
+
+    //initialize test bench signals
+    tb_toggle_state = 1'b0;
+    tb_nRst = 1'b1;
+    tb_checking_outputs = 1'b0;
+    tb_test_num = -1;
+    tb_test_case = "Initializing";
+    $display("/n/n%s", tb_test_case);
+
+    //Wait some time before starting first test case
+    #(0.1);
+
+    //****************************************************
+    //Test Case 0: Power-on-Reset of the DUT
+    //****************************************************
+    tb_test_num += 1;
+    tb_test_case = "Test Case 0: Power-on-Reset of the DUT";
+    $display("/n/n%s", tb_test_case);
+
+    tb_toggle_state = 1'b1;
+    tb_nRst = 1'b0;
+
+    #(2);
+    @(negedge tb_clk);
+    @(negedge tb_clk);
+    tb_nRst = 1'b1;
+
+    tb_toggle_state = 1'b0;
+
+    //****************************************************
+    //Test Case 1: Testing incorrect guesses
+    //****************************************************
+    tb_test_num += 1;
+    tb_test_case = "Test Case 1: Testing incorrect guesses";
+    $display("/n/n%s", tb_test_case);
+
+    //****************************************************
+    //Test Case 2: Testing correct guesses
+    //****************************************************
+    tb_test_num += 1;
+    tb_test_case = "Test Case 2: Testing correct guesses";
+    $display("/n/n%s", tb_test_case);
+
+    //****************************************************
+    //Test Case 3: Testing Guess Change
+    //****************************************************
+    tb_test_num += 1;
+    tb_test_case = "Test Case 3: Testing Guess Change";
+    $display("/n/n%s", tb_test_case);
+
+end
+
+//DUT Portmap
+Game_logic DUT(.clk(tb_clk),
+            .nRst(tb_nRst),
+            .guess(tb_guess),
+            .setWord(tb_setWord),
+            .toggle_state(tb_toggle_state),
+            .letter(tb_letter),
+            .red(tb_red), .green(tb_green),
+            .mistake(tb_mistake), .red_busy(tb_red_busy),
+            .game_rdy(tb_game_rdy), .numMistake(tb_numMistake),
+            .correct(tb_correct));
+
+endmodule
 
 module Game_logic (
     input logic clk, nRst,
     input logic [7:0] guess,
     input logic [39:0] setWord,
-    input logic enable, toggle_state,
+    input logic toggle_state,
     output logic [7:0] letter,
     output logic red, green, mistake, red_busy, game_rdy,
     output logic [2:0] numMistake, correct
