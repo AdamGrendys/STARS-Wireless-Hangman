@@ -2,8 +2,6 @@
 Descriuption: x
 */
 
-`timescale 1ms / 100us
-
 
 module TBUART_Tx ();
 
@@ -15,8 +13,6 @@ IDLE = 3'b001, START = 3'b010, DATAIN = 3'b011, STOP = 3'b100, CLEAN = 3'b101, P
 localparam CLK_PERIOD = 10; // 100 Hz clk
 logic tb_clk, tb_nRst, tb_tx_ctrl, tb_transmit_rdy, tb_tx_serial;
 logic [7:0] tb_byte;
-logic exp_serial, exp_rdy, exp_bit;
-
 task reset_dut;
     #1;
     @(negedge tb_clk);
@@ -81,17 +77,12 @@ initial begin
     tb_nRst = 1'b1;
     tb_tx_ctrl = 1'b0;
     tb_byte = 8'b10101010;
-    exp_bit = 1;
-    exp_rdy = 0;
-    exp_serial = 0;
-    #(CLK_PERIOD * 2);
-    exp_bit = 0;
+    #(CLK_PERIOD * 1);
     tb_tx_ctrl = 1'b1;
-    #(CLK_PERIOD *10);
+    #(CLK_PERIOD *2);
     
     tb_tx_ctrl = 1'b0;
-    exp_bit = 1;
-    #(CLK_PERIOD *2);
+    #(CLK_PERIOD *1);
 
     // ***********************************
     // Test Case 3: succesful data transmission 
