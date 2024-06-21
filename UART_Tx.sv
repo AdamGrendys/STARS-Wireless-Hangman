@@ -17,7 +17,6 @@ module uart_tx
     output logic transmit_ready, tx_serial
 );
     logic [2:0] bit_index, next_bit_index;  
-    logic [7:0] data; 
     logic [10:0] clk_count, next_clk_count;
     logic [3:0] pcount, count;
     curr_state state, next_state;
@@ -47,18 +46,15 @@ module uart_tx
 
 
                 if (tx_ctrl == 1) begin //state transition logic
-                    data = tx_byte;
                     next_state = START;
                 end else begin  
                     next_state = IDLE;
-                    data = tx_byte;
                 end
             end
             START: begin 
                 tx_serial = 0;
                 transmit_ready = 0;
                 next_bit_index = 0;
-                data = tx_byte;
                 pcount = 0;
 
 
@@ -72,9 +68,8 @@ module uart_tx
                 end
             end
             DATAIN: begin   
-                data = tx_byte;
                 transmit_ready = 0;
-                tx_serial = data[bit_index];
+                tx_serial = tx_byte[bit_index];
                 
                 if(clk_count < Clkperbaud - 1) begin
                 next_clk_count = clk_count + 1;
@@ -101,7 +96,6 @@ module uart_tx
                 end
             end 
             PARITY: begin
-                data = tx_byte;
                 next_bit_index = 0;
                 transmit_ready = 0;
                 
@@ -127,7 +121,6 @@ module uart_tx
                 pcount = 0;
                 tx_serial = 1;
                 next_bit_index = 0;
-                data = tx_byte;
                 transmit_ready = 0;
 
                 if(clk_count < Clkperbaud - 1) begin
@@ -143,7 +136,6 @@ module uart_tx
                 next_state = CLEAN; // state transition logic
                 end
             CLEAN: begin 
-                data = tx_byte;
                 next_bit_index = 0;
                 transmit_ready = 0;
                 tx_serial = 1;
@@ -154,7 +146,6 @@ module uart_tx
                 end
             default: begin 
                 next_state = IDLE;
-                data = tx_byte;
                 next_bit_index = 0;
                 transmit_ready = 0;
                 tx_serial = 1;
