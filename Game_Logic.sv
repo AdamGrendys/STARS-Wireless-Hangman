@@ -8,12 +8,13 @@ typedef enum logic [2:0] {
     SET = 0, L0 = 1, L1 = 2, L2 = 3, L3 = 4, L4 = 5, STOP = 6
 } state_t;
 
-module game_logic (
+module Game_logic (
     input logic clk, nRst,
     input logic [7:0] guess,
     input logic [39:0] setWord,
     input logic enable, toggle_state,
-    output logic red, green, letter, mistake, red_busy, game_rdy,
+    output logic [7:0] letter,
+    output logic red, green, mistake, red_busy, game_rdy,
     output logic [2:0] numMistake, correct
 );
     logic pos;
@@ -115,6 +116,7 @@ module game_logic (
                 nextState = STOP;
             end
             STOP: begin
+                letter = guess;
                 if(correct > 0) begin
                     tempmistake = 0;
                     mistake = 0;
