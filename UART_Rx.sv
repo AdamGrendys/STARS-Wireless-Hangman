@@ -17,30 +17,40 @@ module uart_rx
 );
 
 logic [7:0] temp_byte;
-logic [2:0] bit_index;
+logic [2:0] bit_index, next_bit_index;  
 curr_state state, next_state;
 logic [10:0] clk_count, next_clk_count;
+logic [3:0] pcount, count;
+logic pbit;
+logic error_led1, error_led2;
 
 always_ff @(posedge clk, negedge nRst) begin
     if (~nRst) begin
         rx_byte <= 0;
         state <= IDLE;
         clk_count <= 0;
+        bit_index <= 0;
+        count <= 0;
     end else begin
         state <= next_state;
         rx_byte <= temp_byte;
         clk_count <= next_clk_count;
+        bit_index <= next_bit_index;
+        count <= pcount;
     end
 end
 
 always_comb begin
+    error_led1 = 0;
+    error_led2 = 0;
+    pbit = 0;
     case (state)
         IDLE: begin
             rx_ready = 0;
-            bit_index = 0;
+            next_bit_index = 0;
             temp_byte = 0;
-            bit_index = 0;
             next_clk_count = 0;
+            pcount = 0;
 
             if (rx_serial == 0 && rec_ready)
                 next_state = START;
@@ -50,7 +60,8 @@ always_comb begin
         START: begin
             rx_ready = 0;
             temp_byte = 0;
-            bit_index = 0;
+            next_bit_index = 0;
+            pcount = 0;
 
             if(clk_count == (Clkperbaud - 1)/2) begin
             if (rx_serial == 0 && rec_ready) begin
@@ -67,48 +78,93 @@ always_comb begin
             end
         end
         DATAIN: begin
-            // wait for baud cycle 
             temp_byte[bit_index] = rx_serial;
             rx_ready = 0;
-            next_clk_count = 0;
+            
+            if(clk_count < Clkperbaud - 1) begin
+            next_clk_count = clk_count + 1;
+            next_state = DATAIN;
+            next_bit_index = bit_index;
+            pcount = count;
+            end
+            else begin
 
+            if(temp_byte[bit_index] == 1) begin // parity counter counts 1s
+            pcount = count + 1;
+            end
+            else begin
+            pcount = count;
+            end
+            
+            next_clk_count = 0;
+            
             if (bit_index < 7) begin
-                bit_index = bit_index + 1;
+                next_bit_index = bit_index + 1;
                 next_state = DATAIN;
             end else begin
-                bit_index = 0;
+                next_bit_index = 0;
                 next_state = PARITY;
+            end
             end
         end
         PARITY: begin 
-            /// SANDEEEPPPPP HELPPPPPPPPPP
-            next_clk_count = 0;
+            pbit =  rx_serial;
+            pcount = count;
             rx_ready = 0;
             temp_byte = 0;
-            bit_index = 0;
+            next_bit_index = 0;
+
+            if(clk_count < Clkperbaud - 1) begin
+            next_clk_count = clk_count + 1;
+            next_state = PARITY;
+            end
+            else begin 
+            if ((pcount % 2 == 1) && (pbit == 0)) begin
+            error_led1 = 1;
+            next_clk_count = 0;
+            next_state = CLEAN; // state transition logic
+            end
+            else if((pcount % 2 == 0) && (pbit == 1)) begin
+            error_led2 = 1;
+            next_clk_count = 0;
+            next_state = CLEAN; // state transition logic
+            end
+            else 
+            next_clk_count = 0;
             next_state = STOP;
+            end
         end
         STOP: begin
-            // wait for baud cycle
+
+            if(clk_count < Clkperbaud - 1) begin
+            next_clk_count = clk_count + 1;
+            next_state = STOP;
+            end
+            else begin
             next_clk_count = 0;
+            next_state = CLEAN; // state transition logic
+            end
+
             rx_ready = 1;
             temp_byte = 0;
-            bit_index = 0;
-            next_state = CLEAN;
+            next_bit_index = 0; 
+            pcount = 0;
         end
         CLEAN: begin 
+            pcount = 0;
             next_clk_count = 0;
             rx_ready = 0;
             temp_byte = 0;
-            bit_index = 0;
+            next_bit_index = 0;
             next_state = IDLE;
         end
         default: begin
             next_clk_count = 0;
             rx_ready = 0;
             temp_byte = 0;
-            bit_index = 0;
+            next_bit_index = 0;
             next_state = IDLE;
+            pcount = 0;
         end
     endcase
 end
