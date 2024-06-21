@@ -13,11 +13,11 @@ module game_logic (
     input logic [7:0] guess,
     input logic [39:0] setWord,
     input logic enable, toggle_state,
-    output logic red, green, letter, mistake, correct, red_busy, game_rdy,
-    output logic numMistake
+    output logic red, green, letter, mistake, red_busy, game_rdy,
+    output logic [2:0] numMistake, correct
 );
     logic pos;
-    logic tempcorrect, tempmistake;
+    logic [2:0] tempcorrect, tempmistake;
     logic [7:0] placehold;
     state_t nextState;
     logic [4:0] indexCorrect;
@@ -45,7 +45,11 @@ module game_logic (
         green = 0;
         mistake = 0;
         tempcorrect = 0;
+        tempmistake = 0;
+        game_rdy = 0;
         pos = 0;
+        placehold = 0;
+        indexCorrect = 0;
 
         case(state)
             SET: begin
