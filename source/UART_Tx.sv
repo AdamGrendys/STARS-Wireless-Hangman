@@ -85,7 +85,7 @@ module uart_tx
                 pcount = count;
                 end
                 
-                
+
                 if (bit_index < 7) begin // state transition logic
                 next_bit_index = bit_index + 1;
                 next_state = DATAIN;
@@ -101,11 +101,11 @@ module uart_tx
                 
                 if(pcount % 2 == 1) begin //Parity assignment 
                 tx_serial = 1;
-                pcount = 0;
+                pcount = count;
                 end
                 else begin
                 tx_serial = 0;
-                pcount = 0;
+                pcount = count;
                 end
                 
                 if(clk_count < Clkperbaud - 1) begin
