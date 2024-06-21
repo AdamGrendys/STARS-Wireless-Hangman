@@ -69,7 +69,7 @@ initial begin
     // ***********************************
     tb_ready = 1;
     tb_game_rdy = 1;
-    #(CLK_PERIOD * 5);
+    #(CLK_PERIOD * 10);
 
     // ***********************************
     // Test Case 4: Ready flip
