@@ -48,7 +48,7 @@ initial begin
     #10;
 
     // ***********************************
-    // Test Case 0: Ready High, Game Ready Low
+    // Test Case 1: Ready High, Game Ready Low
     // ***********************************
     tb_ready = 1;
     tb_game_rdy = 0;
@@ -56,14 +56,14 @@ initial begin
 
 
     // ***********************************
-    // Test Case 0: Ready Low, Game Ready High
+    // Test Case 2: Ready Low, Game Ready High
     // ***********************************
     tb_ready = 0;
     tb_game_rdy = 1;
     #(CLK_PERIOD * 2);
 
     // ***********************************
-    // Test Case 0: Ready High, Game Ready High
+    // Test Case 3: Ready High, Game Ready High
     // ***********************************
     tb_ready = 1;
     tb_game_rdy = 1;

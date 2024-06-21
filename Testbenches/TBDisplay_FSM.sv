@@ -2,31 +2,51 @@
 Descriuption: x
 */
 
-module display_fsm (
-    input logic clk, nRst, ready,
-    input logic [7:0] msg,
-    output logic [127:0] row1, row2
-);
+`timescale 1ms / 100 us
 
-logic [79:0] guesses, next_guess;
+module tb_display_fsm ();
 
-always_ff @(posedge clk, negedge nRst) begin
-    if (~nRst) begin
-        guesses <= 0;
-        row1 <= 0;
-        row2 <= 0;
-    end else begin
-        guesses <= next_guess;
-        row1 <= {60'b0, msg, 60'b0};
-        row2 <= {guesses, 48'b0};
-    end
+// Testbench ports
+localparam CLK_PERIOD = 10; // 100 Hz clk
+logic tb_clk, tb_nRst, tb_ready;
+logic [7:0] tb_msg;
+logic [127:0] tb_row1, tb_row2;
+
+// Clock generation block
+always begin
+    tb_clk = 1'b0; 
+    #(CLK_PERIOD / 2.0);
+    tb_clk = 1'b1; 
+    #(CLK_PERIOD / 2.0); 
 end
 
+// Portmap
+display_fsm tb_disp_fsm(.clk(tb_clk), .nRst(tb_nRst), .ready(tb_ready), .msg(tb_msg), .row1(tb_row1), .row2(tb_row2));
 
-always_comb begin
-    if (ready)
-        next_guess = {msg, guesses[71:0]};
-    else    
-        next_guess = guesses;
+initial begin 
+    // Signal dump
+    $dumpfile("dump.vcd");
+    $dumpvars; 
+
+    // Initialize test bench signals
+    tb_nRst = 1'b1;
+    tb_msg = 8'd5;
+
+    // Wait some time before starting first test case
+    #(0.1);
+
+    // ***********************************
+    // Test Case 0: Power-on-Reset 
+    // ***********************************
+    #10;
+    @(negedge tb_clk);
+    tb_nRst = 1'b0; 
+    @(negedge tb_clk);
+    @(negedge tb_clk);
+    tb_nRst = 1'b1;
+    @(posedge tb_clk);
+    #10;
+
 end
+
 endmodule
