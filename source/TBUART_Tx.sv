@@ -80,7 +80,7 @@ initial begin
 
     tb_nRst = 1'b1;
     tb_tx_ctrl = 1'b0;
-    tb_byte = 8'b10011101;
+    tb_byte = 8'b10101010;
     exp_bit = 1;
     exp_rdy = 0;
     exp_serial = 0;
@@ -96,7 +96,7 @@ initial begin
     // ***********************************
     // Test Case 3: succesful data transmission 
     // ***********************************
-    #(CLK_PERIOD * 6300);
+    #(CLK_PERIOD * 8000);
 
     reset_dut();
 
