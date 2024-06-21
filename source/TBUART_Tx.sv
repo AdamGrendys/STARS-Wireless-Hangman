@@ -75,7 +75,7 @@ initial begin
 
     tb_nRst = 1'b1;
     tb_tx_ctrl = 1'b0;
-    tb_byte = 8'b10101011;
+    tb_byte = 8'b10101010;
     #(CLK_PERIOD * 1);
     tb_tx_ctrl = 1'b1;
     #(CLK_PERIOD *2);
