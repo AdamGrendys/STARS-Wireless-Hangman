@@ -60,5 +60,16 @@ initial begin
     tb_ready = 1;
     #(CLK_PERIOD * 5);
 
+    // ***********************************
+    // Test Case 3: Ready flip
+    // ***********************************
+    tb_ready = 0;
+    tb_ready = 1;
+    tb_ready = 0;
+    #(CLK_PERIOD *1);
+    tb_ready = 1;
+    #(CLK_PERIOD * 0.5);
+    tb_ready = 0;
+    #(CLK_PERIOD * 5);
 end
 endmodule
