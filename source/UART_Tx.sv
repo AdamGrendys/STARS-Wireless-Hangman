@@ -85,7 +85,7 @@ module uart_tx
                 pcount = count;
                 end
             
-                if (bit_index < 7) begin // state transition logic
+                if (bit_index <= 7) begin // state transition logic
                 next_bit_index = bit_index + 1;
                 next_state = DATAIN;
                 end else  begin 

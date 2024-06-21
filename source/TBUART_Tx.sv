@@ -32,7 +32,7 @@ always begin
     #(CLK_PERIOD / 2.0); 
 end
 
-uart_tx transmit(.clk(tb_clk), .nRst(tb_nRst), .tx_ctrl(tb_tx_ctrl), .tx_serial(tb_tx_serial), .tx_byte(tb_byte), .transmit_ready(tb_transmit_rdy));
+uart_tx #(.Clkperbaud(1250)) transmit(.clk(tb_clk), .nRst(tb_nRst), .tx_ctrl(tb_tx_ctrl), .tx_serial(tb_tx_serial), .tx_byte(tb_byte), .transmit_ready(tb_transmit_rdy));
 
 initial begin
     $dumpfile("dump.vcd");
