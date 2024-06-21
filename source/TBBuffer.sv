@@ -80,8 +80,14 @@ initial begin
     tb_ready = 0;
     #(CLK_PERIOD * 2);
     tb_ready = 1;
+
+    tb_nRst = 0;
+    #(CLK_PERIOD);
+    tb_nRst = 1;
+
     #(CLK_PERIOD * 2);
     tb_ready = 0;
+    #(CLK_PERIOD * 2);
 
     $finish;
 end
