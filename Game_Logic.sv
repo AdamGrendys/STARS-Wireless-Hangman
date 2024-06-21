@@ -134,13 +134,11 @@ module game_logic (
                 end else begin
                     nextState = STOP;
                 end
-                    
+
             end
             default: begin
                 nextState = SET;
             end
-
-
         endcase
 
     end
