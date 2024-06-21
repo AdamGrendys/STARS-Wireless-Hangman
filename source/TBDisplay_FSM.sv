@@ -39,26 +39,26 @@ initial begin
     // ***********************************
     // Test Case 0: Power-on-Reset 
     // ***********************************
-    #10;
+    #(CLK_PERIOD * 2);
     @(negedge tb_clk);
     tb_nRst = 1'b0; 
     @(negedge tb_clk);
     @(negedge tb_clk);
     tb_nRst = 1'b1;
     @(posedge tb_clk);
-    #10;
+    #(CLK_PERIOD * 5);
 
     // ***********************************
     // Test Case 1: Ready Low
     // ***********************************
     tb_ready = 0;
-    #(CLK_PERIOD * 2);
+    #(CLK_PERIOD * 5);
 
     // ***********************************
     // Test Case 2: Ready High
     // ***********************************
     tb_ready = 1;
-    #(CLK_PERIOD * 2);
+    #(CLK_PERIOD * 5);
 
 end
 endmodule
