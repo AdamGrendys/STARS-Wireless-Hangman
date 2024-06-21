@@ -86,7 +86,7 @@ initial begin
     // ***********************************
     // Test Case 3: succesful data transmission 
     // ***********************************
-    #(CLK_PERIOD * 10000);
+    #(CLK_PERIOD * 15000);
 
     reset_dut();
 
