@@ -36,8 +36,7 @@ always_comb begin
                 nextTop = {52'b0, win, 52'b0};
                 nextBottom = {44'b0, word, 44'b0};
             end else begin
-                //Top row in position bit index becomes the guess letter
-                curr_word[indexCorrect] = letter;
+                curr_word[indexCorrect] = letter;  //Top row in position bit index becomes the guess letter
                 nextTop = {44'b0, curr_word, 44'b0};
             end
         end 
@@ -46,7 +45,8 @@ always_comb begin
                 nextTop = {48'b0, lose, 48'b0};
                 nextBottom = {44'b0, word, 44'b0};
             end else begin
-                //bottom row in position bit index becomes the guess letter
+                curr_guesses = ... //bottom row in position bit index becomes the guess letter
+                nextBottom = {40'b0, curr_guesses, 40'b0};
             end
         end
         default: begin

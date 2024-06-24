@@ -4,10 +4,6 @@ Descriuption: x
 
 `timescale 1ms / 100 us
 
-typedef enum logic [1:0] {
-IDLE = 2'b00, WAIT = 2'b01, TRANSMIT = 2'b11
-} curr_state;
-
 module tb_msg_reg ();
 
 // Testbench ports
@@ -17,7 +13,6 @@ logic [7:0] tb_data;
 logic tb_blue, tb_tx_ctrl;
 logic [7:0] tb_tx_byte;
 logic [7:0] tb_msg, tb_msg_rdy;
-curr_state state, next_state;
 
 // Clock generation block
 always begin
