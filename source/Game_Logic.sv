@@ -33,6 +33,7 @@ module Game_logic (
             incorrect <= mistakeCount;
             correct <= correctCount;
             indexCorrect <= nextIndexCorrect;
+            placehold <= guess;
         end
     end
 
@@ -44,12 +45,10 @@ module Game_logic (
         red = 0;
         green = 0;
         mistake = 0;
-        placehold = 0;
 
         case(state)
             SET: begin
                 letter = 0;
-                placehold = 0;
                 correctCount = 0;
                 mistakeCount = 0;
                 //flip flop will set the word using a shift register
@@ -63,7 +62,6 @@ module Game_logic (
             L0: begin
                 nextIndexCorrect = 0;
                 letter = 0;
-                placehold = guess;
                 red_busy = 1;
                 game_rdy = 0;
                 if(guess == setWord[39:32])begin
@@ -77,7 +75,6 @@ module Game_logic (
             end
             L1: begin
                 letter = 0;
-                placehold = guess;
                 game_rdy = 0;
                 if(guess == setWord[31:24])begin
                     nextIndexCorrect[1] = 1;
@@ -89,7 +86,6 @@ module Game_logic (
             end
             L2: begin
                 letter = 0;
-                placehold = guess;
                 game_rdy = 0;
                 if(guess == setWord[23:16])begin
                     nextIndexCorrect[2] = 1;
@@ -101,7 +97,6 @@ module Game_logic (
             end
             L3: begin
                 letter = 0;
-                placehold = guess;
                 game_rdy = 0;
                 if(guess == setWord[15:8])begin
                     nextIndexCorrect[3] = 1;
@@ -113,7 +108,6 @@ module Game_logic (
             end
             L4: begin
                 letter = 0;
-                placehold = guess;
                 game_rdy = 0;
                 if(guess == setWord[7:0])begin
                     nextIndexCorrect[4] = 1;
@@ -124,7 +118,6 @@ module Game_logic (
                 nextState = STOP;
             end
             STOP: begin
-                placehold = guess;
                 letter = guess;
                 if(nextIndexCorrect > 0) begin
                     mistake = 0;
@@ -154,7 +147,6 @@ module Game_logic (
             end
             default: begin
                 letter = 0;
-                placehold = 0;
                 game_rdy = 0;
                 nextState = SET;
                 correctCount = 0;
