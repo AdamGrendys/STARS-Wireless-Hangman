@@ -158,31 +158,31 @@ initial begin
     tb_guess = 8'b01000011; //Guess: "C"
 
     single_button_press();
-    #(CLK_PERIOD * 50);
+    #(CLK_PERIOD * 10);
     check_mistake(1, "1");
 
     tb_guess = 8'b01001010; //Guess: "J"
-    #(CLK_PERIOD * 50);
+    #(CLK_PERIOD * 25);
 
     check_mistake(2, "2");
 
     tb_guess = 8'b01010001; //Guess: "Q"
-    #(CLK_PERIOD * 50);
+    #(CLK_PERIOD * 25);
 
     check_mistake(3, "3");
 
     tb_guess = 8'b01010010; //Guess: "R"
-    #(CLK_PERIOD * 50);
+    #(CLK_PERIOD * 25);
 
     check_mistake(4, "4");
 
     tb_guess = 8'b01001011; //Guess: "K"
-    #(CLK_PERIOD * 50);
+    #(CLK_PERIOD * 25);
 
     check_mistake(5, "5");
 
     tb_guess = 8'b01001101; //Guess: "M"
-    #(CLK_PERIOD * 50);
+    #(CLK_PERIOD * 25);
 
     check_mistake(6, "6");
 
@@ -200,22 +200,22 @@ initial begin
     tb_guess = 8'b01000001; //Guess: "A"
 
     single_button_press();
-    #(CLK_PERIOD * 50);
+    #(CLK_PERIOD * 25);
 
     check_correct(1, "1");
 
     tb_guess = 8'b01010000; //Guess: "P"
-    #(CLK_PERIOD * 50);
+    #(CLK_PERIOD * 25);
 
     check_correct(3, "3");
 
     tb_guess = 8'b01001100; //Guess: "L"
-    #(CLK_PERIOD * 50);
+    #(CLK_PERIOD * 25);
 
     check_correct(4, "4");
 
     tb_guess = 8'b01000101; //Guess: "E"
-    #(CLK_PERIOD * 50);
+    #(CLK_PERIOD * 25);
 
     check_correct(5, "5");
 
@@ -233,12 +233,12 @@ initial begin
     tb_guess = 8'b01001101; //Guess: "M"
 
     single_button_press();
-    #(CLK_PERIOD * 50);
+    #(CLK_PERIOD * 25);
 
     check_correct(1, "1");
 
     tb_guess = 8'b01000001; //Guess: "A"
-    #(CLK_PERIOD * 50);
+    #(CLK_PERIOD * 25);
 
     check_mistake(1,"1");
 

@@ -21,6 +21,7 @@ module Game_logic (
     logic [7:0] placehold;
     state_t nextState, state;
     logic [2:0] correctCount, mistakeCount;
+    logic [4:0] nextIndexCorrect;
 
     always_ff @(posedge clk, negedge nRst) begin
         if(~nRst) begin
@@ -31,17 +32,18 @@ module Game_logic (
             state <= nextState;
             incorrect <= mistakeCount;
             correct <= correctCount;
+            indexCorrect <= nextIndexCorrect;
         end
     end
 
     always_comb begin
         correctCount = correct;
         mistakeCount = incorrect;
+        nextIndexCorrect = indexCorrect;
         red_busy = 0;
         red = 0;
         green = 0;
         mistake = 0;
-        indexCorrect = 0;
         placehold = 0;
 
         case(state)
@@ -52,7 +54,7 @@ module Game_logic (
                 mistakeCount = 0;
                 //flip flop will set the word using a shift register
                 game_rdy = 1;
-                indexCorrect = 0;
+                nextIndexCorrect = 0;
                 if(toggle_state)
                     nextState = L0;
                 else
@@ -64,9 +66,9 @@ module Game_logic (
                 red_busy = 1;
                 game_rdy = 0;
                 if(guess == setWord[39:32])begin
-                    indexCorrect[0] = 1;
+                    nextIndexCorrect[0] = 1;
                 end else begin
-                    indexCorrect[0] = 0;
+                    nextIndexCorrect[0] = 0;
                 end
                 nextState = L1;
             end
@@ -75,9 +77,9 @@ module Game_logic (
                 placehold = guess;
                 game_rdy = 0;
                 if(guess == setWord[31:24])begin
-                    indexCorrect[1] = 1;
+                    nextIndexCorrect[1] = 1;
                 end else begin
-                    indexCorrect[1] = 0;
+                    nextIndexCorrect[1] = 0;
                 end
                 nextState = L2;
             end
@@ -86,9 +88,9 @@ module Game_logic (
                 placehold = guess;
                 game_rdy = 0;
                 if(guess == setWord[23:16])begin
-                    indexCorrect[2] = 1;
+                    nextIndexCorrect[2] = 1;
                 end else begin
-                    indexCorrect[2] = 0;
+                    nextIndexCorrect[2] = 0;
                 end
                 nextState = L3;
             end
@@ -97,9 +99,9 @@ module Game_logic (
                 placehold = guess;
                 game_rdy = 0;
                 if(guess == setWord[15:8])begin
-                    indexCorrect[3] = 1;
+                    nextIndexCorrect[3] = 1;
                 end else begin
-                    indexCorrect[3] = 0;
+                    nextIndexCorrect[3] = 0;
                 end
                 nextState = L4;
             end
@@ -108,9 +110,9 @@ module Game_logic (
                 placehold = guess;
                 game_rdy = 0;
                 if(guess == setWord[7:0])begin
-                    indexCorrect[4] = 1;
+                    nextIndexCorrect[4] = 1;
                 end else begin
-                    indexCorrect[4] = 0;
+                    nextIndexCorrect[4] = 0;
                 end
                 nextState = STOP;
             end
@@ -118,7 +120,7 @@ module Game_logic (
                 letter = 0;
                 placehold = placehold;
                 letter = guess;
-                if(indexCorrect > 0) begin
+                if(nextIndexCorrect > 0) begin
                     mistake = 0;
                     correctCount = correctCount + 1;
                 end else begin
@@ -127,16 +129,16 @@ module Game_logic (
                 end
                 red_busy = 0;
                 game_rdy = 1;
-                if(indexCorrect == 5'b11111) begin
+                if(nextIndexCorrect == 5'b11111) begin
                     green = 1;
                     red = 0;
                     //LCD DISPLAY WIN
-                    indexCorrect = 0;
-                end else if(indexCorrect == 5'b0) begin
+                    nextIndexCorrect = 0;
+                end else if(nextIndexCorrect == 5'b0) begin
                     green = 0;
                     red = 1;
                     //LCD DISPLAY FAIL
-                    indexCorrect = 0;
+                    nextIndexCorrect = 0;
                 end
                 if(placehold != guess) begin
                     nextState = L0;
