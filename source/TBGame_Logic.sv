@@ -27,7 +27,7 @@ logic [39:0] tb_setWord;
 logic tb_toggle_state;
 logic [7:0] tb_letter;
 logic tb_red, tb_green, tb_mistake, tb_red_busy, tb_game_rdy;
-logic [2:0] tb_numMistake, tb_correct;
+logic [2:0] tb_incorrect, tb_correct;
 logic [4:0] tb_indexCorrect;
 
 //Reset DUT Task
@@ -58,10 +58,10 @@ input string string_mistakes;
 begin
     @(negedge tb_clk);
     tb_checking_outputs = 1'b1;
-    if(tb_numMistake == expected_mistakes)
+    if(tb_incorrect == expected_mistakes)
         $info("Correct Mistakes: %s.", string_mistakes);
     else
-        $error("Incorrect Mistakes. Expected: %s. Actual: %s.", string_mistakes, tb_numMistake);
+        $error("Incorrect Mistakes. Expected: %s. Actual: %s.", string_mistakes, tb_incorrect);
 end
 endtask
 
@@ -109,7 +109,7 @@ Game_logic DUT(.clk(tb_clk),
             .letter(tb_letter),
             .red(tb_red), .green(tb_green),
             .mistake(tb_mistake), .red_busy(tb_red_busy),
-            .game_rdy(tb_game_rdy), .numMistake(tb_numMistake),
+            .game_rdy(tb_game_rdy), .incorrect(tb_incorrect),
             .correct(tb_correct), .indexCorrect(tb_indexCorrect));
 
 //Main test bench process
