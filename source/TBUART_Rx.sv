@@ -58,7 +58,7 @@ initial begin
 
     tb_nRst = 1'b1;
     tb_rec_rdy = 0;
-    tb_rx_serial = 0;
+    tb_rx_serial = 1;
 
     #(CLK_PERIOD * 1250);
 
@@ -73,10 +73,35 @@ initial begin
 
     tb_rx_serial = 0;
 
-    #(CLK_PERIOD * 1500); 
+    #(CLK_PERIOD * 1250); 
 
+    tb_rec_rdy = 0;
+    tb_rx_serial = 1;
+    #(CLK_PERIOD * 1250);
 
+    tb_rx_serial = 1;
+    #(CLK_PERIOD * 1250);
 
+    tb_rx_serial = 0;
+    #(CLK_PERIOD * 1250);
+
+    tb_rx_serial = 1;
+    #(CLK_PERIOD * 1250);
+    
+    tb_rx_serial = 0;
+    #(CLK_PERIOD * 1250);
+
+    tb_rx_serial = 1;
+    #(CLK_PERIOD * 1250);
+
+    tb_rx_serial = 0;
+    #(CLK_PERIOD * 1250);
+
+    tb_rx_serial = 1;
+    #(CLK_PERIOD * 1250);
+
+    tb_rx_serial = 1;
+    #(CLK_PERIOD * 1250);
 
 
 
