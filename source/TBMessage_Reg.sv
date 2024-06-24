@@ -90,10 +90,5 @@ initial begin
     
     tb_transmit_ready = 1;
     #(CLK_PERIOD);
-
-
 end
-
-
-
 endmodule
