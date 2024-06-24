@@ -1,7 +1,7 @@
 /* Game Logic File
 Descriuption: Controls the states of the game where the host can confirm the word.
 Then the next state compares the user input with the different letters in the word.
-Finally, once the user either guesses the word, or gets 6 wrong questions, the game
+Finally, once the user either guesses the word, or gets 6 incorrect questions, the game
 ends. 
 */
 typedef enum logic [2:0] { 
@@ -15,7 +15,7 @@ module Game_logic (
     input logic toggle_state,
     output logic [7:0] letter,
     output logic red, green, mistake, red_busy, game_rdy,
-    output logic [2:0] numMistake, correct,
+    output logic [2:0] incorrect, correct,
     output logic [4:0] indexCorrect
 );
     logic [2:0] tempcorrect, tempmistake;
@@ -26,16 +26,18 @@ module Game_logic (
     always_ff @(posedge clk, negedge nRst) begin
         if(~nRst) begin
             state <= SET;
-            numMistake <= 0;
+            incorrect <= 0;
             correct <= 0;
         end else begin
             state <= nextState;
-            numMistake <= mistakeCount;
+            incorrect <= mistakeCount;
             correct <= correctCount;
         end
     end
 
     always_comb begin
+        correctCount = correct;
+        mistakeCount = incorrect;
         red_busy = 0;
         red = 0;
         green = 0;
@@ -43,8 +45,6 @@ module Game_logic (
         tempcorrect = 0;
         tempmistake = 0;
         indexCorrect = 0;
-        correctCount = 0;
-        mistakeCount = 0;
         placehold = 0;
 
         case(state)
@@ -145,7 +145,7 @@ module Game_logic (
                     tempmistake = 0;
                     mistake = 0;
                     correctCount = correctCount + 1;
-                end else begin
+                end else if(tempmistake > 0) begin
                     tempcorrect = 0;
                     mistake = 1;
                     mistakeCount = mistakeCount + 1;
@@ -156,7 +156,7 @@ module Game_logic (
                     green = 1;
                     red = 0;
                     //LCD DISPLAY WIN
-                end else if(numMistake == 6) begin
+                end else if(incorrect == 6) begin
                     green = 0;
                     red = 1;
                     //LCD DISPLAY FAIL
