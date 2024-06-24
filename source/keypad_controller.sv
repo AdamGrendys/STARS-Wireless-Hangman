@@ -3,7 +3,7 @@ module keypad_controller (
     input logic [3:0] read_row,
     output logic [7:0] cur_key, // Input for keypad_fsm
     output logic strobe, // Input for keypad_fsm
-    output logic [3:0] scan_col, sel_col
+    output logic [3:0] scan_col
 );
     logic [3:0] Q0, Q1, Q1_delay, scan_col_next;
 
@@ -14,7 +14,6 @@ module keypad_controller (
             Q1 <= 4'd0;
             Q1_delay <= 4'd0;
             scan_col <= 4'd0;
-            sel_col <= 4'd0;
         end else begin
             Q0 <= read_row;
             Q1 <= Q0;
@@ -43,6 +42,6 @@ module keypad_controller (
     end
 
     assign strobe = |((~Q1_delay) & (Q1));
-    assign cur_key = (|read_row & |scan_col) ? ({read_row, scan_col}) : (8'd0);
+    assign cur_key = ((|read_row) & (|scan_col)) ? ({read_row, scan_col}) : (8'd0);
 
 endmodule
