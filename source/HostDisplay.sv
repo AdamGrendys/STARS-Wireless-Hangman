@@ -24,10 +24,10 @@ always_ff @(posedge clk, negedge nRst) begin
     end
 end
 
-logic [23:0] win = 24'b0; // Placeholder, replace with win encoded bits evnetually.
-logic [31:0] lose = 32'b0; // Placeholder, replace with lose bits evnetually
-logic [39:0] curr_word = 40'b0; // Placeholder, needs 5 dashes
-logic [47:0] curr_guesses = 48'b0; // Placeholder, needs 6 dashes
+logic [23:0] win = {8'h57, 8'h69, 8'h6E};  // Win in ASCII
+logic [31:0] lose = {8'h4C, 8'h6F, 8'h73, 8'h65}; // Lose in ASCII
+logic [39:0] curr_word = {8'h5F, 8'h5F, 8'h5F, 8'h5F, 8'h5F}; // _ _ _ _ _ in ASCII
+logic [47:0] curr_guesses = {8'h5F, 8'h5F, 8'h5F, 8'h5F, 8'h5F, 8'h5F}; // _ _ _ _ _ _ in ASCII
 
 always_comb begin
     case(mistake)
@@ -50,8 +50,8 @@ always_comb begin
             end
         end
         default: begin
-            curr_word = 0; // Placeholder, needs 5 dashes
-            curr_guesses = 0; // Placeholder, needs 6 dashes
+            curr_word = {8'h5F, 8'h5F, 8'h5F, 8'h5F, 8'h5F}; // _ _ _ _ _ in ASCII
+            curr_guesses = {8'h5F, 8'h5F, 8'h5F, 8'h5F, 8'h5F, 8'h5F}; // _ _ _ _ _ _ in ASCII
             nextTop = {44'b0, curr_word, 44'b0};
             nextBottom = {40'b0, curr_guesses, 40'b0};
         end
