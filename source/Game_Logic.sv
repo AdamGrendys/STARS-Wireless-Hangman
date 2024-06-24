@@ -133,6 +133,20 @@ module Game_logic (
                 end
                 red_busy = 0;
                 game_rdy = 1;
+                // if(correct == 5) begin
+                //     green = 1;
+                //     red = 0;
+                //     //LCD DISPLAY WIN
+                // end else if(incorrect == 6) begin
+                //     green = 0;
+                //     red = 1;
+                //     //LCD DISPLAY FAIL
+                // end
+                nextState = IDLE;
+            end
+            IDLE: begin
+                nRight = 0;
+
                 if(correct == 5) begin
                     green = 1;
                     red = 0;
@@ -142,10 +156,7 @@ module Game_logic (
                     red = 1;
                     //LCD DISPLAY FAIL
                 end
-                nextState = IDLE;
-            end
-            IDLE: begin
-                nRight = 0;
+
                 if(placehold != guess) begin
                     nextState = L0;
                 end else begin
