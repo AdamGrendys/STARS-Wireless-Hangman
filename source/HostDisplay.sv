@@ -14,6 +14,10 @@ module HostDisplay (
     logic [127:0] nextTop;
     logic [127:0] nextBottom;
     logic [47:0] next_curr_guesses;
+    logic [23:0] win = {8'h57, 8'h69, 8'h6E};  // Win in ASCII
+    logic [31:0] lose = {8'h4C, 8'h6F, 8'h73, 8'h65}; // Lose in ASCII
+    logic [39:0] curr_word; // _ _ _ _ _ in ASCII
+    logic [47:0] curr_guesses; // _ _ _ _ _ _ in ASCII
 
 always_ff @(posedge clk, negedge nRst) begin
     if(~nRst) begin
@@ -26,10 +30,7 @@ always_ff @(posedge clk, negedge nRst) begin
     end
 end
 
-logic [23:0] win = {8'h57, 8'h69, 8'h6E};  // Win in ASCII
-logic [31:0] lose = {8'h4C, 8'h6F, 8'h73, 8'h65}; // Lose in ASCII
-logic [39:0] curr_word; // _ _ _ _ _ in ASCII
-logic [47:0] curr_guesses; // _ _ _ _ _ _ in ASCII
+
 
 always_comb begin
     case(mistake)
