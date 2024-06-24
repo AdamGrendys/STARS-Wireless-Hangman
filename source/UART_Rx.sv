@@ -112,7 +112,7 @@ always_comb begin
             pbit =  rx_serial;
             pcount = count;
             rx_ready = 0;
-            temp_byte = 0;
+            temp_byte = rx_byte;
             next_bit_index = 0;
 
             if(clk_count < Clkperbaud - 1) begin
