@@ -5,7 +5,7 @@ Finally, once the user either guesses the word, or gets 6 incorrect questions, t
 ends. 
 */
 typedef enum logic [2:0] { 
-    SET = 0, L0 = 1, L1 = 2, L2 = 3, L3 = 4, L4 = 5, STOP = 6
+    SET = 0, L0 = 1, L1 = 2, L2 = 3, L3 = 4, L4 = 5, STOP = 6, IDLE = 7
 } state_t;
 
 module Game_logic (
@@ -34,6 +34,7 @@ module Game_logic (
             correct <= correctCount;
             indexCorrect <= nextIndexCorrect;
             placehold <= guess;
+            letter <= guess;
         end
     end
 
@@ -45,10 +46,10 @@ module Game_logic (
         red = 0;
         green = 0;
         mistake = 0;
+        game_rdy = 0;
 
         case(state)
             SET: begin
-                letter = 0;
                 correctCount = 0;
                 mistakeCount = 0;
                 //flip flop will set the word using a shift register
@@ -61,7 +62,6 @@ module Game_logic (
             end
             L0: begin
                 nextIndexCorrect = 0;
-                letter = 0;
                 red_busy = 1;
                 game_rdy = 0;
                 if(guess == setWord[39:32])begin
@@ -74,7 +74,7 @@ module Game_logic (
                 nextState = L1;
             end
             L1: begin
-                letter = 0;
+
                 game_rdy = 0;
                 if(guess == setWord[31:24])begin
                     nextIndexCorrect[1] = 1;
@@ -85,7 +85,6 @@ module Game_logic (
                 nextState = L2;
             end
             L2: begin
-                letter = 0;
                 game_rdy = 0;
                 if(guess == setWord[23:16])begin
                     nextIndexCorrect[2] = 1;
@@ -96,7 +95,7 @@ module Game_logic (
                 nextState = L3;
             end
             L3: begin
-                letter = 0;
+
                 game_rdy = 0;
                 if(guess == setWord[15:8])begin
                     nextIndexCorrect[3] = 1;
@@ -107,7 +106,6 @@ module Game_logic (
                 nextState = L4;
             end
             L4: begin
-                letter = 0;
                 game_rdy = 0;
                 if(guess == setWord[7:0])begin
                     nextIndexCorrect[4] = 1;
@@ -118,7 +116,6 @@ module Game_logic (
                 nextState = STOP;
             end
             STOP: begin
-                letter = guess;
                 if(nextIndexCorrect > 0) begin
                     mistake = 0;
                     correctCount = correctCount + 1;
@@ -138,15 +135,16 @@ module Game_logic (
                     red = 1;
                     //LCD DISPLAY FAIL
                 end
+                nextState = IDLE;
+            end
+            IDLE: begin
                 if(placehold != guess) begin
                     nextState = L0;
                 end else begin
-                    nextState = STOP;
+                    nextState = IDLE;
                 end
-
             end
             default: begin
-                letter = 0;
                 game_rdy = 0;
                 nextState = SET;
                 correctCount = 0;
