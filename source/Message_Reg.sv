@@ -49,6 +49,7 @@ always_comb begin
             tx_byte = msg;
             tx_ctrl = 1;
             blue = 1;
+            next_state = IDLE;
         end
         default: begin
             next_state = IDLE;
