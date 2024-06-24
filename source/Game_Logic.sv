@@ -60,7 +60,6 @@ module Game_logic (
             end
             L0: begin
                 letter = 0;
-                indexCorrect = 0;
                 placehold = guess;
                 red_busy = 1;
                 game_rdy = 0;
@@ -132,10 +131,12 @@ module Game_logic (
                     green = 1;
                     red = 0;
                     //LCD DISPLAY WIN
+                    indexCorrect = 0;
                 end else if(indexCorrect == 5'b0) begin
                     green = 0;
                     red = 1;
                     //LCD DISPLAY FAIL
+                    indexCorrect = 0;
                 end
                 if(placehold != guess) begin
                     nextState = L0;
