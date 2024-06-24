@@ -26,6 +26,8 @@ end
 
 logic [23:0] win = 24'b0; // Placeholder, replace with win encoded bits evnetually.
 logic [31:0] lose = 32'b0; // Placeholder, replace with lose bits evnetually
+logic [39:0] curr_word = 40'b0; // Placeholder, needs 5 dashes
+logic [47:0] curr_guesses = 48'b0; // Placeholder, needs 6 dashes
 
 always_comb begin
     case(mistake)
@@ -35,7 +37,8 @@ always_comb begin
                 nextBottom = {44'b0, word, 44'b0};
             end else begin
                 //Top row in position bit index becomes the guess letter
-                nextTop = {44'b0, xxx, 44'b0};
+                curr_word[indexCorrect] = letter;
+                nextTop = {44'b0, curr_word, 44'b0};
             end
         end 
         1: begin
@@ -47,8 +50,10 @@ always_comb begin
             end
         end
         default: begin
-            //top row becomes 5 dashes
-            //bottom row becomes 6 sets of "X_"
+            curr_word = 0; // Placeholder, needs 5 dashes
+            curr_guesses = 0; // Placeholder, needs 6 dashes
+            nextTop = {44'b0, curr_word, 44'b0};
+            nextBottom = {40'b0, curr_guesses, 40'b0};
         end
     endcase
 end
