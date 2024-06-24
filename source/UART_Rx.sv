@@ -69,7 +69,7 @@ always_comb begin
                 next_state = DATAIN;
             end
             else
-                next_clk_count = clk_count;    
+                next_clk_count = clk_count +1;    
                 next_state = IDLE;
             end
             else begin 
