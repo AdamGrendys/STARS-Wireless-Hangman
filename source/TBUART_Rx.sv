@@ -100,14 +100,14 @@ initial begin
     tb_rx_serial = 1;
     #(CLK_PERIOD * 1250);
 
-    tb_rx_serial = 1;
-    #(CLK_PERIOD * 1250);
-
     tb_rx_serial = 0;
     #(CLK_PERIOD * 1250);
 
     tb_rx_serial = 0;
-    #(CLK_PERIOD * 1248);
+    #(CLK_PERIOD * 1250);
+
+    tb_rx_serial = 0;
+    #(CLK_PERIOD * 1250);
 
 
 
