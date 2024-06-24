@@ -9,7 +9,7 @@ module HostDisplay (
     input logic [2:0] numMistake, correct,
     input logic [39:0] word,
     input logic mistake,
-    output [127:0] top, bottom
+    output [127:0] top1, bottom1
 );
     logic [127:0] nextTop;
     logic [127:0] nextBottom;
@@ -21,11 +21,11 @@ module HostDisplay (
 
 always_ff @(posedge clk, negedge nRst) begin
     if(~nRst) begin
-        top <= 0;
-        bottom <= 0;
+        top1 <= 0;
+        bottom1 <= 0;
     end else begin
-        top <= nextTop;
-        bottom <= nextBottom;
+        top1 <= nextTop;
+        bottom1 <= nextBottom;
         curr_guesses <= next_curr_guesses;
     end
 end
