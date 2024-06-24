@@ -133,11 +133,11 @@ module Game_logic (
                 end
                 red_busy = 0;
                 game_rdy = 1;
-                if(nextIndexCorrect == 5'b11111) begin
+                if(correct == 5) begin
                     green = 1;
                     red = 0;
                     //LCD DISPLAY WIN
-                end else if(incorrect == 5) begin
+                end else if(incorrect == 6) begin
                     green = 0;
                     red = 1;
                     //LCD DISPLAY FAIL
