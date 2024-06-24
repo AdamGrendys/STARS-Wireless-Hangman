@@ -66,13 +66,14 @@ initial begin
     // ***********************************
     // Test Case 2: Do not take input
     // ***********************************
+    tb_ready = 0;
+    tb_transmit_ready = 0;
+
     tb_nRst = 0;
     #(CLK_PERIOD);
     tb_nRst = 1;
     #(CLK_PERIOD);
 
-    tb_ready = 0;
-    tb_transmit_ready = 0;
     #(CLK_PERIOD * 3);
 
 

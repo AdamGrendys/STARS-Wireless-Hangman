@@ -46,9 +46,9 @@ always_comb begin
                 next_state = WAIT;
         end
         TRANSMIT: begin
+            tx_byte = msg;
             tx_ctrl = 1;
             blue = 1;
-            tx_byte = msg;
         end
         default: begin
             next_state = IDLE;
