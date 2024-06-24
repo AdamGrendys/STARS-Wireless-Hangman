@@ -65,7 +65,7 @@ initial begin
     tb_rec_rdy = 1;
     tb_rx_serial = 0;
 
-    #(CLK_PERIOD * 600);
+    #(CLK_PERIOD * 625);
 
     tb_rx_serial = 1;
 
@@ -73,7 +73,7 @@ initial begin
 
     tb_rx_serial = 0;
 
-    #(CLK_PERIOD * 1250); 
+    #(CLK_PERIOD * 625); 
 
     tb_rec_rdy = 0;
     tb_rx_serial = 1;
