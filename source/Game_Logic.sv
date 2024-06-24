@@ -22,6 +22,7 @@ module Game_logic (
     state_t nextState, state;
     logic [2:0] correctCount, mistakeCount;
     logic [4:0] nextIndexCorrect;
+    logic [2:0] rights, nRight;
 
     always_ff @(posedge clk, negedge nRst) begin
         if(~nRst) begin
@@ -35,6 +36,7 @@ module Game_logic (
             indexCorrect <= nextIndexCorrect;
             placehold <= guess;
             letter <= guess;
+            rights <= nRight;
         end
     end
 
@@ -42,14 +44,17 @@ module Game_logic (
         correctCount = correct;
         mistakeCount = incorrect;
         nextIndexCorrect = indexCorrect;
+        
         red_busy = 0;
         red = 0;
         green = 0;
         mistake = 0;
         game_rdy = 0;
+        nRight = rights;
 
         case(state)
             SET: begin
+                nRight = 0;
                 correctCount = 0;
                 mistakeCount = 0;
                 //flip flop will set the word using a shift register
@@ -65,6 +70,7 @@ module Game_logic (
                 game_rdy = 0;
                 if(guess == setWord[39:32])begin
                     nextIndexCorrect[0] = 1;
+                    nRight = nRight + 1;
                 end 
                 // else begin
                 //     nextIndexCorrect[0] = 0;
@@ -75,6 +81,7 @@ module Game_logic (
                 game_rdy = 0;
                 if(guess == setWord[31:24])begin
                     nextIndexCorrect[1] = 1;
+                    nRight = nRight + 1;
                 end 
                 // else begin
                 //     nextIndexCorrect[1] = 0;
@@ -85,6 +92,7 @@ module Game_logic (
                 game_rdy = 0;
                 if(guess == setWord[23:16])begin
                     nextIndexCorrect[2] = 1;
+                    nRight = nRight + 1;
                 end 
                 // else begin
                 //     nextIndexCorrect[2] = 0;
@@ -95,6 +103,7 @@ module Game_logic (
                 game_rdy = 0;
                 if(guess == setWord[15:8])begin
                     nextIndexCorrect[3] = 1;
+                    nRight = nRight + 1;
                 end 
                 // else begin
                 //     nextIndexCorrect[3] = 0;
@@ -105,6 +114,7 @@ module Game_logic (
                 game_rdy = 0;
                 if(guess == setWord[7:0])begin
                     nextIndexCorrect[4] = 1;
+                    nRight = nRight + 1;
                 end 
                 // else begin
                 //     nextIndexCorrect[4] = 0;
@@ -112,7 +122,7 @@ module Game_logic (
                 nextState = STOP;
             end
             STOP: begin
-                if(nextIndexCorrect > 0) begin
+                if(rights > 0) begin
                     mistake = 0;
                     correctCount = correctCount + 1;
                 end 
@@ -134,6 +144,7 @@ module Game_logic (
                 nextState = IDLE;
             end
             IDLE: begin
+                nRight = 0;
                 if(placehold != guess) begin
                     nextState = L0;
                 end else begin
