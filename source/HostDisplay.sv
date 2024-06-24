@@ -22,7 +22,7 @@ always_ff @(posedge clk, negedge nRst) begin
     end else begin
         top <= nextTop;
         bottom <= nextBottom;
-        curr_guesses = next_curr_guesses;
+        curr_guesses <= next_curr_guesses;
     end
 end
 
