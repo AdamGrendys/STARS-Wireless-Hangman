@@ -172,8 +172,6 @@ initial begin
     tb_letter = 8'b01010000;
     #CLK_PERIOD;
 
-
-
-
+    $finish;
 end
 endmodule
