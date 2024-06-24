@@ -66,14 +66,12 @@ module Game_logic (
                 if(guess == setWord[39:32])begin
                     nextIndexCorrect[0] = 1;
                 end 
-                else begin
-                    nextIndexCorrect[0] = 0;
-                    nextState = STOP;
-                end
+                // else begin
+                //     nextIndexCorrect[0] = 0;
+                // end
                 nextState = L1;
             end
             L1: begin
-
                 game_rdy = 0;
                 if(guess == setWord[31:24])begin
                     nextIndexCorrect[1] = 1;
@@ -94,7 +92,6 @@ module Game_logic (
                 nextState = L3;
             end
             L3: begin
-
                 game_rdy = 0;
                 if(guess == setWord[15:8])begin
                     nextIndexCorrect[3] = 1;
