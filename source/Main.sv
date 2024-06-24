@@ -22,8 +22,12 @@ uart_tx uart_transmitter #(.Clkperbaud(1250))(.clk(clk), .nRst(nRst), .tx_ctrl(t
 // Host Side
 // host side keypad here
 
-uart_rx uart_receiver #(.Clkperbaud(1250))(.clk(clk), .nRst(nRst), .rx_serial(tx_serial), .rec_ready(rec_ready), .rx_ready(rx_ready), .rx_byte(rx_byte), error_led1(error1), .error_led2(error2));
+uart_rx uart_receiver #(.Clkperbaud(1250))(.clk(clk), .nRst(nRst), .rx_serial(tx_serial), .rec_ready(rec_ready), .rx_ready(rx_ready), .rx_byte(rx_byte), 
+.error_led1(error1), .error_led2(error2));
 
-buffer buffer (.clk(clk), .nRst(nRst), .rx_byte(rx_byte), .rx_ready(rx_ready), .game_rdy(game_rdy), .))
+buffer buffer (.clk(clk), .nRst(nRst), .rx_byte(rx_byte), .rx_ready(rx_ready), .game_rdy(game_rdy), .guess(guess));
+
+Game_Logic gamelogic (.clk(clk), .nRst(nRst), .guess(guess), .setWord(setWord), .toggle_state(toggle_state), .letter(letter), .red(red), .green(green), .blue(blue), 
+.mistake(mistake), .red_busy(red_busy), .game_rdy(game_rdy), .incorrect(incorrect), .correct(correct), .indexCorrect(indexCorrect));
 
 endmodule
