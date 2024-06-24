@@ -61,7 +61,6 @@ module Game_logic (
                     nextState = SET;
             end
             L0: begin
-                nextIndexCorrect = 0;
                 red_busy = 1;
                 game_rdy = 0;
                 if(guess == setWord[39:32])begin
@@ -130,7 +129,7 @@ module Game_logic (
                     green = 1;
                     red = 0;
                     //LCD DISPLAY WIN
-                end else if(nextIndexCorrect == 5'b0) begin
+                end else if(incorrect == 5) begin
                     green = 0;
                     red = 1;
                     //LCD DISPLAY FAIL

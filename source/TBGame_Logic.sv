@@ -11,7 +11,7 @@ typedef enum logic [2:0] {
     SET = 0, L0 = 1, 
     L1 = 2, L2 = 3, 
     L3 = 4, L4 = 5, 
-    STOP = 6
+    STOP = 6, IDLE = 7
 } state_t;
 
 //Testbench parameters
