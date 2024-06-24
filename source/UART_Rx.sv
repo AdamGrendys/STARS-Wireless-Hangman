@@ -64,17 +64,18 @@ always_comb begin
             pcount = 0;
 
             if(clk_count == (Clkperbaud - 1)/2) begin
-            if (rx_serial == 0 && rec_ready) begin
-                next_clk_count = 0;
-                next_state = DATAIN;
-            end
-            else
-                next_clk_count = clk_count +1;    
-                next_state = IDLE;
+                if (rx_serial == 0 && rec_ready) begin
+                    next_clk_count = 0;
+                    next_state = DATAIN;
+                end
+                else begin
+                    next_clk_count = clk_count +1;    
+                    next_state = IDLE;
+                end
             end
             else begin 
-            next_clk_count = clk_count +1 ;
-            next_state = START;
+                next_clk_count = clk_count +1 ;
+                next_state = START;
             end
         end
         DATAIN: begin
