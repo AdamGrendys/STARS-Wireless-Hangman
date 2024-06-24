@@ -18,7 +18,7 @@ module Game_logic (
     output logic [2:0] incorrect, correct,
     output logic [4:0] indexCorrect
 );
-    logic [2:0] tempcorrect, tempmistake;
+    logic [2:0] tempcorrect, tempmistake, nextTempC, nextTempM;
     logic [7:0] placehold;
     state_t nextState, state;
     logic [2:0] correctCount, mistakeCount;
@@ -32,18 +32,20 @@ module Game_logic (
             state <= nextState;
             incorrect <= mistakeCount;
             correct <= correctCount;
+            nextTempC <= tempcorrect;
+            nextTempM <= tempmistake;
         end
     end
 
     always_comb begin
+        tempcorrect = nextTempC;
+        tempmistake = nextTempM;
         correctCount = correct;
         mistakeCount = incorrect;
         red_busy = 0;
         red = 0;
         green = 0;
         mistake = 0;
-        tempcorrect = 0;
-        tempmistake = 0;
         indexCorrect = 0;
         placehold = 0;
 
@@ -53,6 +55,8 @@ module Game_logic (
                 placehold = 0;
                 correctCount = 0;
                 mistakeCount = 0;
+                tempcorrect = 0;
+                tempmistake = 0;
                 //flip flop will set the word using a shift register
                 game_rdy = 1;
                 indexCorrect = 0;
@@ -66,8 +70,6 @@ module Game_logic (
                 placehold = guess;
                 red_busy = 1;
                 game_rdy = 0;
-                correctCount = correctCount;
-                mistakeCount = mistakeCount;
                 if(guess == setWord[39:32])begin
                     tempcorrect = tempcorrect + 1;
                     indexCorrect[0] = 1;
@@ -81,8 +83,6 @@ module Game_logic (
                 letter = 0;
                 placehold = guess;
                 game_rdy = 0;
-                correctCount = correctCount;
-                mistakeCount = mistakeCount;
                 if(guess == setWord[31:24])begin
                     tempcorrect = tempcorrect + 1;
                     indexCorrect[1] = 1;
@@ -96,8 +96,6 @@ module Game_logic (
                 letter = 0;
                 placehold = guess;
                 game_rdy = 0;
-                correctCount = correctCount;
-                mistakeCount = mistakeCount;
                 if(guess == setWord[23:16])begin
                     tempcorrect = tempcorrect + 1;
                     indexCorrect[2] = 1;
@@ -111,8 +109,6 @@ module Game_logic (
                 letter = 0;
                 placehold = guess;
                 game_rdy = 0;
-                correctCount = correctCount;
-                mistakeCount = mistakeCount;
                 if(guess == setWord[15:8])begin
                     tempcorrect = tempcorrect + 1;
                     indexCorrect[3] = 1;
@@ -126,8 +122,6 @@ module Game_logic (
                 letter = 0;
                 placehold = guess;
                 game_rdy = 0;
-                correctCount = correctCount;
-                mistakeCount = mistakeCount;
                 if(guess == setWord[7:0])begin
                     tempcorrect = tempcorrect + 1;
                     indexCorrect[4] = 1;
@@ -141,11 +135,11 @@ module Game_logic (
                 letter = 0;
                 placehold = placehold;
                 letter = guess;
-                if(tempcorrect > 0) begin
+                if(nextTempC > 0) begin
                     tempmistake = 0;
                     mistake = 0;
                     correctCount = correctCount + 1;
-                end else if(tempmistake > 0) begin
+                end else begin
                     tempcorrect = 0;
                     mistake = 1;
                     mistakeCount = mistakeCount + 1;
@@ -175,6 +169,8 @@ module Game_logic (
                 nextState = SET;
                 correctCount = 0;
                 mistakeCount = 0;
+                tempcorrect = 0;
+                tempmistake = 0;
             end
         endcase
     end
