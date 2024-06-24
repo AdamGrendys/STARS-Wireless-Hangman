@@ -61,6 +61,7 @@ module Game_logic (
                     nextState = SET;
             end
             L0: begin
+                nextIndexCorrect = 0;
                 letter = 0;
                 placehold = guess;
                 red_busy = 1;
@@ -68,9 +69,10 @@ module Game_logic (
                 if(guess == setWord[39:32])begin
                     nextIndexCorrect[0] = 1;
                 end 
-                // else begin
-                //     nextIndexCorrect[0] = 0;
-                // end
+                else begin
+                    nextIndexCorrect[0] = 0;
+                    nextState = STOP;
+                end
                 nextState = L1;
             end
             L1: begin
@@ -122,8 +124,7 @@ module Game_logic (
                 nextState = STOP;
             end
             STOP: begin
-                letter = 0;
-                placehold = placehold;
+                placehold = guess;
                 letter = guess;
                 if(nextIndexCorrect > 0) begin
                     mistake = 0;
@@ -139,12 +140,10 @@ module Game_logic (
                     green = 1;
                     red = 0;
                     //LCD DISPLAY WIN
-                    nextIndexCorrect = 0;
                 end else if(nextIndexCorrect == 5'b0) begin
                     green = 0;
                     red = 1;
                     //LCD DISPLAY FAIL
-                    nextIndexCorrect = 0;
                 end
                 if(placehold != guess) begin
                     nextState = L0;
