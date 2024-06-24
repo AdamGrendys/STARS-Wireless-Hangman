@@ -52,16 +52,33 @@ initial begin
     #(CLK_PERIOD);
 
     // ***********************************
-    // Test Case 1: Idle state of the transmitter 
+    // Test Case 1: Idle state of the transmitter + succesful start state transition 
     // ***********************************
     reset_dut();
 
     tb_nRst = 1'b1;
     tb_rec_rdy = 0;
     tb_rx_serial = 0;
-    #(0.1);
 
-    #(CLK_PERIOD * 10);
+    #(CLK_PERIOD * 1250);
+
+    tb_rec_rdy = 1;
+    tb_rx_serial = 0;
+
+    #(CLK_PERIOD * 600);
+
+    tb_rx_serial = 1;
+
+    #(CLK_PERIOD * 1250);
+
+    tb_rx_serial = 0;
+
+    #(CLK_PERIOD * 1500); 
+
+
+
+
+
 
     // ***********************************
     // Test Case 2: succesful start state transition 
