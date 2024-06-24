@@ -4,7 +4,7 @@ Descriuption: x
 
 module buffer (
     input logic [7:0] Rx_byte,
-    input logic ready, game_rdy, clk, nRst,
+    input logic rx_ready, game_rdy, clk, nRst,
     output logic [7:0] guess
 );
 
@@ -17,7 +17,7 @@ module buffer (
             temp_guess <= next_byte;
 
     always_comb begin
-        if (ready)
+        if (rx_ready)
             next_byte = Rx_byte;
         else 
             next_byte = temp_guess;
