@@ -67,9 +67,10 @@ module Game_logic (
                 game_rdy = 0;
                 if(guess == setWord[39:32])begin
                     nextIndexCorrect[0] = 1;
-                end else begin
-                    nextIndexCorrect[0] = 0;
-                end
+                end 
+                // else begin
+                //     nextIndexCorrect[0] = 0;
+                // end
                 nextState = L1;
             end
             L1: begin
@@ -78,9 +79,10 @@ module Game_logic (
                 game_rdy = 0;
                 if(guess == setWord[31:24])begin
                     nextIndexCorrect[1] = 1;
-                end else begin
-                    nextIndexCorrect[1] = 0;
-                end
+                end 
+                // else begin
+                //     nextIndexCorrect[1] = 0;
+                // end
                 nextState = L2;
             end
             L2: begin
@@ -89,9 +91,10 @@ module Game_logic (
                 game_rdy = 0;
                 if(guess == setWord[23:16])begin
                     nextIndexCorrect[2] = 1;
-                end else begin
-                    nextIndexCorrect[2] = 0;
-                end
+                end 
+                // else begin
+                //     nextIndexCorrect[2] = 0;
+                // end
                 nextState = L3;
             end
             L3: begin
@@ -100,9 +103,10 @@ module Game_logic (
                 game_rdy = 0;
                 if(guess == setWord[15:8])begin
                     nextIndexCorrect[3] = 1;
-                end else begin
-                    nextIndexCorrect[3] = 0;
-                end
+                end 
+                // else begin
+                //     nextIndexCorrect[3] = 0;
+                // end
                 nextState = L4;
             end
             L4: begin
@@ -111,9 +115,10 @@ module Game_logic (
                 game_rdy = 0;
                 if(guess == setWord[7:0])begin
                     nextIndexCorrect[4] = 1;
-                end else begin
-                    nextIndexCorrect[4] = 0;
-                end
+                end 
+                // else begin
+                //     nextIndexCorrect[4] = 0;
+                // end
                 nextState = STOP;
             end
             STOP: begin
@@ -123,7 +128,8 @@ module Game_logic (
                 if(nextIndexCorrect > 0) begin
                     mistake = 0;
                     correctCount = correctCount + 1;
-                end else begin
+                end 
+                else begin
                     mistake = 1;
                     mistakeCount = mistakeCount + 1;
                 end
