@@ -28,6 +28,7 @@ logic tb_toggle_state;
 logic [7:0] tb_letter;
 logic tb_red, tb_green, tb_mistake, tb_red_busy, tb_game_rdy;
 logic [2:0] tb_numMistake, tb_correct;
+logic [4:0] tb_indexCorrect;
 
 //Reset DUT Task
 task reset_dut;
@@ -109,7 +110,7 @@ Game_logic DUT(.clk(tb_clk),
             .red(tb_red), .green(tb_green),
             .mistake(tb_mistake), .red_busy(tb_red_busy),
             .game_rdy(tb_game_rdy), .numMistake(tb_numMistake),
-            .correct(tb_correct));
+            .correct(tb_correct), .indexCorrect(tb_indexCorrect));
 
 //Main test bench process
 initial begin
