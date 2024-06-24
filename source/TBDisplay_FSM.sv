@@ -20,6 +20,18 @@ always begin
     #(CLK_PERIOD / 2.0); 
 end
 
+//task that presses the button once
+task single_button_press;
+begin
+    @(negedge tb_clk);
+    tb_ready = 1'b1;
+    @(negedge tb_clk);
+    tb_ready = 1'b0;
+    @(posedge tb_clk);
+end
+endtask
+
+
 // Portmap
 display_fsm tb_disp_fsm(.clk(tb_clk), .nRst(tb_nRst), .ready(tb_ready), .msg(tb_msg), .row1(tb_row1), .row2(tb_row2));
 
@@ -46,19 +58,24 @@ initial begin
     @(negedge tb_clk);
     tb_nRst = 1'b1;
     @(posedge tb_clk);
-    #(CLK_PERIOD * 5);
+    #(CLK_PERIOD * 2);
 
     // ***********************************
     // Test Case 1: Ready Low
     // ***********************************
     tb_ready = 0;
-    #(CLK_PERIOD * 5);
+    #(CLK_PERIOD * 2);
+    tb_msg = 8'hA;
+    #CLK_PERIOD;
 
     // ***********************************
     // Test Case 2: Ready High
     // ***********************************
     tb_ready = 1;
-    #(CLK_PERIOD * 5);
+    #(CLK_PERIOD * 2);
+    tb_ready = 0;
+    #(CLK_PERIOD * 2);
+    tb_msg = 8'hF;
 
     // ***********************************
     // Test Case 3: Ready flip
@@ -66,10 +83,13 @@ initial begin
     tb_ready = 0;
     tb_ready = 1;
     tb_ready = 0;
+    tb_msg = 8'h6;
     #(CLK_PERIOD *1);
     tb_ready = 1;
     #(CLK_PERIOD * 0.5);
     tb_ready = 0;
-    #(CLK_PERIOD * 5);
+    #(CLK_PERIOD * 2);
+
+    $finish;
 end
 endmodule
