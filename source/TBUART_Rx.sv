@@ -58,7 +58,7 @@ initial begin
 
     tb_nRst = 1'b1;
     tb_rec_rdy = 0;
-    tb_rx_byte = 0;
+    tb_rx_serial = 0;
     #(0.1);
 
     #(CLK_PERIOD * 10);
