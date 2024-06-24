@@ -114,22 +114,9 @@ module keypad_controller (
             scan_col_next = scan_col;
         endcase
       
-      /*
-        for (int i = 0; i <= 3; i++) begin
-          scan_col_next = 4'd0;
-
-          if (~nRst) begin
-            scan_col_next[i] = 1;
-
-            if (i == 4) begin
-              i = -1;
-            end
-          end
-        end
-      */
     end
 
     assign strobe = |((~Q1_delay) & (Q1));
-    assign cur_key = {Q1_delay, scan_col};
+    assign cur_key = (read_row && scan_col) ? ({read_row, scan_col}) : (8'd0);
 
 endmodule
