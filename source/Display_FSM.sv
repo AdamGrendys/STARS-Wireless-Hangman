@@ -12,7 +12,7 @@ logic [79:0] guesses, next_guess;
 
 always_ff @(posedge clk, negedge nRst) begin
     if (~nRst) begin
-        guesses <= 0;
+        guesses <= {8'h5F, 8'h5F, 8'h5F, 8'h5F, 8'h5F, 8'h5F, 8'h5F, 8'h5F, 8'h5F, 8'h5F}; // _ x10 in ASCII
         row1 <= 0;
         row2 <= 0;
     end else begin
@@ -22,10 +22,9 @@ always_ff @(posedge clk, negedge nRst) begin
     end
 end
 
-
 always_comb begin
     if (ready)
-        next_guess = {msg, guesses[71:0]};
+        next_guess = {msg, guesses[79:8]};
     else    
         next_guess = guesses;
 end
