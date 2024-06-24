@@ -26,7 +26,7 @@ always begin
 end
 
 // Portmap
-HostDisplay hostdisplaytb (.clk(tb_clk), .nRst(tb_nRst), .indexCorrect(tb_indexCorrect), .letter(tb_letter), .numMistake(tb_numMistake), .correct(tb_correct), .mistake(tb_mistake), .top(tb_top), .bottom(tb_bottom), .word(tb_word));
+HostDisplay hostdisplaytb (.clk(tb_clk), .nRst(tb_nRst), .indexCorrect(tb_indexCorrect), .letter(tb_letter), .numMistake(tb_numMistake), .correct(tb_correct), .mistake(tb_mistake), .top1(tb_top), .bottom1(tb_bottom), .word(tb_word));
 
 initial begin 
     // Signal dump
