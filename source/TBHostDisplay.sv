@@ -35,7 +35,7 @@ initial begin
 
     // Initialize test bench signals
     tb_indexCorrect = 0;
-    tb_letter = 8'hA;
+    tb_letter = 8'b01000001;
     tb_numMistake = 0;
     tb_correct = 0;
     tb_word = {40'b0100000101010000010100000100110001000101}; //APPLE
@@ -63,7 +63,7 @@ initial begin
     #CLK_PERIOD;
     tb_mistake = 1;
     tb_numMistake = 1;
-    tb_letter = 8'hB;
+    tb_letter = 8'b01000010 ;
     #CLK_PERIOD;
 
     // ***********************************
@@ -83,7 +83,7 @@ initial begin
     tb_correct = 1;
     tb_indexCorrect = 5'b10000;
     tb_numMistake = 0;
-    tb_letter = 8'hA;
+    tb_letter = 8'b01000001;
     #CLK_PERIOD;
 
     // ***********************************
@@ -102,13 +102,13 @@ initial begin
     tb_mistake = 0;
     tb_correct = 1;
     tb_indexCorrect = 5'b00001;
-    tb_letter = 8'hE;
+    tb_letter = 8'b01000101;
     #CLK_PERIOD;
     tb_numMistake = 0;
     #CLK_PERIOD;
     tb_mistake = 1;
     tb_numMistake = 1;
-    tb_letter = 8'hC;
+    tb_letter = 8'b01000011;
     #CLK_PERIOD;
 
 
