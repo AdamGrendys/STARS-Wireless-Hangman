@@ -1,115 +1,99 @@
-/* UART Reciever File
-Descriuption: x
-*/
+module TBUART_Rx ();
+
 typedef enum logic [2:0] {
 IDLE = 3'b001, START = 3'b010, DATAIN = 3'b011, STOP = 3'b100, CLEAN = 3'b101, PARITY = 3'b110
 } curr_state;
 
-module uart_rx
-#(
-    parameter Clkperbaud = 1250
-)
+// Testbench ports
+localparam CLK_PERIOD = 10; // 100 Hz clk
+logic tb_clk, tb_nRst, tb_rx_ready, tb_rec_rdy, tb_rx_serial;
+logic [7:0] tb_rx_byte;
+task reset_dut;
+    #1;
+    @(negedge tb_clk);
+    tb_nRst = 1'b0; 
+    @(negedge tb_clk);
+    @(negedge tb_clk);
+    tb_nRst = 1'b1;
+    @(posedge tb_clk);
+    #1;
+endtask
 
-(
-    input logic clk, nRst, rx_serial, rec_ready,
-    output logic rx_ready,
-    output logic [7:0] rx_byte
-);
-
-logic [7:0] temp_byte;
-logic [2:0] bit_index;
-curr_state state, next_state;
-logic [10:0] clk_count, next_clk_count;
-
-always_ff @(posedge clk, negedge nRst) begin
-    if (~nRst) begin
-        rx_byte <= 0;
-        state <= IDLE;
-        clk_count <= 0;
-    end else begin
-        state <= next_state;
-        rx_byte <= temp_byte;
-        clk_count <= next_clk_count;
-    end
+// Clock generation block
+always begin
+    tb_clk = 1'b0; 
+    #(CLK_PERIOD / 2.0);
+    tb_clk = 1'b1; 
+    #(CLK_PERIOD / 2.0); 
 end
 
-always_comb begin
-    case (state)
-        IDLE: begin
-            rx_ready = 0;
-            bit_index = 0;
-            temp_byte = 0;
-            bit_index = 0;
-            next_clk_count = 0;
+uart_rx #(.Clkperbaud(1250)) receive(.clk(tb_clk), .nRst(tb_nRst), .rx_ready(tb_rx_ready), .rx_serial(tb_rx_serial), .rx_byte(tb_rx_byte), .rec_ready(tb_rec_rdy));
 
-            if (rx_serial == 0 && rec_ready)
-                next_state = START;
-            else
-                next_state = IDLE;
-        end
-        START: begin
-            rx_ready = 0;
-            temp_byte = 0;
-            bit_index = 0;
+initial begin
+    $dumpfile("dump.vcd");
+    $dumpvars;
 
-            if(clk_count == (Clkperbaud - 1)/2) begin
-            if (rx_serial == 0 && rec_ready) begin
-                next_clk_count = 0;
-                next_state = DATAIN;
-            end
-            else
-                next_clk_count = clk_count;    
-                next_state = IDLE;
-            end
-            else begin 
-            next_clk_count = clk_count +1 ;
-            next_state = START;
-            end
-        end
-        DATAIN: begin
-            // wait for baud cycle 
-            temp_byte[bit_index] = rx_serial;
-            rx_ready = 0;
-            next_clk_count = 0;
+    tb_nRst = 1'b1;
+    tb_rec_rdy = 0; 
+    tb_rx_serial = 1;
 
-            if (bit_index < 7) begin
-                bit_index = bit_index + 1;
-                next_state = DATAIN;
-            end else begin
-                bit_index = 0;
-                next_state = PARITY;
-            end
-        end
-        PARITY: begin 
-            /// SANDEEEPPPPP HELPPPPPPPPPP
-            next_clk_count = 0;
-            rx_ready = 0;
-            temp_byte = 0;
-            bit_index = 0;
-            next_state = STOP;
-        end
-        STOP: begin
-            // wait for baud cycle
-            next_clk_count = 0;
-            rx_ready = 1;
-            temp_byte = 0;
-            bit_index = 0;
-            next_state = CLEAN;
-        end
-        CLEAN: begin 
-            next_clk_count = 0;
-            rx_ready = 0;
-            temp_byte = 0;
-            bit_index = 0;
-            next_state = IDLE;
-        end
-        default: begin
-            next_clk_count = 0;
-            rx_ready = 0;
-            temp_byte = 0;
-            bit_index = 0;
-            next_state = IDLE;
-        end
-    endcase
+     #(0.1);
+    // ***********************************
+    // Test Case 0: Power-on-Reset 
+    // ***********************************
+    // Reset DUT Task
+    #(CLK_PERIOD);
+    @(negedge tb_clk);
+    tb_nRst = 1'b0; 
+    @(negedge tb_clk);
+    @(negedge tb_clk);
+    tb_nRst = 1'b1;
+    @(posedge tb_clk);
+    #(CLK_PERIOD);
+
+    // ***********************************
+    // Test Case 1: Idle state of the transmitter 
+    // ***********************************
+    reset_dut();
+
+    tb_nRst = 1'b1;
+    tb_rec_rdy = 0;
+    tb_rx_byte = 0;
+    #(0.1);
+
+    #(CLK_PERIOD * 10);
+
+    // ***********************************
+    // Test Case 2: succesful start state transition 
+    // ***********************************
+
+    // reset_dut();
+
+    // tb_nRst = 1'b1;
+    // tb_tx_ctrl = 1'b0;
+    // tb_byte = 8'b10101011;
+    // #(CLK_PERIOD * 1);
+    // tb_tx_ctrl = 1'b1;
+    // #(CLK_PERIOD *2);
+    
+    // tb_tx_ctrl = 1'b0;
+    // #(CLK_PERIOD *1);
+
+    // ***********************************
+    // Test case 3: DATAIN STATE 
+    // ***********************************
+
+    reset_dut();
+
+
+    
+
+
+
+
+$finish;
+
 end
+
+
 endmodule
