@@ -41,16 +41,17 @@ module Game_logic (
     end
 
     always_comb begin
-        correctCount = correct;
-        mistakeCount = incorrect;
-        nextIndexCorrect = indexCorrect;
+        correctCount = correct; //for latch
+        mistakeCount = incorrect; //for latch
+        nextIndexCorrect = indexCorrect; //for latch
+        nRight = rights; //for latch
         
         red_busy = 0;
         red = 0;
         green = 0;
         mistake = 0;
         game_rdy = 0;
-        nRight = rights;
+        
 
         case(state)
             SET: begin
@@ -124,7 +125,7 @@ module Game_logic (
             STOP: begin
                 if(rights > 0) begin
                     mistake = 0;
-                    correctCount = correctCount + 1;
+                    correctCount = correctCount + rights;
                 end 
                 else begin
                     mistake = 1;
