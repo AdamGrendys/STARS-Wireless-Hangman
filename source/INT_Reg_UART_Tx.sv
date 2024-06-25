@@ -55,7 +55,10 @@ initial begin
     #(CLK_PERIOD * 6500);
 
     tb_ready = 1;
-    #(CLK_PERIOD * 15000);
+    #(CLK_PERIOD * 7500);
+    tb_msg = 8'b01101101;
+    #(CLK_PERIOD * 10000);
+
     
     $finish;
 
