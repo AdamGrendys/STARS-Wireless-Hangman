@@ -52,10 +52,10 @@ initial begin
 
     tb_ready = 0;
     tb_msg = 8'b10101011;
-    #(CLK_PERIOD * 1300);
+    #(CLK_PERIOD * 6500);
 
     tb_ready = 1;
-    #(CLK_PERIOD * 10000);
+    #(CLK_PERIOD * 15000);
     
     $finish;
 

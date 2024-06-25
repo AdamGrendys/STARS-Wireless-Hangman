@@ -55,6 +55,7 @@ always_comb begin
         end
         default: begin
             next_state = IDLE;
+            tx_byte = 8'b0;
         end
     endcase
 end
