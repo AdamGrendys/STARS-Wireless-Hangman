@@ -3,7 +3,6 @@ Descriuption: x
 */
 
 
-
 module Message_Reg (
     input logic clk, nRst, ready, transmit_ready,
     input logic [7:0] data,
