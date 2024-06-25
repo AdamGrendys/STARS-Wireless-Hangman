@@ -46,7 +46,7 @@ initial begin
     tb_nRst = 1;
     tb_rx_serial = 0;
     tb_rec_ready = 0;
-    temphold = 8'hA;
+    temphold = 8'b01000001;
 
     // Wait some time before starting first test case
     #(0.1);
