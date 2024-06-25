@@ -1,171 +1,103 @@
-###########################################################################################
-# STARS 2024 General Makefile
-# Synopsys Tools - VCS and DVE
-# iCE40 FPGA Targets
-###########################################################################################
-
-export PATH            := /home/shay/a/ece270/bin:$(PATH)
+export PATH := /home/shay/a/ece270/bin:$(PATH)
 export LD_LIBRARY_PATH := /home/shay/a/ece270/lib:$(LD_LIBRARY_PATH)
 
-# Specify the name of the top level file
-# (do not include the source folder in the name)
-TOP_FILE		:= Buffer.sv
+YOSYS=yosys
+NEXTPNR=nextpnr-ice40
+SHELL=bash
 
-# Specify the name of component or sub-module files
-# (do not include the source folder in the name)
-COMPONENT_FILES	:= 
+PROJ    = template
+PINMAP  = pinmap.pcf
+CELLS	= support/cells_map_timing.v support/cells_sim_timing.v
+SRC     = top.sv
+TB	= tb.sv
+ICE     = ice40hx8k.sv
+UART    = support/uart.v support/uart_tx.v support/uart_rx.v
+FILES   = $(ICE) $(SRC) $(UART)
+BUILD   = ./build
+TRACE   = sim.vcd
 
-# Specify the top level testbench to be simulated
-# (do not include the source folder in the name)
-TB 				:= TBBuffer.sv
+DEVICE  = 8k
+TIMEDEV = hx8k
+FOOTPRINT = ct256
 
-# Directories where source code is located
-SRC 			:= source
+all: cram
 
-# Simulation target
-SIM_SOURCE		:= sim_source
+#########################
+# Compile, synthesis, place and route, and bitstream generation for ice40 FPGA
+$(BUILD)/$(PROJ).json : $(ICE) $(SRC) $(PINMAP) Makefile
+	# lint with Verilator
+	verilator --lint-only --top-module top $(SRC)
+	# if build folder doesn't exist, create it
+	mkdir -p $(BUILD)
+	# synthesize using Yosys
+	$(YOSYS) -p "read_verilog -sv -noblackbox $(FILES); synth_ice40 -top ice40hx8k -json $(BUILD)/$(PROJ).json"
 
-# Location of executables and files created during source compilation
-BUILD            := sim_build
+$(BUILD)/$(PROJ).asc : $(BUILD)/$(PROJ).json
+	# Place and route using nextpnr
+	$(NEXTPNR) --hx8k --package ct256 --pcf $(PINMAP) --asc $(BUILD)/$(PROJ).asc --json $(BUILD)/$(PROJ).json 2> >(sed -e 's/^.* 0 errors$$//' -e '/^Info:/d' -e '/^[ ]*$$/d' 1>&2)
 
-# Specifies the VCD file
-# Does not need to be configured unless your TB dumps to another file name.
-VCD 			:= dump
+$(BUILD)/$(PROJ).bin : $(BUILD)/$(PROJ).asc
+	# Convert to bitstream using IcePack
+	icepack $(BUILD)/$(PROJ).asc $(BUILD)/$(PROJ).bin
 
-# FPGA project vars and filenames
-PROJ	         := ice40
-PINMAP 	         := $(PROJ)/pinmap.pcf
-ICE   	         := $(PROJ)/ice40hx8k.sv
-UART	         := $(addprefix $(PROJ)/uart/, uart.v uart_tx.v uart_rx.v)
-FILES            := $(ICE) $(SRC)/top.sv $(addprefix $(SRC)/, $(TOP_FILE) $(COMPONENT_FILES)) $(UART)
-FPGA_BUILD       := ./$(PROJ)/build
+#########################
+# Run a testbench
+sim: $(SRC)
+	# if build folder doesn't exist, create it
+	mkdir -p $(BUILD)
+	# synthesize with yosys to cell-level Verilog
+	$(YOSYS) -p "read_verilog -sv -noblackbox $(SRC); synth_ice40; write_verilog $(BUILD)/$(PROJ).v"
+	# run simulation
+	iverilog -g2012 $(CELLS) $(BUILD)/$(PROJ).v $(TB) -o $(BUILD)/$(PROJ)
+	vvp $(BUILD)/$(PROJ)
+	gtkwave $(TRACE)
 
-# FPGA specific configuration
-FPGA_DC		     := yosys
-DEVICE           := 8k
-TIMEDEV          := hx8k
-FOOTPRINT        := ct256
+verify_%: $(SRC) tb_%.sv
+	# if build folder doesn't exist, create it
+	mkdir -p $(BUILD)
+	# synthesize with yosys to cell-level Verilog
+	$(YOSYS) -p "read_verilog -sv -noblackbox $(SRC); synth_ice40 -top $*; write_verilog $(BUILD)/$(PROJ).v"
+	# run simulation
+	iverilog -g2012 $(CELLS) $(BUILD)/$(PROJ).v tb_$*.sv -o $(BUILD)/$(PROJ)
+	vvp $(BUILD)/$(PROJ)
+	gtkwave $(TRACE)
 
-# Binary names
-NEXTPNR          := nextpnr-ice40
-SHELL            := bash
+# source_sim: $(SRC)
+# 	# if build folder doesn't exist, create it
+# 	mkdir -p $(BUILD)
+# 	# run simulation
+# 	iverilog -g2012 $(SRC) $(TB) -o $(BUILD)/$(PROJ)
+# 	vvp $(BUILD)/$(PROJ)
+# 	gtkwave $(TRACE)
 
-##############################################################################
-# Administrative Targets
-##############################################################################
+# mapped_sim: $(SRC)
+# 	# if build folder doesn't exist, create it
+# 	mkdir -p $(BUILD)
+# 	# synthesize with yosys to cell-level Verilog
+# 	$(YOSYS) -p "read_verilog -sv -noblackbox $(SRC); synth_ice40; write_verilog $(BUILD)/$(PROJ).v"
+# 	# run simulation
+# 	iverilog -g2012 $(CELLS) $(BUILD)/$(PROJ).v $(TB) -o $(BUILD)/$(PROJ)
+# 	vvp $(BUILD)/$(PROJ)
+# 	gtkwave $(TRACE)
 
-# Make the default target (the one called when no specific one is invoked) to
-# output the proper usage of this makefile
-help:
-	@echo "----------------------------------------------------------------"
-	@echo "|                       Makefile Targets                       |"
-	@echo "----------------------------------------------------------------"
-	@echo "Administrative targets:"
-	@echo "  all           - compiles the source version of a full"
-	@echo "                  design including its top level test bench"
-	@echo "  help          - Makefile targets explanation"
-	@echo "  setup         - Setups the directory for work"
-	@echo "  clean         - removes the temporary files"
-	@echo
-	@echo "Compilation targets:"
-	@echo "  source       - compiles the source version of a full"
-	@echo "                 design including its top level test bench"
-	@echo
-	@echo "Simulation targets:"
-	@echo "  sim_source   - compiles the source version of a full design"
-	@echo "                 and simulates its test bench in DVE, where"
-	@echo "                 the waveforms can be opened for debugging"
-	@echo
-	@echo "FPGA targets:"
-	@echo "  ice          - synthesizes the source files along with the"
-	@echo "                 ice40 files to make and netlist and then"
-	@echo "                 place and route to program ice40 FPGA as per"
-	@echo "                 the given design"
-	@echo "----------------------------------------------------------------"
+#########################
+# ice40 Specific Targets
+check: $(CHK)
+	iceprog -S $(CHK)
+	
+demo:  $(DEM)
+	iceprog -S $(DEM)
 
-# Compiles design and runs simulation
-all: $(SIM_SOURCE)
+flash: $(BUILD)/$(PROJ).bin
+	iceprog $(BUILD)/$(PROJ).bin
 
-# Removes all non essential files that were made during the building process
+cram: $(BUILD)/$(PROJ).bin
+	iceprog -S $(BUILD)/$(PROJ).bin
+
+time: $(BUILD)/$(PROJ).asc
+	icetime -p $(PINMAP) -P $(FOOTPRINT) -d $(TIMEDEV) $<
+
+#########################
+# Clean Up
 clean:
-	@echo "Removing temporary files, build files and log files"
-	@rm -rf $(BUILD)/*
-	@rm -f *.vcd
-	@rm -f *.vpd
-	@rm -f *.key
-	@rm -f *.log
-	@rm -f .restartSimSession.tcl.old
-	@rm -rf DVEfiles/
-	@rm -rf $(PROJ)/build
-	@echo -e "Done\n\n"
-
-# A target that sets up the working directory structure
-# (A mapped directory can be added later on)
-setup:
-	@mkdir -p ./docs
-	@mkdir -p ./$(BUILD)
-	@mkdir -p ./$(SRC)
-
-##############################################################################
-# Compilation Targets
-##############################################################################
-
-# Rule to compile design without running simulation
-$(SRC): $(addprefix $(SRC)/, $(TB) $(TOP_FILE) $(COMPONENT_FILES))
-	@echo "----------------------------------------------------------------"
-	@echo "Creating executable for source compilation ....."
-	@echo -e "----------------------------------------------------------------\n\n"
-	@mkdir -p ./$(BUILD)
-	@vcs -sverilog -lca -debug_access+all -Mdir=$(BUILD)/csrc -o $(BUILD)/simv $^
-
-##############################################################################
-# Simulation Targets
-##############################################################################
-
-# Rule to compile design and open simulation in DVE
-$(SIM_SOURCE): $(SRC)
-	@echo "----------------------------------------------------------------"
-	@echo "Simulating source ....."
-	@echo -e "----------------------------------------------------------------\n\n"
-	@./$(BUILD)/simv -gui -suppress=ASLR_DETECTED_INFO &
-
-##############################################################################
-# FPGA Targets
-##############################################################################
-
-# this target checks your code and synthesizes it into a netlist
-$(FPGA_BUILD)/$(PROJ).json : $(ICE) $(addprefix $(SRC)/, $(COMPONENT_FILES) $(TOP_FILE)) $(PINMAP) $(SRC)/top.sv
-	@mkdir -p $(FPGA_BUILD)
-	@echo "----------------------------------------------------------------"
-	@echo "Synthesizing to ice40 ....."
-	@echo -e "----------------------------------------------------------------\n\n"
-	@$(FPGA_DC) -p "read_verilog -sv -noblackbox $(FILES); synth_ice40 -top ice40hx8k -json $(FPGA_BUILD)/$(PROJ).json" > $(PROJ).log
-	@echo -e "\n\n"
-	@echo -e "Synthesis Complete \n\n"
-	
-# Place and route using nextpnr
-$(FPGA_BUILD)/$(PROJ).asc : $(FPGA_BUILD)/$(PROJ).json
-	@echo "----------------------------------------------------------------"
-	@echo "Mapping to ice40 ....."
-	@echo -e "----------------------------------------------------------------\n\n"
-	@$(NEXTPNR) --hx8k --package ct256 --pcf $(PINMAP) --asc $(FPGA_BUILD)/$(PROJ).asc --json $(FPGA_BUILD)/$(PROJ).json 2> >(sed -e 's/^.* 0 errors$$//' -e '/^Info:/d' -e '/^[ ]*$$/d' 1>&2) >> $(PROJ).log
-	@echo -e "\n\n"
-	@echo -e "Place and Route Complete \n\n" 
-
-# Convert to bitstream using IcePack
-$(FPGA_BUILD)/$(PROJ).bin : $(FPGA_BUILD)/$(PROJ).asc
-	@icepack $(FPGA_BUILD)/$(PROJ).asc $(FPGA_BUILD)/$(PROJ).bin >> $(PROJ).log
-	@echo -e "\n\n"
-	@echo -e "Converted to Bitstream for FPGA \n\n" 
-	
-# synthesize and flash the FPGA
-ice : $(FPGA_BUILD)/$(PROJ).bin
-	@echo "----------------------------------------------------------------"
-	@echo "Flashing onto FPGA ....."
-	@echo -e "----------------------------------------------------------------\n\n"
-	@iceprog -S $(FPGA_BUILD)/$(PROJ).bin
-
-# Designate targets that do not correspond directly to files
-.PHONY: all help clean
-.PHONY: $(SRC)
-.PHONY: $(SIM_SOURCE)
+	rm -rf build/ *.fst *.vcd verilog.log abc.history

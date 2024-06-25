@@ -17,26 +17,55 @@ module top (
 );
 
   // Your code goes here...
-    logic [7:0] temp;
+    logic [7:0] temp, char;
+    logic [3:0] discard;
+    logic strb;
 
     keypad_controller kc (.clk (hz100),
-                         .nRst (~reset),
+                         .nRst (~pb[19]),
                          .read_row (pb[7:4]),
                          .cur_key (temp),
-                         .strobe (red),
-                         .scan_col (left[7:4]));
+                         .strobe (green),
+                         .scan_col (left[3:0]),
+                         .sel_row (right[7:4]),
+                         .sel_col (right[3:0]));
 
-    ssdec ssdec0 (.in (temp[3:0]),
+    //assign right[7:4] = temp[7:4];
+
+    ssdec ssdec1 (.in (right[7:4]),
+                  .enable (1'b1),
+                  .out (ss1[6:0]));
+
+    // Column
+    ssdec ssdec0 (.in (right[3:0]),
                   .enable (1'b1),
                   .out (ss0[6:0]));
 
-    ssdec ssdec1 (.in (temp[7:4]),
-                  .enable (1'b1),
-                  .out (ss1[6:0]));
+  /*
+    keypad_fsm key_fsm (.clk (hz100),
+                        .nRst (~reset),
+                        .strobe (strb),
+                        .cur_key (temp),
+                        .ready (red), // Outputs
+                        .data (char));
+
+    assign green = strb;
+    assign right[7:0] = char;
+    */
+
+    /*
+    ssdec_original ssdec3 (.in (temp[3:0]),
+                           .enable (1'b1),
+                           .out (ss3[6:0]));
+
+    ssdec_original ssdec4 (.in (temp[7:4]),
+                           .enable (1'b1),
+                           .out (ss4[6:0]));
+    */
 endmodule
 
 // Add more modules down here...
-module ssdec (
+module ssdec_original (
   input logic [3:0] in,
   input logic enable,
   output logic [6:0] out
@@ -44,11 +73,6 @@ module ssdec (
   always_comb begin
     if (enable) // Turned on - push button pressed
       case(in)
-        4'b1000: out = 7'b0111111; // 0th row/column
-        4'b0100: out = 7'b0000110; // 1st row/column
-        4'b0010: out = 7'b1011011; // 2nd row/column
-        4'b0001: out = 7'b1001111; // 3rd row/column
-        /*
         4'd0: out = 7'b0111111;
         4'd1: out = 7'b0000110;
         4'd2: out = 7'b1011011;
@@ -65,7 +89,25 @@ module ssdec (
         4'hD: out = 7'b1011110;
         4'hE: out = 7'b1111001;
         4'hF: out = 7'b1110001;
-        */
+        default: out = 7'd0;
+      endcase
+    else // Turned off - push button unpressed
+      out = 7'd0;
+  end
+endmodule
+
+module ssdec (
+  input logic [3:0] in,
+  input logic enable,
+  output logic [6:0] out
+);
+  always_comb begin
+    if (enable) // Turned on - push button pressed
+      case(in)
+        4'b1000: out = 7'b0111111; // 0th row/column
+        4'b0100: out = 7'b0000110; // 1st row/column
+        4'b0010: out = 7'b1011011; // 2nd row/column
+        4'b0001: out = 7'b1001111; // 3rd row/column
         default: out = 7'd0;
       endcase
     else // Turned off - push button unpressed
@@ -78,45 +120,191 @@ module keypad_controller (
     input logic [3:0] read_row,
     output logic [7:0] cur_key, // Input for keypad_fsm
     output logic strobe, // Input for keypad_fsm
-    output logic [3:0] scan_col
+    output logic [3:0] scan_col, sel_col, sel_row
 );
-    logic [3:0] Q0, Q1, Q1_delay, scan_col_next;
+    logic [3:0] Q0, Q1, Q1_delay;
+    logic [3:0] scan_col_next, sel_col_next;
+    //logic [3:0] Q2;
+    //logic strobe_clean;
 
     // Synchronizer and rising (positive) edge detector - 3 FFs
     always_ff @(posedge clk, negedge nRst) begin
         if (~nRst) begin
+            // Code below caused errors because of strobe going high when resetting
+            // while holding a push button
             Q0 <= 4'd0;
             Q1 <= 4'd0;
             Q1_delay <= 4'd0;
+
+            // Only necessary line, as deactivating the scanning of columns prevents key input
             scan_col <= 4'd0;
+
+            sel_row <= 4'd0;
+            sel_col <= 4'd0;
         end else begin
             Q0 <= read_row;
             Q1 <= Q0;
             Q1_delay <= Q1;
+
+            if (strobe) begin
+              sel_row <= read_row;
+              sel_col <= scan_col_next;
+            end
+
             scan_col <= scan_col_next;
         end
     end
 
+    // Strobe should prompt transition in finite state machine (FSM) module
+    /*
+    always_ff @(posedge strobe) begin
+        sel_col <= scan_col_next;
+    end
+    */
+
     always_comb begin
         // Setting active column for button press, rate of switching reflected by all indicator lights turned on
-        case (scan_col)
-          4'b0000:
-            scan_col_next = 4'b1000;
-          4'b1000:
-            scan_col_next = 4'b0100;
-          4'b0100:
-            scan_col_next = 4'b0010;
-          4'b0010:
-            scan_col_next = 4'b0001;
-          4'b0001:
-            scan_col_next = 4'b1000;
-          default:
-            scan_col_next = scan_col;
-        endcase
-      
+        if (read_row != 0)
+          scan_col_next = scan_col;
+        else
+          case (scan_col)
+            4'b0000:
+              scan_col_next = 4'b1000;
+            4'b1000:
+              scan_col_next = 4'b0100;
+            4'b0100:
+              scan_col_next = 4'b0010;
+            4'b0010:
+              scan_col_next = 4'b0001;
+            4'b0001:
+              scan_col_next = 4'b1000;
+            default:
+              scan_col_next = 4'd0;
+          endcase
     end
 
     assign strobe = |((~Q1_delay) & (Q1));
+    //assign strobe_clean = (strobe);
     assign cur_key = ((|read_row) & (|scan_col)) ? ({read_row, scan_col}) : (8'd0);
+endmodule
+
+module keypad_fsm (
+    input clk, nRst, strobe,
+    input logic [7:0] cur_key, // Concatenation of row and column
+    
+    output logic ready,
+    output logic [7:0] data
+);
+    logic [2:0] state, next_state;
+    logic [7:0] prev_key, next_data;
+    assign prev_key = 8'd0;
+
+    always_ff @(posedge clk, negedge nRst) begin
+        if (~nRst) begin // Separate from clear button???
+            state <= INIT;
+            prev_key <= 8'd0;
+            ready <= 1'b0;
+        end else begin
+            state <= next_state;
+            prev_key <= cur_key;
+            ready <= (next_state == DONE);
+            data <= next_data;
+        end
+    end
+
+     typedef enum logic [2:0] {
+        INIT = 0, S0 = 1, S1 = 2, S2 = 3, S3 = 4, DONE = 5
+    } keypad_state_t;
+
+    localparam key_7 = 8'b00101000; // R2 C0
+    localparam key_9 = 8'b00100010; // R2 C2
+
+    localparam submit_letter_key = 8'b00011000; // R3 C0
+    localparam clear_key = 8'b00010100; // R3 C1
+    localparam submit_word_key = 8'b00010010; // R3 C2
+
+    localparam invalid_key = 8'b10001000; // R0 C0
+    localparam invalid_col = 4'b0001; // C3
+
+    function logic [7:0] get_ascii_from_key (logic [3:0] row, logic [3:0] col);
+      logic [7:0] val;
+
+      if (row[0]) begin
+        if (col[1])
+          val = 8'd65;
+        else
+          val = 8'd68;
+
+      end else if (row[1]) begin
+        if (col[0])
+          val = 8'd71;
+        else if (col[1])
+          val = 8'd74;
+        else
+          val = 8'd77;
+      
+      end else if (row[2]) begin
+        if (col[0])
+          val = 8'd80;
+        else if (col[1])
+          val = 8'd84;
+        else
+          val = 8'd87;
+      end
+      //return val;
+    endfunction
+    
+    always_comb begin
+        // By default
+        next_state = state;
+        next_data = data;
+
+        /* 1. Invalid (inactive) or no push button pressed */
+        if ((!strobe) || (cur_key == submit_word_key) || 
+            (cur_key == invalid_key) || (cur_key[3:0] == invalid_col)) begin
+            next_state = state;
+
+        /* 2. Valid (active) push button pressed */
+        end else begin
+            if (state == DONE) begin
+                next_state = INIT;
+            end
+
+            /* Listing valid push button scenarios */
+            /* 2-1. CLEAR */
+            // Should take priority over other push buttons
+            if (cur_key == clear_key) begin
+                next_state = INIT;
+                next_data = 8'b0;
+
+            /* 2-2. SUBMIT_LETTER */
+            end else if ((cur_key == submit_letter_key) && (state != INIT)) begin
+                next_state = DONE;
+                // Note: ASCII character (data) has already been assigned
+
+            /* 2-3. LETTER SETS 2 to 9 */
+            end else begin
+                /* 2-3-1. Buttons match, so toggle and/or wrap around */
+                if (prev_key == cur_key) begin
+                    if (state == S0) begin
+                        next_state = S1;
+                    end else if (state == S1) begin
+                        next_state = S2;
+                    end else if (state == S2) begin
+                        next_state = ((cur_key == key_7) || (cur_key == key_9)) ? (S3) : (S0);
+                    end
+
+                /* 2-3-2. Buttons do not match (first or new letter set selected) */
+                end else begin
+                    // Note: (state == DONE) should never be the case here
+                    // Because of automatic transition to INIT (reset)
+                    next_state = S0;
+                end
+
+                // Update pre-submission data (current letter) to preview on display each time
+                next_data = get_ascii_from_key(cur_key[7:4], cur_key[3:0]) + ({5'd0, state} - 1);
+            end
+        end
+    end
 
 endmodule
