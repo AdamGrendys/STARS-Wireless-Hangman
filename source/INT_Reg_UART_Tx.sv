@@ -20,7 +20,7 @@ always begin
 end
 
 // Portmap
-INT_TOP_message_TX mesgsgs (.tb_clk(tb_clk), .tb_nRst(tb_nRst), .tb_tx_serial(tb_tx_serial), .tb_ready(tb_ready));
+INT_TOP_message_TX mesgsgs (.tb_clk(tb_clk), .tb_nRst(tb_nRst), .tb_tx_serial(tb_tx_serial), .tb_ready(tb_ready), .tb_blue(tb_blue), .tb_tx_ctrl(tb_tx_ctrl), .tb_msg(tb_msg), .tb_tx_byte(tb_tx_byte), .tb_transmit_ready(tb_transmit_ready));
 
 initial begin 
     // Signal dump
