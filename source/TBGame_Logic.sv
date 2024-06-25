@@ -24,11 +24,12 @@ string tb_test_case;
 logic tb_clk, tb_nRst;
 logic [7:0] tb_guess;
 logic [39:0] tb_setWord;
-logic tb_toggle_state;
+logic tb_toggle_state, tb_gameEnd;
 logic [7:0] tb_letter;
 logic tb_red, tb_green, tb_mistake, tb_red_busy, tb_game_rdy;
 logic [2:0] tb_incorrect, tb_correct;
 logic [4:0] tb_indexCorrect;
+
 
 //Reset DUT Task
 task reset_dut;
@@ -103,6 +104,7 @@ end
 //DUT Portmap
 Game_logic DUT(.clk(tb_clk),
             .nRst(tb_nRst),
+            .gameEnd(tb_gameEnd),
             .guess(tb_guess),
             .setWord(tb_setWord),
             .toggle_state(tb_toggle_state),

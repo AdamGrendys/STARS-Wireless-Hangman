@@ -4,6 +4,7 @@ Then the next state compares the user input with the different letters in the wo
 Finally, once the user either guesses the word, or gets 6 incorrect questions, the game
 ends. 
 */
+
 typedef enum logic [3:0] { 
     SET = 0, L0 = 1, L1 = 2, L2 = 3, L3 = 4, L4 = 5, STOP = 6, IDLE = 7
 } state_t;
