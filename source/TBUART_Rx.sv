@@ -6,7 +6,7 @@ IDLE = 3'b001, START = 3'b010, DATAIN = 3'b011, STOP = 3'b100, CLEAN = 3'b101, P
 
 // Testbench ports
 localparam CLK_PERIOD = 10; // 100 Hz clk
-logic tb_clk, tb_nRst, tb_rx_ready, tb_rec_rdy, tb_rx_serial, odd_parity_err, even_parity_err;
+logic tb_clk, tb_nRst, tb_rx_ready, tb_rec_rdy, tb_rx_serial, parity_err;
 logic [7:0] tb_rx_byte;
 task reset_dut;
     #1;
