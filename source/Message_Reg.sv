@@ -6,7 +6,7 @@ typedef enum logic [1:0] {
 IDLE = 2'b00, WAIT = 2'b01, TRANSMIT = 2'b11
 } curr_state;
 
-module msg_reg (
+module Message_Reg (
     input logic clk, nRst, ready, transmit_ready,
     input logic [7:0] data,
     output logic blue, tx_ctrl,

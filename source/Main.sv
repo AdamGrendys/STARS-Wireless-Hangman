@@ -22,13 +22,13 @@ logic [4:0] indexCorrect, input_row_player, input_row_host, scan_col_player, sca
 keypad_controller keypadplayer (.clk(clk), .nRst(nRst), .read_row(input_row_player), .cur_key(cur_key_player), .strobe(strobe_player), .scan_col(scan_col_player));
 keypad_fsm keypadFSMPlayer (.clk(clk), .nRst(nRst), .strobe(strobe_player), .cur_key(cur_key_player), .ready(ready), .data(msg), .gameEnd(gameEnd_player));
 
-display_fsm dispFSM (.clk(clk), .nRst(nRst), .ready(ready), .msg(msg), .row1(play_row1), .row2(play_row2));
+Display_FSM dispFSM (.clk(clk), .nRst(nRst), .ready(ready), .msg(msg), .row1(play_row1), .row2(play_row2));
 
-msg_reg message_reg (.clk(clk), .nRst(nRst), .ready(ready), .transmit_ready(transmit_ready), .data(msg), .blue(blue), .tx_ctrl(tx_ctrl), .tx_byte(tx_byte));
+Message_Reg message_reg (.clk(clk), .nRst(nRst), .ready(ready), .transmit_ready(transmit_ready), .data(msg), .blue(blue), .tx_ctrl(tx_ctrl), .tx_byte(tx_byte));
 
-uart_tx uart_transmitter (.clk(clk), .nRst(nRst), .tx_ctrl(tx_ctrl), .tx_byte(tx_byte), .transmit_ready(transmit_ready), .tx_serial(tx_serial));
+UART_Tx uart_transmitter (.clk(clk), .nRst(nRst), .tx_ctrl(tx_ctrl), .tx_byte(tx_byte), .transmit_ready(transmit_ready), .tx_serial(tx_serial));
 
-lcd1602 lcdPlayer (.clk(clk), .nRst(nRst), .row1(play_row1), .row2(play_row2));
+lcd_controller lcdPlayer (.clk(clk), .rst(nRst), .row1(play_row1), .row2(play_row2));
 
 
 // *********
@@ -41,7 +41,7 @@ keypad_fsm keypadFSMHost (.clk(clk), .nRst(nRst), .strobe(strobe_host), .cur_key
 UART_Rx uart_receiver (.clk(clk), .nRst(nRst), .rx_serial(tx_serial), .rec_ready(rec_ready), .rx_ready(rx_ready), .rx_byte(rx_byte), 
 .error_led(error));
 
-buffer buffer (.clk(clk), .nRst(nRst), .rx_byte(rx_byte), .rx_ready(rx_ready), .game_rdy(blue), .guess(guess));
+Buffer buffer (.clk(clk), .nRst(nRst), .Rx_byte(rx_byte), .rx_ready(rx_ready), .game_rdy(blue), .guess(guess));
 
 Game_Logic gamelogic (.clk(clk), .nRst(nRst), .guess(guess), .setWord(setWord), .toggle_state(toggle_state), .letter(letter), .red(red), .green(green),
 .mistake(mistake), .red_busy(red_busy), .game_rdy(blue), .incorrect(incorrect), .correct(correct), .indexCorrect(indexCorrect), .gameEnd(gameEnd_host));
@@ -49,7 +49,7 @@ Game_Logic gamelogic (.clk(clk), .nRst(nRst), .guess(guess), .setWord(setWord), 
 HostDisplay hostdisp (.clk(clk), .nRst(nRst), .indexCorrect(indexCorrect), .letter(letter), .numMistake(incorrect), .correct(correct), .word(setWord), 
 .mistake(mistake), .top(host_row1), .bottom(host_row2));
 
-lcd1602 lcdHost (.clk(clk), .nRst(nRst), .row1(host_row1), .row2(host_row2));
+lcd_controller lcdHost (.clk(clk), .rst(nRst), .row1(host_row1), .row2(host_row2));
 
 
 endmodule
