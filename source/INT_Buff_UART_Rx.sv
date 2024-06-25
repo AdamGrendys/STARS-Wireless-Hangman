@@ -22,7 +22,7 @@ always begin
 end
 
 // Portmap
-buffRX bufferRecieve (.clk(tb_clk), .nRst(tb_nRst), .rx_serial(tb_rx_serial), .rec_ready(tb_rec_ready), .error_led(tb_error_led), .guess(tb_guess));
+buffRX bufferRecieve (.clk(tb_clk), .nRst(tb_nRst), .rx_serial(tb_rx_serial), .rec_ready(tb_rec_ready), .err_LED(tb_error_led), .guess(tb_guess));
 
 task guess_check;
 input logic[7:0] expected_guess;
