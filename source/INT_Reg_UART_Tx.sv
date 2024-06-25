@@ -37,14 +37,14 @@ initial begin
     // ***********************************
     // Test Case 0: Power-on-Reset 
     // ***********************************
-    #(CLK_PERIOD * 2);
+    #(CLK_PERIOD * 1000);
     @(negedge tb_clk);
     tb_nRst = 1'b0; 
     @(negedge tb_clk);
     @(negedge tb_clk);
     tb_nRst = 1'b1;
     @(posedge tb_clk);
-    #(CLK_PERIOD * 2);
+    #(CLK_PERIOD * 1000);
 
      // ***********************************
     // Test Case 0: Power-on-Reset 
