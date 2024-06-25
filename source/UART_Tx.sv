@@ -123,7 +123,7 @@ module UART_Tx
                 pcount = 0;
                 tx_serial = 1;
                 next_bit_index = 0;
-                transmit_ready = 0;
+                transmit_ready = 1;
 
                 if(clk_count < Clkperbaud - 1) begin
                 next_clk_count = clk_count + 1;
