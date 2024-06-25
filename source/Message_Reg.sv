@@ -31,7 +31,7 @@ end
 always_comb begin 
     case (state)
         IDLE: begin 
-            tx_byte = 8'b11111111;
+            //tx_byte = 8'b11111111;
             tx_ctrl = 0;
             blue = 0;
             if (ready) begin
