@@ -9,7 +9,7 @@ module INT_Reg_UART_Tx ();
 // Testbench ports
 localparam CLK_PERIOD = 10; // 100 Hz clk
 logic tb_clk, tb_nRst, tb_ready, tb_transmit_ready, tb_blue, tb_tx_ctrl, tb_tx_serial;
-logic tb_msg, tb_tx_byte;
+logic [7:0] tb_msg, tb_tx_byte;
 
 // Clock generation block
 always begin
