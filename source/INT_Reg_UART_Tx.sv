@@ -28,8 +28,8 @@ initial begin
     $dumpvars; 
 
     // Initialize test bench signals
-    tb_msg = 8'hA;
     tb_ready = 0;
+    tb_msg = 0;
 
     // Wait some time before starting first test case
     #(0.1);
@@ -46,7 +46,18 @@ initial begin
     @(posedge tb_clk);
     #(CLK_PERIOD * 2);
 
+     // ***********************************
+    // Test Case 0: Power-on-Reset 
+    // ***********************************
 
+    tb_ready = 0;
+    tb_msg = 8'b10101011;
+    #(CLK_PERIOD * 1300);
+
+    tb_ready = 1;
+    #(CLK_PERIOD * 10000);
+    
+    $finish;
 
 end
 endmodule
