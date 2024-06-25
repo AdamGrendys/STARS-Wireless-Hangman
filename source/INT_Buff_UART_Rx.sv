@@ -9,7 +9,7 @@ module INT_Buff_UART_Rx ();
 // Testbench ports
 localparam CLK_PERIOD = 10; // 100 Hz clk
 logic tb_clk, tb_nRst, tb_rx_serial, tb_rec_ready; //Input of UART_Rx
-logic tb_error_led; //output of UART_Rx, rx_ready is also input of buffer
+logic tb_error_led; //output of UART_Rx
 logic [7:0] tb_guess; //output of buffer
 logic [7:0] temphold; //value to feed into reciever
 
@@ -46,7 +46,6 @@ initial begin
     tb_nRst = 1;
     tb_rx_serial = 0;
     tb_rec_ready = 0;
-    tb_error_led = 0;
     temphold = 8'hA;
 
     // Wait some time before starting first test case
