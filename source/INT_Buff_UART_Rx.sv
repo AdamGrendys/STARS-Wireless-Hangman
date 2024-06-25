@@ -75,6 +75,7 @@ initial begin
     end
     #CLK_PERIOD
     guess_check(temphold, "A");
+    #(CLK_PERIOD * 15000);
 
     // ***********************************
     // Test Case 2: Error with recieving message
