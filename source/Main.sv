@@ -7,11 +7,11 @@ module main (
     output logic [127:0] play_row1, play_row2, host_row1, host_row2
 );
 // Local Variable Declarations
-logic ready, transmit_ready, tx_ctrl, tx_serial, rec_ready, rx_ready, game_rdy, toggle_state, mistake, red_busy;
-logic [7:0] msg, tx_byte, rx_byte, guess, letter;
+logic ready, transmit_ready, tx_ctrl, tx_serial, rec_ready, rx_ready, game_rdy, toggle_state, mistake, red_busy, strobe_player, strobe_host, gameEnd_player, gameEnd_host;
+logic [7:0] msg, tx_byte, rx_byte, guess, letter, cur_key_player, cur_key_host;
 logic [39:0] setWord;
 logic [2:0] incorrect, correct;
-logic [4:0] indexCorrect;
+logic [4:0] indexCorrect, input_row_player, input_row_host, scan_col_player, scan_col_host;
 
 
 // ***********
