@@ -20,8 +20,7 @@ always begin
 end
 
 // Portmap
-Message_Reg message_reg (.clk(tb_clk), .nRst(tb_nRst), .ready(tb_ready), .transmit_ready(tb_transmit_ready), .data(tb_msg), .blue(tb_blue), .tx_ctrl(tb_tx_ctrl), .tx_byte(tb_tx_byte));
-UART_Tx uart_transmitter (.clk(tb_clk), .nRst(tb_nRst), .tx_ctrl(tb_tx_ctrl), .tx_byte(tb_tx_byte), .transmit_ready(tb_transmit_ready), .tx_serial(tb_tx_serial));
+INT_TOP_message_TX mesgsgs (.tb_clk(tb_clk), .tb_nRst(tb_nRst), .tb_tx_serial(tb_tx_serial), .tb_ready(tb_ready));
 
 initial begin 
     // Signal dump
