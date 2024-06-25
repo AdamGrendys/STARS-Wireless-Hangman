@@ -9,7 +9,7 @@ typedef enum logic [3:0] {
     SET = 0, L0 = 1, L1 = 2, L2 = 3, L3 = 4, L4 = 5, STOP = 6, IDLE = 7
 } state_t;
 
-module Game_logic (
+module Game_Logic (
     input logic clk, nRst, gameEnd,
     input logic [7:0] guess,
     input logic [39:0] setWord,
