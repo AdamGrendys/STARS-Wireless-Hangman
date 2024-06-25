@@ -14,6 +14,10 @@ logic [39:0] setWord;
 logic [2:0] incorrect, correct;
 logic [4:0] indexCorrect, input_row_player, input_row_host, scan_col_player, scan_col_host;
 
+// LCD Outputs
+logic [7:0] lcd_data1, lcd_data2;
+logic lcd_en1, lcd_en2, lcd_rw1, lcd_rw2, lcd_rs1, lcd_rs2;
+
 
 // ***********
 // Player Side
@@ -28,7 +32,7 @@ Message_Reg message_reg (.clk(clk), .nRst(nRst), .ready(ready), .transmit_ready(
 
 UART_Tx uart_transmitter (.clk(clk), .nRst(nRst), .tx_ctrl(tx_ctrl), .tx_byte(tx_byte), .transmit_ready(transmit_ready), .tx_serial(tx_serial));
 
-lcd_controller lcdPlayer (.clk(clk), .rst(nRst), .row1(play_row1), .row2(play_row2));
+lcd_controller lcdPlayer (.clk(clk), .rst(nRst), .row_1(play_row1), .row_2(play_row2), .lcd_en(lcd_en1), .lcd_rw(lcd_rw1), .lcd_rs(lcd_rs1), .lcd_data(lcd_data1));
 
 
 // *********
@@ -49,7 +53,7 @@ Game_Logic gamelogic (.clk(clk), .nRst(nRst), .guess(guess), .setWord(setWord), 
 HostDisplay hostdisp (.clk(clk), .nRst(nRst), .indexCorrect(indexCorrect), .letter(letter), .numMistake(incorrect), .correct(correct), .word(setWord), 
 .mistake(mistake), .top(host_row1), .bottom(host_row2));
 
-lcd_controller lcdHost (.clk(clk), .rst(nRst), .row1(host_row1), .row2(host_row2));
+lcd_controller lcdHost (.clk(clk), .rst(nRst), .row_1(host_row1), .row_2(host_row2), .lcd_en(lcd_en2), .lcd_rw(lcd_rw2), .lcd_rs(lcd_rs2), .lcd_data(lcd_data2));
 
 
 endmodule
