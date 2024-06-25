@@ -14,7 +14,7 @@ module uart_rx
     input logic clk, nRst, rx_serial, rec_ready,
     output logic rx_ready,
     output logic [7:0] rx_byte,
-    output logic error_led1, error_led2
+    output logic error_led
 );
 
 logic [7:0] temp_byte;
@@ -23,7 +23,7 @@ curr_state state, next_state;
 logic [10:0] clk_count, next_clk_count;
 logic [3:0] pcount, count;
 logic pbit;
-
+logic next_err;
 always_ff @(posedge clk, negedge nRst) begin
     if (~nRst) begin
         rx_byte <= 0;
@@ -31,21 +31,22 @@ always_ff @(posedge clk, negedge nRst) begin
         clk_count <= 0;
         bit_index <= 0;
         count <= 0;
+        error_led <= 0;
     end else begin
         state <= next_state;
         rx_byte <= temp_byte;
         clk_count <= next_clk_count;
         bit_index <= next_bit_index;
-        count <= pcount;
+        count <= pcount; 
+        error_led <= next_err;
     end
 end
 
 always_comb begin
-    error_led1 = 0;
-    error_led2 = 0;
     pbit = 0;
     case (state)
         IDLE: begin
+            next_err = error_led;
             rx_ready = 0;
             next_bit_index = 0;
             temp_byte = 0;
@@ -62,7 +63,7 @@ always_comb begin
             temp_byte = 0;
             next_bit_index = 0;
             pcount = 0;
-
+            next_err = 0;
             if(clk_count == (Clkperbaud - 1)/2) begin
                 if (rx_serial == 0 && rec_ready) begin
                     next_clk_count = 0;
@@ -81,7 +82,7 @@ always_comb begin
         DATAIN: begin
             temp_byte[bit_index] = rx_serial;
             rx_ready = 0;
-            
+            next_err = 0;
             if(clk_count < Clkperbaud - 1) begin
             next_clk_count = clk_count + 1;
             next_state = DATAIN;
@@ -118,25 +119,27 @@ always_comb begin
             if(clk_count < Clkperbaud - 1) begin
             next_clk_count = clk_count + 1;
             next_state = PARITY;
+            next_err = 0;
             end
             else begin 
             if ((pcount % 2 == 1) && (pbit == 0)) begin
-            error_led1 = 1;
+            next_err = 1;
             next_clk_count = 0;
             next_state = CLEAN; // state transition logic
             end
             else if((pcount % 2 == 0) && (pbit == 1)) begin
-            error_led2 = 1;
+            next_err = 1;
             next_clk_count = 0;
             next_state = CLEAN; // state transition logic
             end
             else 
+            next_err = 0;
             next_clk_count = 0;
             next_state = STOP;
             end
         end
         STOP: begin
-
+            next_err = error_led;
             if(clk_count < Clkperbaud - 1) begin
             next_clk_count = clk_count + 1;
             next_state = STOP;
@@ -152,6 +155,7 @@ always_comb begin
             pcount = 0;
         end
         CLEAN: begin 
+            next_err = error_led;
             pcount = 0;
             next_clk_count = 0;
             rx_ready = 0;
@@ -166,6 +170,7 @@ always_comb begin
             next_bit_index = 0;
             next_state = IDLE;
             pcount = 0;
+            next_err = 0;
         end
     endcase
 end
