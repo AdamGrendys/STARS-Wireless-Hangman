@@ -2,7 +2,8 @@ module INT_TOP_message_TX (
     input logic tb_clk, tb_nRst, tb_ready,
     output logic tb_tx_serial,
     output logic tb_transmit_ready, tb_blue, tb_tx_ctrl,
-    output logic [7:0] tb_msg, tb_tx_byte
+    output logic [7:0] tb_tx_byte,
+    input logic [7:0] tb_msg
 
 
 );
