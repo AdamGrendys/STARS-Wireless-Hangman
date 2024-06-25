@@ -55,5 +55,4 @@ HostDisplay hostdisp (.clk(clk), .nRst(nRst), .indexCorrect(indexCorrect), .lett
 
 lcd_controller lcdHost (.clk(clk), .rst(nRst), .row_1(host_row1), .row_2(host_row2), .lcd_en(lcd_en2), .lcd_rw(lcd_rw2), .lcd_rs(lcd_rs2), .lcd_data(lcd_data2));
 
-
 endmodule
