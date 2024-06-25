@@ -27,7 +27,7 @@ always begin
     #(CLK_PERIOD / 2.0); 
 end
 
-uart_rx #(.Clkperbaud(1250)) receive(.clk(tb_clk), .nRst(tb_nRst), .rx_ready(tb_rx_ready), .rx_serial(tb_rx_serial), .rx_byte(tb_rx_byte), .rec_ready(tb_rec_rdy), .error_led1(odd_parity_err), .error_led2(even_parity_err));
+uart_rx #(.Clkperbaud(1250)) receive(.clk(tb_clk), .nRst(tb_nRst), .rx_ready(tb_rx_ready), .rx_serial(tb_rx_serial), .rx_byte(tb_rx_byte), .rec_ready(tb_rec_rdy), .error_led(parity_err));
 
 initial begin
     $dumpfile("dump.vcd");
