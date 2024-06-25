@@ -1,4 +1,3 @@
-
 module INT_TOP_message_TX (
     input logic tb_clk, tb_nRst, tb_ready,
     output logic tb_tx_serial
