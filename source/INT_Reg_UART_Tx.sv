@@ -62,7 +62,7 @@ initial begin
     tb_msg = 8'b01101101;
     #(CLK_PERIOD * 12000);
     tb_ready = 0;
-    #(CLK_PERIOD * 5000);
+    #(CLK_PERIOD * 10000);
 
 
 
