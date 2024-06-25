@@ -2,9 +2,7 @@
 Descriuption: x
 */
 
-typedef enum logic [1:0] {
-IDLE = 2'b00, WAIT = 2'b01, TRANSMIT = 2'b11
-} curr_state;
+
 
 module Message_Reg (
     input logic clk, nRst, ready, transmit_ready,
@@ -12,6 +10,11 @@ module Message_Reg (
     output logic blue, tx_ctrl,
     output logic [7:0] tx_byte
 );
+
+typedef enum logic [1:0] {
+IDLE = 2'b00, WAIT = 2'b01, TRANSMIT = 2'b11
+} curr_state;
+
 
 logic [7:0] msg, msg_rdy;
 curr_state state, next_state;

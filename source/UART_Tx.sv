@@ -2,9 +2,6 @@
 Descriuption: x
 */
 
-typedef enum logic [2:0] {
-IDLE = 3'b001, START = 3'b010, DATAIN = 3'b011, STOP = 3'b100, CLEAN = 3'b101, PARITY = 3'b110
-} curr_state;
 
 module UART_Tx
 #(
@@ -16,6 +13,11 @@ module UART_Tx
     input logic [7:0] tx_byte, 
     output logic transmit_ready, tx_serial
 );
+
+    typedef enum logic [2:0] {
+    IDLE = 3'b001, START = 3'b010, DATAIN = 3'b011, STOP = 3'b100, CLEAN = 3'b101, PARITY = 3'b110
+    } curr_state;
+
     logic [2:0] bit_index, next_bit_index;  
     logic [10:0] clk_count, next_clk_count;
     logic [3:0] pcount, count;
