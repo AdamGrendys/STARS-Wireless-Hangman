@@ -73,9 +73,6 @@ module Game_logic (
                     nextIndexCorrect[0] = 1;
                     nRight = nRight + 1;
                 end 
-                // else begin
-                //     nextIndexCorrect[0] = 0;
-                // end
                 nextState = L1;
             end
             L1: begin
@@ -84,9 +81,6 @@ module Game_logic (
                     nextIndexCorrect[1] = 1;
                     nRight = nRight + 1;
                 end 
-                // else begin
-                //     nextIndexCorrect[1] = 0;
-                // end
                 nextState = L2;
             end
             L2: begin
@@ -95,9 +89,6 @@ module Game_logic (
                     nextIndexCorrect[2] = 1;
                     nRight = nRight + 1;
                 end 
-                // else begin
-                //     nextIndexCorrect[2] = 0;
-                // end
                 nextState = L3;
             end
             L3: begin
@@ -106,9 +97,6 @@ module Game_logic (
                     nextIndexCorrect[3] = 1;
                     nRight = nRight + 1;
                 end 
-                // else begin
-                //     nextIndexCorrect[3] = 0;
-                // end
                 nextState = L4;
             end
             L4: begin
@@ -117,9 +105,6 @@ module Game_logic (
                     nextIndexCorrect[4] = 1;
                     nRight = nRight + 1;
                 end 
-                // else begin
-                //     nextIndexCorrect[4] = 0;
-                // end
                 nextState = STOP;
             end
             STOP: begin
@@ -133,15 +118,6 @@ module Game_logic (
                 end
                 red_busy = 0;
                 game_rdy = 1;
-                // if(correct == 5) begin
-                //     green = 1;
-                //     red = 0;
-                //     //LCD DISPLAY WIN
-                // end else if(incorrect == 6) begin
-                //     green = 0;
-                //     red = 1;
-                //     //LCD DISPLAY FAIL
-                // end
                 nextState = IDLE;
             end
             IDLE: begin
