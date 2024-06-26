@@ -44,7 +44,7 @@ initial begin
 
     // Initialize test bench signals
     tb_nRst = 1;
-    tb_rx_serial = 0;
+    tb_rx_serial = 1;
     tb_rec_ready = 0;
     temphold = 8'b11011011;
 
@@ -68,6 +68,7 @@ initial begin
     // ***********************************
 
     tb_rec_ready = 1;
+    tb_rx_serial = 0;
     #CLK_PERIOD;
     for(integer i = 0; i < 8; i = i + 1) begin
         #(CLK_PERIOD * 1250);
@@ -80,6 +81,18 @@ initial begin
     // ***********************************
     // Test Case 2: Error with recieving message
     // ***********************************
+    tb_rec_ready = 0;
+    #CLK_PERIOD;
+    
+    for(integer i = 0; i < 8; i = i + 1) begin
+        #(CLK_PERIOD * 1250);
+        tb_rx_serial = temphold[i];
+    end
+    #CLK_PERIOD
+    guess_check(temphold, "A");
+    #(CLK_PERIOD * 15000);
+
+
 
 
     $finish;
