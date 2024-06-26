@@ -24,6 +24,7 @@ module Game_Logic (
     logic [4:0] nextIndexCorrect;
     logic [2:0] rights, nRight;
     logic tempRed, tempGreen;
+    logic pulse;
 
     always_ff @(posedge clk, negedge nRst) begin
         if(~nRst) begin
@@ -55,6 +56,7 @@ module Game_Logic (
         red_busy = 0;
         mistake = 0;
         game_rdy = 0;
+        pulse = 0;
         
 
         case(state)
@@ -65,7 +67,6 @@ module Game_Logic (
                 correctCount = 0;
                 mistakeCount = 0;
                 //flip flop will set the word using a shift register
-                game_rdy = 1;
                 nextIndexCorrect = 0;
                 if(toggle_state) begin
                     nextState = FIRST;
@@ -152,8 +153,10 @@ module Game_Logic (
                 game_rdy = 1;
                 if(guess != 0)begin
                     placehold = guess;
+                    pulse = 1;
                 end else begin
                     placehold = letter;
+                    pulse = 0;
                 end
             if(correct == 5 | incorrect == 6) begin
                 if(correct == 5) begin
@@ -169,7 +172,7 @@ module Game_Logic (
                 if(gameEnd) begin
                     nextState = SET;
                 end
-                else if(placehold != letter & !(correct == 5 | incorrect == 6)) begin
+                else if((pulse | placehold != letter) & !(correct == 5 | incorrect == 6)) begin
                     nextState = L0;
                 end else begin
                     nextState = IDLE;
