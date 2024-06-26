@@ -76,7 +76,7 @@ module Game_Logic (
                 red_busy = 1;
                 game_rdy = 0;
                 if(letter == setWord[39:32] & nextIndexCorrect[4] != 1)begin
-                    nextIndexCorrect[0] = 1;
+                    nextIndexCorrect[4] = 1;
                     nRight = nRight + 1;
                 end 
 
@@ -86,7 +86,7 @@ module Game_Logic (
                 red_busy = 1;
                 game_rdy = 0;
                 if(letter == setWord[31:24] & nextIndexCorrect[3] != 1)begin
-                    nextIndexCorrect[1] = 1;
+                    nextIndexCorrect[3] = 1;
                     nRight = nRight + 1;
                 end 
 
@@ -106,7 +106,7 @@ module Game_Logic (
                 red_busy = 1;
                 game_rdy = 0;
                 if(letter == setWord[15:8] & nextIndexCorrect[1] != 1)begin
-                    nextIndexCorrect[3] = 1;
+                    nextIndexCorrect[1] = 1;
                     nRight = nRight + 1;
                 end 
 
@@ -116,7 +116,7 @@ module Game_Logic (
                 red_busy = 1;
                 game_rdy = 0;
                 if(letter == setWord[7:0] & nextIndexCorrect[0] != 1)begin
-                    nextIndexCorrect[4] = 1;
+                    nextIndexCorrect[0] = 1;
                     nRight = nRight + 1;
                 end 
 
