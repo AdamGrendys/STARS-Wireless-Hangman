@@ -26,8 +26,8 @@ module top (
                         .cur_key (input_key), // Input for FSM
                         .strobe (green), // Input for FSM
                         .scan_col (discard_scan_col),
-                        .sel_row (discard_row), //left[7:4]), // Temporary
-                        .sel_col (discard_col)); //left[3:0])); // Temporary
+                        .sel_row (left[7:4]), //left[7:4]), // Temporary
+                        .sel_col (left[3:0])); //left[3:0])); // Temporary
 
   // Row (sel_row)
   ssdec ssdec7 (.in (left[7:4]),
@@ -41,7 +41,13 @@ module top (
 
   logic discard_game_end;
   logic [7:0] discard_data;
+  logic [7:0] char;
+  
+  ascii_encoder ae (.row (input_key[7:4]), .col (input_key[3:0]), .state (3'd0), .ascii_character (char));
 
+  assign right[7:0] = char;
+
+/*
   keypad_fsm key_fsm (.clk (hz100),
                       .nRst (~pb[19]), // Single key for simplicity
                       .strobe (green), // Input from controller
@@ -51,7 +57,7 @@ module top (
                       .temp_data (right[7:0]),
                       .cur_key (left[7:0]),
                       .game_end (discard_game_end)); // TODO: Output
-
+*/
   //assign right [7:0] = input_key;
 
   //ssdec_original
@@ -327,40 +333,28 @@ module ascii_encoder (
   always_comb begin
     ascii_character = 8'd0;
 
-    if (row[0])
-      //ascii_character = {row, col};
-      ascii_character = 8'b01111111;
-    else if (row[1])
-      ascii_character = 8'b10111111;
-    else if (row[2])
-      ascii_character = 8'b11011111;
-    else if (row[3])
-      ascii_character = 8'b11101111;
-
-/*
-    if (row[0] == 1) begin
-      if (col[1])
+    if (row[3]) begin // "0" - 1000
+      if (col[2]) // "1" - 0100
         ascii_character = 8'd65;
-      else if (col[2])
+      else if (col[1]) // "2" - 0010
         ascii_character = 8'd68;
 
-    end else if (row[1]) begin
-      if (col[0])
+    end else if (row[2]) begin // "1" - 0100
+      if (col[3]) // "0" - 1000
         ascii_character = 8'd71;
-      else if (col[1])
+      else if (col[2]) // "1" - 0100
         ascii_character = 8'd74;
-      else if (col[2])
+      else if (col[1]) // "2" - 0010
         ascii_character = 8'd77;
 
-    end else if (row[2]) begin
-      if (col[0])
+    end else if (row[1]) begin // "2" - 0010
+      if (col[3]) // "0" - 1000
         ascii_character = 8'd80;
-      else if (col[1])
+      else if (col[2]) // "1" - 0100
         ascii_character = 8'd84;
-      else if (col[2])
+      else if (col[1]) // "2" - 0010
         ascii_character = 8'd87;
     end
-    */
 
     //if (|{row, col})
     //  ascii_character += ({5'd0, state} - 8'd1);
