@@ -68,7 +68,7 @@ module Game_Logic (
                 game_rdy = 0;
                 nextIndexCorrect = 0;
                 if(toggle_state) begin
-                    nextState = L0;
+                    nextState = STOP;
                 end else
                     nextState = SET;
             end
@@ -137,10 +137,11 @@ module Game_Logic (
                 game_rdy = 1;
                 if(guess != 0)begin
                     placehold = guess;
+                    nextState = IDLE;
                 end else begin
                     placehold = letter;
+                    nextState = STOP;
                 end
-                nextState = IDLE;
             end
             IDLE: begin
                 nRight = 0;
