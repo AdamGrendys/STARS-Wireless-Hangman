@@ -75,9 +75,10 @@ initial begin
         #(CLK_PERIOD * 1250);
         tb_rx_serial = temphold[i];
     end
-    tb_game_rdy = 0;
+   
     #(CLK_PERIOD * 1250);
     tb_rx_serial = 0;
+    tb_game_rdy = 0;
     #(CLK_PERIOD * 1250);
     tb_rx_serial = 1;
 
