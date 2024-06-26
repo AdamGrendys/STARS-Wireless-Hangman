@@ -24,7 +24,6 @@ module Game_Logic (
     logic [4:0] nextIndexCorrect;
     logic [2:0] rights, nRight;
     logic tempRed, tempGreen;
-    logic [7:0] tempLetter;
 
     always_ff @(posedge clk, negedge nRst) begin
         if(~nRst) begin
@@ -36,8 +35,7 @@ module Game_Logic (
             incorrect <= mistakeCount;
             correct <= correctCount;
             indexCorrect <= nextIndexCorrect;
-            placehold <= guess;
-            letter <= tempLetter;
+            letter <= placehold;
             rights <= nRight;
             red <= tempRed;
             green <= tempGreen;
@@ -52,7 +50,7 @@ module Game_Logic (
         nRight = rights; //for latch
         tempRed = red;
         tempGreen = green;
-        tempLetter = letter;
+        placehold = letter;
 
         red_busy = 0;
         mistake = 0;
@@ -67,18 +65,17 @@ module Game_Logic (
                 correctCount = 0;
                 mistakeCount = 0;
                 //flip flop will set the word using a shift register
-                game_rdy = 1;
+                game_rdy = 0;
                 nextIndexCorrect = 0;
                 if(toggle_state) begin
                     nextState = L0;
                 end else
                     nextState = SET;
-                tempLetter = placehold;
             end
             L0: begin
                 red_busy = 1;
                 game_rdy = 0;
-                if(letter == setWord[39:32] & letter != 0 & nextIndexCorrect[0] != 1)begin
+                if(letter == setWord[39:32] & nextIndexCorrect[0] != 1)begin
                     nextIndexCorrect[0] = 1;
                     nRight = nRight + 1;
                 end 
@@ -87,7 +84,7 @@ module Game_Logic (
             end
             L1: begin
                 game_rdy = 0;
-                if(letter == setWord[31:24] & letter != 0 & nextIndexCorrect[1] != 1)begin
+                if(letter == setWord[31:24] & nextIndexCorrect[1] != 1)begin
                     nextIndexCorrect[1] = 1;
                     nRight = nRight + 1;
                 end 
@@ -96,7 +93,7 @@ module Game_Logic (
             end
             L2: begin
                 game_rdy = 0;
-                if(letter == setWord[23:16] & letter != 0 & nextIndexCorrect[2] != 1)begin
+                if(letter == setWord[23:16] & nextIndexCorrect[2] != 1)begin
                     nextIndexCorrect[2] = 1;
                     nRight = nRight + 1;
                 end 
@@ -105,7 +102,7 @@ module Game_Logic (
             end
             L3: begin
                 game_rdy = 0;
-                if(letter == setWord[15:8] & letter != 0 & nextIndexCorrect[3] != 1)begin
+                if(letter == setWord[15:8] & nextIndexCorrect[3] != 1)begin
                     nextIndexCorrect[3] = 1;
                     nRight = nRight + 1;
                 end 
@@ -114,7 +111,7 @@ module Game_Logic (
             end
             L4: begin
                 game_rdy = 0;
-                if(letter == setWord[7:0] & letter != 0 & nextIndexCorrect[4] != 1)begin
+                if(letter == setWord[7:0] & nextIndexCorrect[4] != 1)begin
                     nextIndexCorrect[4] = 1;
                     nRight = nRight + 1;
                 end 
@@ -127,7 +124,7 @@ module Game_Logic (
                     mistake = 0;
                     correctCount = correctCount + rights;
                 end 
-                else if (letter != 0) begin
+                else if (guess != 0) begin
                     mistake = 1;
                     mistakeCount = mistakeCount + 1;
                 end
@@ -139,6 +136,11 @@ module Game_Logic (
             IDLE: begin
                 nRight = 0;
                 game_rdy = 1;
+                if(guess != 0)begin
+                    placehold = guess;
+                end else begin
+                    placehold = letter;
+                end
             if(correct == 5 | incorrect == 6) begin
                 if(correct == 5) begin
                     tempGreen = 1;
@@ -153,8 +155,7 @@ module Game_Logic (
                 if(gameEnd) begin
                     nextState = SET;
                 end
-                else if(placehold != letter & letter != 0 & !(correct == 5 | incorrect == 6)) begin
-                    tempLetter = placehold;
+                else if(placehold != letter & !(correct == 5 | incorrect == 6)) begin
                     nextState = L0;
                 end else begin
                     nextState = IDLE;
