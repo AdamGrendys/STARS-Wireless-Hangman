@@ -1,20 +1,21 @@
 module INT_TOP_Reg_Tx (
-    input logic tb_clk, tb_nRst, tb_ready,
-    output logic tb_tx_serial,
-    output logic tb_transmit_ready, tb_blue, tb_tx_ctrl,
-    output logic [7:0] tb_tx_byte,
-    input logic [7:0] tb_msg
+    input logic clk, nRst, ready,
+    output logic tx_serial,
+    output logic transmit_ready, blue, tx_ctrl,
+    output logic [7:0] tx_byte,
+    input logic [7:0] msg
 
 
 );
 
 // Testbench ports
 localparam CLK_PERIOD = 10; // 100 Hz clk
-// logic tb_transmit_ready, tb_blue, tb_tx_ctrl;
-// logic [7:0] tb_msg, tb_tx_byte;
+// logic transmit_readymit_ready, blue, tx_ctrl;
+// logic [7:0] msg, tx_byte;
 
 // Portmap
-Message_Reg message_reg (.clk(tb_clk), .nRst(tb_nRst), .ready(tb_ready), .transmit_ready(tb_transmit_ready), .data(tb_msg), .blue(tb_blue), .tx_ctrl(tb_tx_ctrl), .tx_byte(tb_tx_byte));
-UART_Tx uart_transmitter (.clk(tb_clk), .nRst(tb_nRst), .tx_ctrl(tb_tx_ctrl), .tx_byte(tb_tx_byte), .transmit_ready(tb_transmit_ready), .tx_serial(tb_tx_serial));
+Message_Reg message_reg (.clk(clk), .nRst(nRst), .ready(ready), .transmit_ready(transmit_ready), .data(msg), .blue(blue), .tx_ctrl(tx_ctrl), .tx_byte(tx_byte));
+UART_Tx uart_transmitter (.clk(clk), .nRst(nRst), .tx_ctrl(tx_ctrl), .tx_byte(tx_byte), .transmit_ready(transmit_ready), .tx_serial(tx_serial));
 
 endmodule
+
