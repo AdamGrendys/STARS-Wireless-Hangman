@@ -68,7 +68,7 @@ module Game_Logic (
                 game_rdy = 0;
                 nextIndexCorrect = 0;
                 if(toggle_state) begin
-                    nextState = STOP;
+                    nextState = IDLE;
                 end else
                     nextState = SET;
             end
@@ -83,8 +83,8 @@ module Game_Logic (
                 nextState = L1;
             end
             L1: begin
-                game_rdy = 0;
                 red_busy = 1;
+                game_rdy = 0;
                 if(letter == setWord[31:24] & nextIndexCorrect[3] != 1)begin
                     nextIndexCorrect[1] = 1;
                     nRight = nRight + 1;
@@ -93,8 +93,8 @@ module Game_Logic (
                 nextState = L2;
             end
             L2: begin
-                game_rdy = 0;
                 red_busy = 1;
+                game_rdy = 0;
                 if(letter == setWord[23:16] & nextIndexCorrect[2] != 1)begin
                     nextIndexCorrect[2] = 1;
                     nRight = nRight + 1;
@@ -103,8 +103,8 @@ module Game_Logic (
                 nextState = L3;
             end
             L3: begin
-                game_rdy = 0;
                 red_busy = 1;
+                game_rdy = 0;
                 if(letter == setWord[15:8] & nextIndexCorrect[1] != 1)begin
                     nextIndexCorrect[3] = 1;
                     nRight = nRight + 1;
@@ -113,8 +113,8 @@ module Game_Logic (
                 nextState = L4;
             end
             L4: begin
-                game_rdy = 0;
                 red_busy = 1;
+                game_rdy = 0;
                 if(letter == setWord[7:0] & nextIndexCorrect[0] != 1)begin
                     nextIndexCorrect[4] = 1;
                     nRight = nRight + 1;
@@ -135,17 +135,16 @@ module Game_Logic (
                 end
                 red_busy = 0;
                 game_rdy = 1;
-                if(guess != 0)begin
-                    placehold = guess;
-                    nextState = IDLE;
-                end else begin
-                    placehold = letter;
-                    nextState = STOP;
-                end
+                nextState = IDLE;
             end
             IDLE: begin
                 nRight = 0;
                 game_rdy = 1;
+                if(guess != 0)begin
+                    placehold = guess;
+                end else begin
+                    placehold = letter;
+                end
             if(correct == 5 | incorrect == 6) begin
                 if(correct == 5) begin
                     tempGreen = 1;
