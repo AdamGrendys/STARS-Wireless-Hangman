@@ -114,6 +114,8 @@ initial begin
     tb_ready = 0;
     #(CLK_PERIOD * 15000);
     tb_gameEnd_host = 1;
+    #CLK_PERIOD
+    tb_gameEnd_host = 0;
 
     // ***********************************
     // Test Case 2: Player loss
@@ -172,11 +174,13 @@ initial begin
     tb_ready = 0;
     #(CLK_PERIOD * 15000);
     tb_gameEnd_host = 1;
+    #CLK_PERIOD
+    tb_gameEnd_host = 0;
+
 
     // ***********************************
     // Test Case 2: Mid-reset
     // ***********************************
-
 
     #(CLK_PERIOD * 100);
     tb_setWord = 40'b0101100101010101010011010100110101011001;
