@@ -74,10 +74,12 @@ initial begin
         #(CLK_PERIOD * 1250);
         tb_rx_serial = temphold[i];
     end
+    tb_rx_serial = 1;
     #CLK_PERIOD
     guess_check(temphold, "A");
+    
     #(CLK_PERIOD * 15000);
-
+    
     // ***********************************
     // Test Case 2: Error with recieving message
     // ***********************************
