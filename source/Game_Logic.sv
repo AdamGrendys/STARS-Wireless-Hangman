@@ -127,7 +127,7 @@ module Game_Logic (
                     mistake = 0;
                     correctCount = correctCount + rights;
                 end 
-                else if (guess != 0 && letter != 0) begin
+                else if (letter != 0) begin
                     mistake = 1;
                     mistakeCount = mistakeCount + 1;
                 end
@@ -137,7 +137,6 @@ module Game_Logic (
                 nextState = IDLE;
             end
             IDLE: begin
-                tempLetter = placehold;
                 nRight = 0;
                 game_rdy = 1;
             if(correct == 5 | incorrect == 6) begin
@@ -154,7 +153,8 @@ module Game_Logic (
                 if(gameEnd) begin
                     nextState = SET;
                 end
-                else if(placehold != letter & letter != 0 & guess != 0 & !(correct == 5 | incorrect == 6)) begin
+                else if(placehold != letter & letter != 0 & !(correct == 5 | incorrect == 6)) begin
+                    tempLetter = placehold;
                     nextState = L0;
                 end else begin
                     nextState = IDLE;
