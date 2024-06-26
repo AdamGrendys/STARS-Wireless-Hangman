@@ -3,10 +3,11 @@ module keypad_fsm (
   input logic [7:0] cur_key, // Concatenation of row and column
   output logic ready, // Notification of letter submission after selection
   output logic game_end, // End-of-game signal
-  output logic [7:0] data, temp_data // ASCII character from current key and number of consecutive presses
+  output logic [7:0] data // ASCII character from current key and number of consecutive presses
 );
   logic [2:0] state, next_state;
-  logic [7:0] prev_key, next_data;
+  logic [7:0] prev_key;
+  logic [7:0] temp_data, next_data;
 
   typedef enum logic [2:0] {
       INIT = 0, S0 = 1, S1 = 2, S2 = 3, S3 = 4, DONE = 5

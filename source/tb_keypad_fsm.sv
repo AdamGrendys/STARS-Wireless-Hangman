@@ -18,12 +18,13 @@ module tb_keypad_fsm ();
     logic tb_ready_o;
     logic tb_game_end_o;
     logic [7:0] tb_data_o;
-    logic [7:0] tb_temp_data_o; // TODO: Get rid of later
 
     // Reset DUT Task
     task reset_dut;
         @(negedge tb_clk);
-        tb_nRst_i = 1'b0; // Activate rest
+        tb_nRst_i = 1'b0; // Activate reset
+        tb_strobe_i = 1'b0;
+        tb_cur_key_i = 8'd0;
 
         @(negedge tb_clk);
         @(negedge tb_clk);
@@ -36,13 +37,43 @@ module tb_keypad_fsm ();
     task check_data_o;
     input logic [7:0] exp_data_o;
     begin
-        @(negedge tb_clk);
+        //@(negedge tb_clk);
         tb_checking_outputs = 1'b1;
         if (tb_data_o == exp_data_o)
             $info("Correct Data: %b", exp_data_o);
         else
             $error("Incorrect data. Expected: %b. Actual: %b", exp_data_o, tb_data_o);
        
+        #(1);
+        tb_checking_outputs = 1'b0;
+    end
+    endtask
+
+    // Task to check ready signal
+    task check_ready_o;
+    input logic exp_ready_o;
+    begin
+        //@(negedge tb_clk);
+        tb_checking_outputs = 1'b1;
+        if (tb_ready_o == exp_ready_o)
+            $info("Correct: %d", exp_ready_o);
+        else
+            $error("Incorrect. Expected: %d. Actual: %d", exp_ready_o, tb_ready_o);
+        #(1);
+        tb_checking_outputs = 1'b0;
+    end
+    endtask
+
+    // Task to check game end signal
+    task check_game_end_o;
+    input logic exp_game_end_o;
+    begin
+        //@(negedge tb_clk);
+        tb_checking_outputs = 1'b1;
+        if (tb_game_end_o == exp_game_end_o)
+            $info("Correct: %d", exp_game_end_o);
+        else
+            $error("Incorrect. Expected: %d. Actual: %d", exp_game_end_o, tb_game_end_o);
         #(1);
         tb_checking_outputs = 1'b0;
     end
@@ -58,14 +89,12 @@ module tb_keypad_fsm ();
 
     // DUT Port Map
     keypad_fsm DUT (.clk (tb_clk),
-                           .nRst (tb_nRst_i),
-                           .strobe (tb_strobe_i),
-                           .cur_key (tb_cur_key_i),
-                           .ready (tb_ready_o),
-                           .game_end (tb_game_end_o),
-                           .data (tb_data_o),
-                           // TODO: Get rid of once verified
-                           .temp_data (tb_temp_data_o));
+                    .nRst (tb_nRst_i),
+                    .strobe (tb_strobe_i),
+                    .cur_key (tb_cur_key_i),
+                    .ready (tb_ready_o),
+                    .game_end (tb_game_end_o),
+                    .data (tb_data_o));
 
     // Main Test Bench Processes
     initial begin
@@ -91,13 +120,13 @@ module tb_keypad_fsm ();
         tb_test_case = "Test Case 0: Power-on-Reset of the DUT";
         $display("\n\n%s", tb_test_case);
 
-        //@(negedge clk);
+        @(negedge tb_clk);
         tb_cur_key_i = {4'b1000, 4'b0100}; // R0 C1 -> 'A'
         repeat (2) @(negedge tb_clk);
-        @(posedge tb_clk);
+        @(posedge tb_clk); // Delayed for 2 clock cycles
         tb_strobe_i = 1'b1;
         
-        //@(negedge clk);
+        @(negedge tb_clk);
         tb_nRst_i = 1'b0; // Activate reset
         tb_cur_key_i = 8'd0; // Input values reset
         tb_strobe_i = 1'b0;
@@ -105,38 +134,81 @@ module tb_keypad_fsm ();
         // Wait for a bit before checking for correct functionality
         #(2);
         // All columns are inactive, so no key press is registered
+        @(negedge tb_clk);
         check_data_o(8'd0);
+        check_ready_o(1'b0);
+        check_game_end_o(1'b0);
 
         // Check that the reset value is maintained during a clock cycle
         @(negedge tb_clk);
         check_data_o(8'd0);
+        check_ready_o(1'b0);
+        check_game_end_o(1'b0);      
 
         // Release the reset away from a clock edge
         @(negedge tb_clk);
         tb_nRst_i = 1'b1; // Deactivate reset
 
         // Check that internal state was correctly kept after reset release
+        @(negedge tb_clk);
         check_data_o(8'd0);
+        check_ready_o(1'b0);
+        check_game_end_o(1'b0);
 
-        // *****************
-        // Test Case 1: 
-        // ****************
+        // ********************************************************
+        // Test Case 1: Toggle through 3-letter set and wrap around
+        // ********************************************************
         tb_test_num += 1;
-        tb_test_case = "...";
-        // $display(...);
+        tb_test_case = "Test Case 1: Toggle through 3-letter set and wrap around";
+        $display("\n\n%s", tb_test_case);
 
-        // Check that ready = 0 if not submitted (state != DONE)
-        // (Repeat test case for mult. keys)
-        // Toggle through letter set (wrap around)
-        // Change letter sets
+        @(negedge tb_clk);
 
-        // Check clear key
-        // Check game end key
+        // **********************
+        // Test Case 2: Clear key
+        // **********************
+        tb_test_num += 1;
+        tb_test_case = "Test Case 2: Clear key";
+        $display("\n\n%s", tb_test_case);
 
-        // Invalid key test - no impact on state/letter
+        // ************************************************************
+        // Test Case 3: Non-default letter of set, change sets, go back
+        // ************************************************************
+        tb_test_num += 1;
+        tb_test_case = "Test Case 3: Non-default letter of set, change sets, go back";
+        $display("\n\n%s", tb_test_case);
 
-        // Submit letter (ready signal)
+        // **********************************************
+        // Test Case 4: Invalid key (no impact on letter)
+        // **********************************************
+        tb_test_num += 1;
+        tb_test_case = "Test Case 4: Invalid key (no impact on letter)";
+        $display("\n\n%s", tb_test_case);
 
+        // *****************************************
+        // Test Case 5: Submit letter (ready signal)
+        // *****************************************
+        tb_test_num += 1;
+        tb_test_case = "Test Case 5: Submit letter (ready signal)";
+        $display("\n\n%s", tb_test_case); 
+
+        // Also: Change to INIT right after
+
+        // ********************************************************
+        // Test Case 6: Toggle through 4-letter set and wrap around
+        // ********************************************************
+        tb_test_num += 1;
+        tb_test_case = "Test Case 6: Toggle through 4-letter set and wrap around";
+        $display("\n\n%s", tb_test_case); 
+
+        // *****************************************************
+        // Test Case 7: Game end key (data clear, game end high)
+        // *****************************************************
+        tb_test_num += 1;
+        tb_test_case = "Test Case 5: Game end key (data clear, game end high)";
+        $display("\n\n%s", tb_test_case); 
+
+        // TODO
     $finish;
     end
 endmodule
