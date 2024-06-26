@@ -54,9 +54,9 @@ module Game_Logic (
         mistakeCount = incorrect; //for latch
         nextIndexCorrect = indexCorrect; //for latch
         nRight = rights; //for latch
-        tempRed = red;
-        tempGreen = green;
-        placehold = letter;
+        tempRed = red;//for latch 
+        tempGreen = green;//for latch
+        placehold = letter;//for latch
 
         red_busy = 0;
         mistake = 0;
