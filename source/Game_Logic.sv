@@ -31,6 +31,11 @@ module Game_Logic (
             state <= SET;
             incorrect <= 0;
             correct <= 0;
+            indexCorrect <= 0;
+            letter <= 0;
+            rights <= 0;
+            red <= 0;
+            green <= 0;
         end else begin
             state <= nextState;
             incorrect <= mistakeCount;
