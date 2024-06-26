@@ -15,7 +15,7 @@ module Game_Logic (
     output logic [4:0] indexCorrect
 );
     typedef enum logic [3:0] { 
-        SET = 0, L0 = 1, L1 = 2, L2 = 3, L3 = 4, L4 = 5, STOP = 6, IDLE = 7
+        SET = 0, L0 = 1, L1 = 2, L2 = 3, L3 = 4, L4 = 5, STOP = 6, IDLE = 7, FIRST = 8
     } state_t;
 
     logic [7:0] placehold;
@@ -65,17 +65,27 @@ module Game_Logic (
                 correctCount = 0;
                 mistakeCount = 0;
                 //flip flop will set the word using a shift register
-                game_rdy = 0;
+                game_rdy = 1;
                 nextIndexCorrect = 0;
                 if(toggle_state) begin
-                    nextState = IDLE;
+                    nextState = FIRST;
                 end else
                     nextState = SET;
+                    
+            end
+            FIRST: begin
+                game_rdy = 1;
+                if(guess != 0)begin
+                    placehold = guess;
+                    nextState = L0;
+                end else begin
+                    nextState = FIRST;
+                end               
             end
             L0: begin
                 red_busy = 1;
                 game_rdy = 0;
-                if(letter == setWord[39:32] & nextIndexCorrect[4] != 1)begin
+                if(letter == setWord[39:32] & indexCorrect[4] != 1)begin
                     nextIndexCorrect[4] = 1;
                     nRight = nRight + 1;
                 end 
@@ -85,7 +95,7 @@ module Game_Logic (
             L1: begin
                 red_busy = 1;
                 game_rdy = 0;
-                if(letter == setWord[31:24] & nextIndexCorrect[3] != 1)begin
+                if(letter == setWord[31:24] & indexCorrect[3] != 1)begin
                     nextIndexCorrect[3] = 1;
                     nRight = nRight + 1;
                 end 
@@ -95,7 +105,7 @@ module Game_Logic (
             L2: begin
                 red_busy = 1;
                 game_rdy = 0;
-                if(letter == setWord[23:16] & nextIndexCorrect[2] != 1)begin
+                if(letter == setWord[23:16] & indexCorrect[2] != 1)begin
                     nextIndexCorrect[2] = 1;
                     nRight = nRight + 1;
                 end 
@@ -105,7 +115,7 @@ module Game_Logic (
             L3: begin
                 red_busy = 1;
                 game_rdy = 0;
-                if(letter == setWord[15:8] & nextIndexCorrect[1] != 1)begin
+                if(letter == setWord[15:8] & indexCorrect[1] != 1)begin
                     nextIndexCorrect[1] = 1;
                     nRight = nRight + 1;
                 end 
@@ -115,7 +125,7 @@ module Game_Logic (
             L4: begin
                 red_busy = 1;
                 game_rdy = 0;
-                if(letter == setWord[7:0] & nextIndexCorrect[0] != 1)begin
+                if(letter == setWord[7:0] & indexCorrect[0] != 1)begin
                     nextIndexCorrect[0] = 1;
                     nRight = nRight + 1;
                 end 
