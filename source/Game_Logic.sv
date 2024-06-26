@@ -128,7 +128,7 @@ module Game_Logic (
                     mistake = 0;
                     correctCount = correctCount + rights;
                 end 
-                else if (guess != 0) begin
+                else begin
                     mistake = 1;
                     mistakeCount = mistakeCount + 1;
                 end
