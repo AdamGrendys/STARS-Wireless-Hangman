@@ -13,19 +13,21 @@ logic [79:0] guesses, next_guess;
 always_ff @(posedge clk, negedge nRst) begin
     if (~nRst) begin
         guesses <= {8'h5F, 8'h5F, 8'h5F, 8'h5F, 8'h5F, 8'h5F, 8'h5F, 8'h5F, 8'h5F, 8'h5F}; // _ x10 in ASCII
-        row1 <= 0;
-        row2 <= 0;
     end else begin
         guesses <= next_guess;
-        row1 <= {60'b0, msg, 60'b0};
-        row2 <= {guesses, 48'b0};
     end
 end
 
 always_comb begin
-    if (ready)
+    if (ready) begin
         next_guess = {msg, guesses[79:8]};
-    else    
+        row1 = {60'b0, msg, 60'b0};
+        row2 = {guesses, 48'b0};
+    end
+    else begin
         next_guess = guesses;
+        row1 = {60'b0, msg, 60'b0};
+        row2 = {guesses, 48'b0};
+    end
 end
 endmodule
