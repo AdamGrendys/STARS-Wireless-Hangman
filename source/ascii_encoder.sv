@@ -30,7 +30,6 @@ module ascii_encoder (
         ascii_character = 8'd87;
     end
 
-    if (|{row, col})
-      ascii_character += ({5'd0, state} - 8'd1);
+    ascii_character += ({5'd0, state} - 8'd1);
   end
 endmodule

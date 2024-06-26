@@ -3,12 +3,11 @@ module keypad_fsm (
   input logic [7:0] cur_key, // Concatenation of row and column
   output logic ready, // Notification of letter submission after selection
   output logic game_end, // End-of-game signal
-  output logic [7:0] data // ASCII character from current key and number of consecutive presses
+  output logic [7:0] data, temp_data // ASCII character from current key and number of consecutive presses
 );
   logic [2:0] state, next_state;
-  logic [7:0] prev_key;
+  logic [7:0] prev_key, next_data;
   assign prev_key = 8'd0;
-  logic [7:0] next_data;
 
   typedef enum logic [2:0] {
       INIT = 0, S0 = 1, S1 = 2, S2 = 3, S3 = 4, DONE = 5
@@ -17,14 +16,25 @@ module keypad_fsm (
   always_ff @(posedge clk, negedge nRst) begin
     if (~nRst) begin
       state <= INIT;
-      prev_key <= 8'd0;
       ready <= 1'b0;
       data <= 8'd0;
+
+      //prev_key <= 8'd0;
     end else begin
       state <= next_state;
-      prev_key <= cur_key;
       ready <= (next_state == DONE);
       data <= next_data;
+
+      //prev_key <= cur_key;
+    end
+  end
+
+  // TODO: Necessary?
+  always_ff @(posedge strobe, negedge nRst) begin
+    if (~nRst) begin
+      prev_key <= 8'd0;
+    end else begin
+      prev_key <= cur_key;
     end
   end
 
@@ -35,8 +45,13 @@ module keypad_fsm (
   localparam clear_key = 8'b00010100; // R3 C1
   localparam submit_word_key = 8'b00010010; // R3 C2
   localparam game_end_key = 8'b00100001; // R2 C3
+  
+  ascii_encoder encoder (.row (cur_key[7:4]),
+                         .col (cur_key[3:0]),
+                         .state (state),
+                         .ascii_character (temp_data));
 
-  // TODO: game_end signal should make state return to INIT
+  // TODO: Check if ready signal high at right moment
 
   always_comb begin
     // 0. By default
@@ -48,7 +63,7 @@ module keypad_fsm (
       (cur_key == (8'b10000001 | 8'b01000001 | 8'b00010001 | 8'b10001000)) ||
       (cur_key == submit_word_key)) begin
       next_state = state;
-      // TODO: Test Case: Make sure state doesn't change with invalid key as input
+      // Test Case: Make sure state doesn't change with invalid key as input
 
     // 2. Valid (active) push button pressed
     end else begin
@@ -88,36 +103,8 @@ module keypad_fsm (
         end
 
         // Update pre-submission data (current letter) to preview on display each time
-        next_data = get_ascii_from_key(cur_key[7:4], cur_key[3:0]) + ({5'd0, state} - 1);
+        next_data = temp_data;
       end
     end
   end
-
-  function logic [7:0] get_ascii_from_key (logic [3:0] row, logic [3:0] col);
-    logic [7:0] val;
-
-    if (row[0]) begin
-      if (col[1])
-        val = 8'd65;
-      else
-        val = 8'd68;
-
-    end else if (row[1]) begin
-      if (col[0])
-        val = 8'd71;
-      else if (col[1])
-        val = 8'd74;
-      else
-        val = 8'd77;
-    
-    end else if (row[2]) begin
-      if (col[0])
-        val = 8'd80;
-      else if (col[1])
-        val = 8'd84;
-      else
-        val = 8'd87;
-    end
-    // return val;
-  endfunction
 endmodule

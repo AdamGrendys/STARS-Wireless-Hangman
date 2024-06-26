@@ -17,15 +17,17 @@ module top (
 );
 
   // Your code goes here...
-  logic [7:0] input_key, ascii_char;
+  logic [7:0] input_key;
+  logic discard_strobe;
   logic [3:0] discard_scan_col, discard_row, discard_col;
 
   keypad_controller kc (.clk (hz100),
                         .nRst (~pb[19]), // Single key for simplicity
                         .read_row (pb[7:4]),
                         .cur_key (input_key), // Input for FSM
-                        .strobe (green), // Input for FSM
+                        .strobe (discard_strobe), // Input for FSM
                         .scan_col (discard_scan_col),
+
                         .sel_row (left[7:4]), //left[7:4]), // Temporary
                         .sel_col (left[3:0])); //left[3:0])); // Temporary
 
@@ -40,25 +42,17 @@ module top (
                 .out (ss6[6:0]));
 
   logic discard_game_end;
-  logic [7:0] discard_data;
-  logic [7:0] char;
-  
-  ascii_encoder ae (.row (input_key[7:4]), .col (input_key[3:0]), .state (3'd0), .ascii_character (char));
+  logic [7:0] discard_data, discard_temp_data;
 
-  assign right[7:0] = char;
-
-/*
   keypad_fsm key_fsm (.clk (hz100),
                       .nRst (~pb[19]), // Single key for simplicity
-                      .strobe (green), // Input from controller
-                      .key (input_key), // Input from controller
+                      .strobe (discard_strobe), // Input from controller
+
+                      .cur_key (input_key), // Input from controller
                       .ready (red), // Output
-                      .data (discard_data), // Output
-                      .temp_data (right[7:0]),
-                      .cur_key (left[7:0]),
+                      .data (right[7:0]), // Output
+                      .temp_data (discard_temp_data),
                       .game_end (discard_game_end)); // TODO: Output
-*/
-  //assign right [7:0] = input_key;
 
   //ssdec_original
   /*
@@ -206,15 +200,14 @@ endmodule
 
 module keypad_fsm (
   input logic clk, nRst, strobe,
-  input logic [7:0] key, // Concatenation of row and column
+  input logic [7:0] cur_key, // Concatenation of row and column
   output logic ready, // Notification of letter submission after selection
   output logic game_end, // End-of-game signal
-  output logic [7:0] data, cur_key, temp_data // ASCII character from current key and number of consecutive presses
+  output logic [7:0] data, temp_data // ASCII character from current key and number of consecutive presses
 );
   logic [2:0] state, next_state;
-  logic [7:0] prev_key; //, delayed_key;
+  logic [7:0] prev_key, next_data;
   assign prev_key = 8'd0;
-  logic [7:0] next_data;
 
   typedef enum logic [2:0] {
       INIT = 0, S0 = 1, S1 = 2, S2 = 3, S3 = 4, DONE = 5
@@ -223,33 +216,24 @@ module keypad_fsm (
   always_ff @(posedge clk, negedge nRst) begin
     if (~nRst) begin
       state <= INIT;
-
-      //delayed_key <= 8'd0;
-      //cur_key <= 8'd0;
-      //prev_key <= 8'd0;
-
       ready <= 1'b0;
       data <= 8'd0;
+
+      //prev_key <= 8'd0;
     end else begin
       state <= next_state;
-
-      //delayed_key <= key;
-      //cur_key <= delayed_key;
-      //prev_key <= cur_key;
-
       ready <= (next_state == DONE);
       data <= next_data;
+
+      //prev_key <= cur_key;
     end
   end
 
+  // TODO: Necessary?
   always_ff @(posedge strobe, negedge nRst) begin
     if (~nRst) begin
-      //delayed_key <= 8'd0;
-      cur_key <= 8'd0;
       prev_key <= 8'd0;
     end else begin
-      //delayed_key <= key;
-      cur_key <= key;
       prev_key <= cur_key;
     end
   end
@@ -266,6 +250,8 @@ module keypad_fsm (
                          .col (cur_key[3:0]),
                          .state (state),
                          .ascii_character (temp_data));
+
+  // TODO: Check if ready signal high at right moment
 
   always_comb begin
     // 0. By default
@@ -321,7 +307,6 @@ module keypad_fsm (
       end
     end
   end
-
 endmodule
 
 module ascii_encoder (
@@ -356,7 +341,6 @@ module ascii_encoder (
         ascii_character = 8'd87;
     end
 
-    //if (|{row, col})
-    //  ascii_character += ({5'd0, state} - 8'd1);
+    ascii_character += ({5'd0, state} - 8'd1);
   end
 endmodule
