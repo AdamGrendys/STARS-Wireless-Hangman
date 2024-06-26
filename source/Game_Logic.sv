@@ -172,7 +172,7 @@ module Game_Logic (
                 if(gameEnd) begin
                     nextState = SET;
                 end
-                else if((pulse | placehold != letter) & !(correct == 5 | incorrect == 6)) begin
+                else if((pulse) & !(correct == 5 | incorrect == 6)) begin
                     nextState = L0;
                 end else begin
                     nextState = IDLE;
