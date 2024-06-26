@@ -54,7 +54,7 @@ module Game_Logic (
 
         red_busy = 0;
         mistake = 0;
-        game_rdy = 0;
+        
         
 
         case(state)
@@ -135,7 +135,7 @@ module Game_Logic (
             end
             IDLE: begin
                 nRight = 0;
-
+                game_rdy = 1;
             if(correct == 5 | incorrect == 6) begin
                 if(correct == 5) begin
                     tempGreen = 1;
