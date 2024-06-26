@@ -162,7 +162,57 @@ module tb_keypad_fsm ();
         tb_test_case = "Test Case 1: Toggle through 3-letter set and wrap around";
         $display("\n\n%s", tb_test_case);
 
+        // Letter set 2, state S0
         @(negedge tb_clk);
+        tb_cur_key_i = {4'b1000, 4'b0010}; // R0 C2 -> 'D'
+        repeat (2) @(negedge tb_clk);
+        @(posedge tb_clk); // Delay of 2 clock cycles
+        tb_strobe_i = 1'b1;
+
+        @(negedge tb_clk); // Because strobe is high, letter set
+        check_data_o(8'd68);
+        check_ready_o(1'b0);
+        check_game_end_o(1'b0);
+        tb_cur_key_i = 8'd0; // Let go of key to stop hold
+
+        // Letter set 2, state S1
+        @(negedge tb_clk);
+        tb_cur_key_i = {4'b1000, 4'b0010}; // R0 C2 -> 'E'
+        repeat (2) @(negedge tb_clk);
+        @(posedge tb_clk); // Delay of 2 clock cycles
+        tb_strobe_i = 1'b1;
+
+        @(negedge tb_clk);
+        check_data_o(8'd69);
+        check_ready_o(1'b0);
+        check_game_end_o(1'b0);
+        tb_cur_key_i = 8'd0; // Let go of key to stop hold
+
+        // Letter set 2, state S2
+        @(negedge tb_clk);
+        tb_cur_key_i = {4'b1000, 4'b0010}; // R0 C2 -> 'F'
+        repeat (2) @(negedge tb_clk);
+        @(posedge tb_clk); // Delay of 2 clock cycles
+        tb_strobe_i = 1'b1;
+
+        @(negedge tb_clk);
+        check_data_o(8'd70);
+        check_ready_o(1'b0);
+        check_game_end_o(1'b0);
+        tb_cur_key_i = 8'd0; // Let go of key to stop hold
+
+        // Letter set 2, state S0 (wrap around)
+        @(negedge tb_clk);
+        tb_cur_key_i = {4'b1000, 4'b0010}; // R0 C2 -> 'D'
+        repeat (2) @(negedge tb_clk);
+        @(posedge tb_clk); // Delay of 2 clock cycles
+        tb_strobe_i = 1'b1;
+
+        @(negedge tb_clk);
+        check_data_o(8'd68);
+        check_ready_o(1'b0);
+        check_game_end_o(1'b0);
+        tb_cur_key_i = 8'd0; // Let go of key to stop hold
 
         // **********************
         // Test Case 2: Clear key
