@@ -207,7 +207,6 @@ module keypad_fsm (
 );
   logic [2:0] state, next_state;
   logic [7:0] prev_key, next_data;
-  assign prev_key = 8'd0;
 
   typedef enum logic [2:0] {
       INIT = 0, S0 = 1, S1 = 2, S2 = 3, S3 = 4, DONE = 5
@@ -218,23 +217,13 @@ module keypad_fsm (
       state <= INIT;
       ready <= 1'b0;
       data <= 8'd0;
-
-      //prev_key <= 8'd0;
+      prev_key <= 8'd0;
     end else begin
       state <= next_state;
       ready <= (next_state == DONE);
       data <= next_data;
-
-      //prev_key <= cur_key;
-    end
-  end
-
-  // TODO: Necessary?
-  always_ff @(posedge strobe, negedge nRst) begin
-    if (~nRst) begin
-      prev_key <= 8'd0;
-    end else begin
-      prev_key <= cur_key;
+      if (strobe)
+        prev_key <= cur_key;
     end
   end
 
@@ -257,6 +246,7 @@ module keypad_fsm (
     // 0. By default
     next_state = state;
     next_data = data;
+    game_end = 1'b0;
 
     // 1. Invalid (inactive) or no push button pressed
     if ((!strobe) ||
@@ -272,11 +262,14 @@ module keypad_fsm (
       end
 
       // Listing valid push button scenarios
-      // 2-1. CLEAR
+      // 2-1. CLEAR or GAME END
       // Should take priority over other push buttons
-      if (cur_key == clear_key) begin
+      if (cur_key == (clear_key | game_end_key)) begin
         next_state = INIT;
         next_data = 8'b0;
+
+        if (cur_key == game_end_key)
+          game_end = 1'b1;
 
       // 2-2. SUBMIT_LETTER
       end else if ((cur_key == submit_letter_key) && (state != INIT)) begin

@@ -32,31 +32,6 @@ module tb_keypad_controller ();
         @(posedge tb_clk);
     endtask
 
-    /*
-    function get_key_rc_value;
-    input logic [7:0] key;
-    output string string_rc_value;
-    begin
-        @(negedge tb_clk);
-        case (key[7:4])
-            4'b1000: string_rc_value = "Row 0, ";
-            4'b0100: string_rc_value = "Row 1, ";
-            4'b0010: string_rc_value = "Row 2, ";
-            4'b0001: string_rc_value = "Row 3, ";
-            default: string_rc_value = "Row _, ";
-        endcase
-
-        case (key[3:0])
-            4'b1000: string_rc_value += "Col 0";
-            4'b0100: string_rc_value += "Col 1";
-            4'b0010: string_rc_value += "Col 2";
-            4'b0001: string_rc_value += "Col 3";
-            default: string_rc_value += "Col _";
-        endcase
-    end
-    endfunction
-    */
-
     // Task to check current key tb_checking_outputs
     task check_key_o;
     input logic [7:0] exp_key_o;
@@ -191,6 +166,8 @@ module tb_keypad_controller ();
         // Pressing the buttons in each row has no effect
         tb_read_row_i = 4'b1111;
         check_key_o(8'd0);
+
+        tb_read_row_i = 4'd0;
 
         @(negedge tb_clk);
         check_scan_col_o(4'b1000);
