@@ -1,4 +1,4 @@
-module INT_TOP_message_TX (
+module INT_TOP_Reg_Tx (
     input logic tb_clk, tb_nRst, tb_ready,
     output logic tb_tx_serial,
     output logic tb_transmit_ready, tb_blue, tb_tx_ctrl,

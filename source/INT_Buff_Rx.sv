@@ -4,7 +4,7 @@ Descriuption: x
 
 `timescale 1ms / 100 us
 
-module INT_Buff_UART_Rx ();
+module INT_Buff_Rx ();
 
 // Testbench ports
 localparam CLK_PERIOD = 10; // 100 Hz clk
@@ -22,7 +22,7 @@ always begin
 end
 
 // Portmap
-buffRX bufferRecieve (.clk(tb_clk), .nRst(tb_nRst), .rx_serial(tb_rx_serial), .rec_ready(tb_rec_ready), .err_LED(tb_error_led), .guess(tb_guess));
+INT_TOP_Buff_Rx bufferRecieve (.clk(tb_clk), .nRst(tb_nRst), .rx_serial(tb_rx_serial), .rec_ready(tb_rec_ready), .err_LED(tb_error_led), .guess(tb_guess));
 
 task guess_check;
 input logic[7:0] expected_guess;

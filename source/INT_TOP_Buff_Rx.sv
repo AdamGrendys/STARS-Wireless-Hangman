@@ -2,7 +2,7 @@
 Descriuption: x
 */
 
-module buffRX(
+module INT_TOP_Buff_Rx(
     input logic clk, nRst, rx_serial, rec_ready, //Input of UART_Rx
     output logic err_LED, //output of UART_Rx 
     output logic [7:0] guess //output of buffer
