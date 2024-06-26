@@ -8,7 +8,7 @@ module INT_Buff_Rx ();
 
 // Testbench ports
 localparam CLK_PERIOD = 10; // 100 Hz clk
-logic tb_clk, tb_nRst, tb_rx_serial, tb_rec_ready; //Input of UART_Rx
+logic tb_clk, tb_nRst, tb_rx_serial, tb_rec_ready, tb_game_rdy; //Input of UART_Rx
 logic tb_error_led; //output of UART_Rx
 logic [7:0] tb_guess; //output of buffer
 logic [7:0] temphold; //value to feed into reciever
@@ -22,7 +22,7 @@ always begin
 end
 
 // Portmap
-INT_TOP_Buff_Rx bufferRecieve (.clk(tb_clk), .nRst(tb_nRst), .rx_serial(tb_rx_serial), .rec_ready(tb_rec_ready), .err_LED(tb_error_led), .guess(tb_guess));
+INT_TOP_Buff_Rx bufferRecieve (.clk(tb_clk), .nRst(tb_nRst), .rx_serial(tb_rx_serial), .rec_ready(tb_rec_ready), .err_LED(tb_error_led), .guess(tb_guess), .game_rdy(tb_game_rdy));
 
 task guess_check;
 input logic[7:0] expected_guess;
@@ -47,6 +47,7 @@ initial begin
     tb_rx_serial = 1;
     tb_rec_ready = 0;
     temphold = 8'b11011011;
+    tb_game_rdy = 1;
 
     // Wait some time before starting first test case
     #(0.1);
@@ -78,6 +79,7 @@ initial begin
     tb_rx_serial = 0;
     #(CLK_PERIOD * 1250);
     tb_rx_serial = 1;
+
     #CLK_PERIOD
     guess_check(temphold, "A");
     
