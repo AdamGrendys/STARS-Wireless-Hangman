@@ -79,6 +79,7 @@ initial begin
 
     #(CLK_PERIOD * 20000);
 
-
+    $finish;
+    
 end
 endmodule
