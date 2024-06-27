@@ -19,6 +19,8 @@ module HostDisplay (
     logic [31:0] lose = {8'b01001100, 8'b01101111, 8'b01110011, 8'b01100101}; // Lose in ASCII MAKE IT BINARY
     logic [39:0] curr_word, next_curr_word; // _ _ _ _ _ in ASCII
     logic [47:0] curr_guesses; // _ _ _ _ _ _ in ASCII
+    logic [39:0] space5 = {8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000};
+    logic [7:0] space1 = 8'b00100000;
 
 always_ff @(posedge clk, negedge nRst) begin
     if(~nRst) begin
@@ -44,13 +46,13 @@ next_curr_word = curr_word;
             if(gameEnd_host) begin
                 next_curr_word = {8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111}; // _ _ _ _ _ in ASCII
                 next_curr_guesses = {8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111}; // _ _ _ _ _ _ in ASCII
-                nextTop = {48'b00100000, curr_word, 40'b00100000}; // split evenly by 8
-                nextBottom = {40'b00100000, curr_guesses, 40'b00100000}; // split evenly by 8
+                nextTop = {space5, space1, curr_word, space5}; // split evenly by 8
+                nextBottom = {space5, curr_guesses, space5}; // split evenly by 8
             end
             else begin
                 if(correct == 5) begin
-                    nextTop = {56'b00100000, win, 48'b00100000}; // split evenly by 8
-                    nextBottom = {48'b00100000, word, 40'b00100000}; // split evenly by 8
+                    nextTop = {space5, space1, space1, win, space5, space1}; // split evenly by 8
+                    nextBottom = {space5, space1, word, space5}; // split evenly by 8
                 end else begin
                     if(indexCorrect[4]) begin
                     next_curr_word[39:32] = letter;
@@ -68,7 +70,7 @@ next_curr_word = curr_word;
                     next_curr_word[7:0] = letter;
                     end
 
-                    nextTop = {48'b00100000, curr_word, 40'b00100000}; // split evenly by 8
+                    nextTop = {space5, space1, curr_word, space5}; // split evenly by 8
                 end
             end
         end 
@@ -76,24 +78,24 @@ next_curr_word = curr_word;
             if(gameEnd_host) begin
                 next_curr_word = {8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111}; // _ _ _ _ _ in ASCII
                 next_curr_guesses = {8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111}; // _ _ _ _ _ _ in ASCII
-                nextTop = {48'b000100000, curr_word, 40'b00100000}; // split evenly by 8
-                nextBottom = {40'b00100000, curr_guesses, 40'b00100000}; // split evenly by 8
+                nextTop = {space5, space1, curr_word, space5}; // split evenly by 8
+                nextBottom = {space5, curr_guesses, space5}; // split evenly by 8
             end
             else begin
                 if(incorrect == 6) begin
-                    nextTop = {48'b00100000, lose, 48'b00100000}; // split evenly by 8
-                    nextBottom = {48'b00100000, word, 40'b00100000}; // split evenly by 8
+                    nextTop = {space5, space1, lose, space5, space1}; // split evenly by 8
+                    nextBottom = {space5, space1, word, space5}; // split evenly by 8
                 end else begin
                     next_curr_guesses = {letter, curr_guesses[47:8]};//bottom row in position bit index becomes the guess letter
-                    nextBottom = {40'b00100000, curr_guesses, 40'b00100000}; // split evenly by 8
+                    nextBottom = {space5, curr_guesses, space5}; // split evenly by 8
                 end
             end 
         end
         default: begin
             next_curr_word = {8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111}; // _ _ _ _ _ in ASCII
             next_curr_guesses = {8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111}; // _ _ _ _ _ _ in ASCII
-            nextTop = {48'b00100000, curr_word, 40'b00100000}; // split evenly by 8
-            nextBottom = {40'b00100000, curr_guesses, 40'b00100000}; // split evenly by 8
+            nextTop = {space5, space1, curr_word, space5}; // split evenly by 8
+            nextBottom = {space5, curr_guesses, space5}; // split evenly by 8
         end 
     endcase
 end
