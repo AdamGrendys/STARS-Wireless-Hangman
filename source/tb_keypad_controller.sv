@@ -35,17 +35,12 @@ module tb_keypad_controller ();
     // Task to check current key tb_checking_outputs
     task check_key_o;
     input logic [7:0] exp_key_o;
-    // input string string_rc_key;
-
     begin
-        // @(negedge tb_clk);
         tb_checking_outputs = 1'b1;
-        // tb_string_cur_key = get_key_rc_value(tb_cur_key_o);
         if (tb_cur_key_o == exp_key_o)
             $info("Correct Key: %b", exp_key_o); //string_rc_key);
         else
             $error("Incorrect key. Expected: %b. Actual: %b", exp_key_o, tb_cur_key_o); // string_rc_key, tb_string_cur_key);
-       
         #(1);
         tb_checking_outputs = 1'b0;
     end
@@ -55,7 +50,6 @@ module tb_keypad_controller ();
     task check_strobe_o;
     input logic exp_strobe_o;
     begin
-        // @(negedge tb_clk);
         tb_checking_outputs = 1'b1;
         if (tb_strobe_o == exp_strobe_o)
             $info("Correct strobe: %d", exp_strobe_o);
@@ -69,7 +63,6 @@ module tb_keypad_controller ();
     task check_scan_col_o;
     input logic [3:0] exp_col_o;
     begin
-        // @(negedge tb_clk);
         tb_checking_outputs = 1'b1;
         if (tb_scan_col_o == exp_col_o)
             $info("Correct column: %b", exp_col_o);
@@ -119,20 +112,25 @@ module tb_keypad_controller ();
         tb_test_case = "Test Case 0: Power-on-Reset of the DUT";
         $display("\n\n%s", tb_test_case);
 
+        @(negedge tb_clk);
         tb_read_row_i = 4'b1000; // Press button (e.g., in row 0)
         tb_nRst_i = 1'b0; // Activate reset
 
-        // Wait for a bit before checking for correct functionality
-        #(2);
         @(negedge tb_clk);
         check_scan_col_o(4'd0);
-        check_key_o(8'd0); //, "Row _, Col _");
+        check_key_o(8'd0);
+
+        @(posedge tb_clk);
+        #(0.1);
         check_strobe_o(1'b0);
 
         // Check that the reset value is maintained during a clock cycle
         @(negedge tb_clk);
         check_scan_col_o(4'd0);
-        check_key_o(8'd0); //, "Row _, Col _");
+        check_key_o(8'd0);
+
+        @(posedge tb_clk);
+        #(0.1);
         check_strobe_o(1'b0);
 
         // Release the reset away from a clock edge
@@ -140,49 +138,51 @@ module tb_keypad_controller ();
         tb_nRst_i = 1'b1; // Deactivate the chip reset
 
         // Check that internal state was correctly kept after reset release
+        @(negedge tb_clk);
         check_scan_col_o(4'd0);
         check_key_o(8'd0);
-        check_strobe_o(1'b0);
 
-        @(negedge tb_clk);
-        check_scan_col_o(4'b1000);
-        check_key_o(8'b10001000);
-
-        @(negedge tb_clk);
+        @(posedge tb_clk);
+        #(0.1);
         check_strobe_o(1'b1);
 
         // *********************************************
         // Test Case 1: Check flipping of active columns
         // *********************************************
         tb_test_num += 1;
-        reset_dut;
         tb_test_case = "Test Case 1: Check flipping of active columns";
         $display("\n\n%s", tb_test_case);
 
-        // None are initially active
-        check_scan_col_o(4'b0000);
-
-        reset_dut;
         // Pressing the buttons in each row has no effect
         tb_read_row_i = 4'b1111;
+        #(0.1);
+
+        // None are initially active
+        check_scan_col_o(4'b0000);
         check_key_o(8'd0);
 
+        @(negedge tb_clk);
         tb_read_row_i = 4'd0;
 
         @(negedge tb_clk);
         check_scan_col_o(4'b1000);
+        check_key_o(8'd0);
 
         @(negedge tb_clk);
         check_scan_col_o(4'b0100);
+        check_key_o(8'd0);
 
         @(negedge tb_clk);
         check_scan_col_o(4'b0010);
+        check_key_o(8'd0);
 
         @(negedge tb_clk);
         check_scan_col_o(4'b0001);
+        check_key_o(8'd0);
 
         @(negedge tb_clk);
         check_scan_col_o(4'b1000);
+        check_key_o(8'd0);
 
         // ******************************************
         // Test Case 2: Verify a few key combinations
@@ -233,6 +233,8 @@ module tb_keypad_controller ();
         
         @(negedge tb_clk);
         tb_read_row_i = 4'b1000;
+        check_scan_col_o(4'b1000);
+        check_key_o(8'b10001000);
 
         @(posedge tb_clk);
         @(posedge tb_clk);
@@ -244,6 +246,27 @@ module tb_keypad_controller ();
         #(1);
         check_strobe_o(1'b0);
 
+        // ******************************************************************************************
+        // Test Case 4: Check that active column is held (cur_key stays constant) while row value set
+        // ******************************************************************************************
+        tb_test_num += 1;
+        tb_test_case = "Test Case 4: Check that active column is held (cur_key stays constant) while row value set";
+        $display("\n\n%s", tb_test_case);
+
+        // After setting read_row to certain val, cur_key
+        // should stay same over mult. clock cycles
+        // (hold active column until unpressed)
+
+        @(negedge tb_clk);
+        check_scan_col_o(4'b1000);
+        check_key_o(8'b10001000);
+
+        @(negedge tb_clk);
+        tb_read_row_i = 4'd0;
+
+        @(negedge tb_clk);
+        check_scan_col_o(4'b0100);
+        check_key_o(8'd0);
     $finish;
     end
 endmodule

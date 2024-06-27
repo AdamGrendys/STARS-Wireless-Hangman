@@ -66,5 +66,5 @@ module keypad_controller (
   end
 
   assign strobe = |((~Q1_delay) & (Q1));
-  assign cur_key = ((|read_row) & (|scan_col)) ? ({read_row, scan_col}) : (8'd0);
+  assign cur_key = (read_row && scan_col) ? ({read_row, scan_col}) : (8'd0);
 endmodule

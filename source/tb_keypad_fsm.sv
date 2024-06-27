@@ -168,11 +168,13 @@ module tb_keypad_fsm ();
         repeat (2) @(negedge tb_clk);
         @(posedge tb_clk); // Delay of 2 clock cycles
         tb_strobe_i = 1'b1;
+        #(1);
 
-        @(negedge tb_clk); // Because strobe is high, letter set
+        //@(negedge tb_clk); // Because strobe is high, letter set
         check_data_o(8'd68);
         check_ready_o(1'b0);
         check_game_end_o(1'b0);
+        tb_strobe_i = 1'b0;
         tb_cur_key_i = 8'd0; // Let go of key to stop hold
 
         // Letter set 2, state S1
@@ -186,6 +188,7 @@ module tb_keypad_fsm ();
         check_data_o(8'd69);
         check_ready_o(1'b0);
         check_game_end_o(1'b0);
+        tb_strobe_i = 1'b0;
         tb_cur_key_i = 8'd0; // Let go of key to stop hold
 
         // Letter set 2, state S2
@@ -199,6 +202,7 @@ module tb_keypad_fsm ();
         check_data_o(8'd70);
         check_ready_o(1'b0);
         check_game_end_o(1'b0);
+        tb_strobe_i = 1'b0;
         tb_cur_key_i = 8'd0; // Let go of key to stop hold
 
         // Letter set 2, state S0 (wrap around)
@@ -212,6 +216,7 @@ module tb_keypad_fsm ();
         check_data_o(8'd68);
         check_ready_o(1'b0);
         check_game_end_o(1'b0);
+        tb_strobe_i = 1'b0;
         tb_cur_key_i = 8'd0; // Let go of key to stop hold
 
         // **********************

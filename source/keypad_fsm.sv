@@ -23,9 +23,15 @@ module keypad_fsm (
       state <= next_state;
       ready <= (next_state == DONE);
       data <= next_data;
-      if (strobe)
+      if (strobe) // How to prevent changing too early?
         prev_key <= cur_key;
     end
+  end
+
+  always_ff @(posedge strobe, negedge nRst) begin
+    if (~nRst) begin
+      prev_key <= 8'd0;
+    else
   end
 
   localparam key_7 = 8'b00101000; // R2 C0
