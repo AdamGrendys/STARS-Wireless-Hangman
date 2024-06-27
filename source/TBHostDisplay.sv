@@ -109,6 +109,7 @@ initial begin
     tb_letter = 8'b01001111; //GUESS O
     #CLK_PERIOD;
     tb_numMistake = 0;
+    tb_indexCorrect = 5'b0;
     tb_letter = 8'b01010000;
     #CLK_PERIOD;
     tb_mistake = 1;
