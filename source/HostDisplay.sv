@@ -48,19 +48,19 @@ always_comb begin
                     nextTop = {52'b0, win, 52'b0};
                     nextBottom = {44'b0, word, 44'b0};
                 end else begin
-                    if(indexCorrect[0]) begin
+                    if(indexCorrect[4]) begin
                     curr_word[39:32] = letter;
                     end               
-                    if(indexCorrect[1]) begin
+                    if(indexCorrect[3]) begin
                     curr_word[31:24] = letter;
                     end
                     if(indexCorrect[2]) begin
                     curr_word[23:16] = letter;
                     end
-                    if(indexCorrect[3]) begin
+                    if(indexCorrect[1]) begin
                     curr_word[15:8] = letter;
                     end
-                    if(indexCorrect[4]) begin
+                    if(indexCorrect[0]) begin
                     curr_word[7:0] = letter;
                     end
 
