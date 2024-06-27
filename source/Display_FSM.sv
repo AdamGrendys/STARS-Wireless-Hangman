@@ -12,7 +12,7 @@ logic [79:0] guesses, next_guess;
 
 always_ff @(posedge clk, negedge nRst) begin
     if (~nRst) begin
-        guesses <= {8'h5F, 8'h5F, 8'h5F, 8'h5F, 8'h5F, 8'h5F, 8'h5F, 8'h5F, 8'h5F, 8'h5F}; // _ x10 in ASCII
+        guesses <= {8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111}; // _ x10 in ASCII
     end else begin
         guesses <= next_guess;
     end
@@ -21,13 +21,13 @@ end
 always_comb begin
     if (ready) begin
         next_guess = {msg, guesses[79:8]};
-        row1 = {60'b0, msg, 60'b0};
-        row2 = {guesses, 48'b0};
+        row1 = {8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, msg, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000};
+        row2 = {guesses, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000};
     end
     else begin
         next_guess = guesses;
-        row1 = {60'b0, msg, 60'b0};
-        row2 = {guesses, 48'b0};
+        row1 = {8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, msg, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000};
+        row2 = {guesses, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000};
     end
 end
 endmodule
