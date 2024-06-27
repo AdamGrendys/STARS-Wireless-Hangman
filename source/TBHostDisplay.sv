@@ -16,6 +16,7 @@ logic [39:0] tb_word;
 logic tb_mistake;
 logic [127:0] tb_top;
 logic [127:0] tb_bottom;
+logic tb_gameEnd_host;
 
 // Clock generation block
 always begin
@@ -26,7 +27,7 @@ always begin
 end
 
 // Portmap
-HostDisplay hostdisplaytb (.clk(tb_clk), .nRst(tb_nRst), .indexCorrect(tb_indexCorrect), .letter(tb_letter), .numMistake(tb_numMistake), .correct(tb_correct), .mistake(tb_mistake), .top1(tb_top), .bottom1(tb_bottom), .word(tb_word));
+HostDisplay hostdisplaytb (.clk(tb_clk), .nRst(tb_nRst), .indexCorrect(tb_indexCorrect), .letter(tb_letter), .numMistake(tb_numMistake), .correct(tb_correct), .mistake(tb_mistake), .top(tb_top), .bottom(tb_bottom), .word(tb_word), .gameEnd_host(tb_gameEnd_host));
 
 initial begin 
     // Signal dump
@@ -38,7 +39,7 @@ initial begin
     tb_letter = 8'b01000001;
     tb_numMistake = 0;
     tb_correct = 0;
-    tb_word = {40'b0100000101010000010100000100110001000101}; //APPLE
+    tb_word = 40'b0100110101001111010011110101001001000101; // MOORE
     tb_mistake = 0;
 
 
@@ -63,8 +64,8 @@ initial begin
     #CLK_PERIOD;
     tb_mistake = 1;
     tb_numMistake = 1;
-    tb_letter = 8'b01000010 ;
-    #CLK_PERIOD;
+    tb_letter = 8'b01010000; //GUESS P
+    #(CLK_PERIOD * 25);
 
     // ***********************************
     // Test Case 0: Getting a letter right
@@ -83,8 +84,8 @@ initial begin
     tb_correct = 1;
     tb_indexCorrect = 5'b10000;
     tb_numMistake = 0;
-    tb_letter = 8'b01000001;
-    #CLK_PERIOD;
+    tb_letter = 8'b01001101; //GUESS M
+     #(CLK_PERIOD * 25);
 
     // ***********************************
     // Test Case 0: Getting a letter correct and one wrong 
@@ -102,14 +103,14 @@ initial begin
     tb_mistake = 0;
     tb_correct = 1;
     tb_indexCorrect = 5'b00001;
-    tb_letter = 8'b01000101;
+    tb_letter = 8'b01001101; //GUESS M
     #CLK_PERIOD;
     tb_numMistake = 0;
     #CLK_PERIOD;
     tb_mistake = 1;
     tb_numMistake = 1;
-    tb_letter = 8'b01000011;
-    #CLK_PERIOD;
+    tb_letter = 8'b01010000;
+     #(CLK_PERIOD * 25);
 
 
     // ***********************************
@@ -129,7 +130,7 @@ initial begin
     tb_correct = 5;
     tb_numMistake = 0;
     tb_indexCorrect = 5'b11111;
-    #CLK_PERIOD;
+     #(CLK_PERIOD * 25);
 
 
     // ***********************************
@@ -149,11 +150,11 @@ initial begin
     tb_correct = 0;
     tb_numMistake = 6;
     tb_indexCorrect = 5'b00000;
-    #CLK_PERIOD;
+     #(CLK_PERIOD * 25);
 
 
     // ***********************************
-    // Test Case 0: Duplicate corrects (letter P)
+    // Test Case 0: Duplicate corrects (letter O)
     // ***********************************
     #(CLK_PERIOD * 2);
     @(negedge tb_clk);
@@ -169,8 +170,8 @@ initial begin
     tb_correct = 2;
     tb_indexCorrect = 5'b01100;
     tb_numMistake = 0;
-    tb_letter = 8'b01010000;
-    #CLK_PERIOD;
+    tb_letter = 8'b01001111; //GUESS O
+     #(CLK_PERIOD * 25);
 
     $finish;
 end

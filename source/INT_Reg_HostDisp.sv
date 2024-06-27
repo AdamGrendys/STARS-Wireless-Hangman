@@ -37,7 +37,7 @@ initial begin
 
     // Initialize test bench signals
     tb_ready = 0;
-    tb_setWord = 40'b0100110101001111010011110101001001000101;
+    tb_setWord = 40'b0100110101001111010011110101001001000101; // MOORE
     tb_rec_ready = 1;
     tb_toggle_state = 0;
     tb_gameEnd_host = 0;

@@ -6,8 +6,8 @@ module INT_TOP_Reg_HostDisp(
     input logic clk, nRst, ready, rec_ready, //Input of UART_Rx
     input logic toggle_state, gameEnd_host,
     input logic [7:0] msg,
+    input logic [39:0] setWord,  
     output logic err_LED, blue, red, green, //output of UART_Rx 
-    input logic [39:0] setWord,
     output logic [127:0] host_row1, host_row2
 );
 logic rx_serial, game_rdy, transmit_ready, tx_ctrl, mistake, red_busy;

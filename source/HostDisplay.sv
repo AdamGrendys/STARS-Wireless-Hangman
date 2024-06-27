@@ -9,6 +9,7 @@ module HostDisplay (
     input logic [2:0] numMistake, correct,
     input logic [39:0] word,
     input logic mistake,
+    input logic gameEnd_host,
     output logic [127:0] top, bottom
 );
     logic [127:0] nextTop;
@@ -36,38 +37,53 @@ end
 always_comb begin
     case(mistake)
         0: begin
-            if(correct == 5) begin
-                nextTop = {52'b0, win, 52'b0};
-                nextBottom = {44'b0, word, 44'b0};
-            end else begin
-
-                if(indexCorrect[0]) begin
-                curr_word[39:32] = letter;
-                end               
-                if(indexCorrect[1]) begin
-                curr_word[31:24] = letter;
-                end
-                if(indexCorrect[2]) begin
-                curr_word[23:16] = letter;
-                end
-                if(indexCorrect[3]) begin
-                curr_word[15:8] = letter;
-                end
-                if(indexCorrect[4]) begin
-                curr_word[7:0] = letter;
-                end
-
+            if(gameEnd_host) begin
+                curr_word = {8'h5F, 8'h5F, 8'h5F, 8'h5F, 8'h5F}; // _ _ _ _ _ in ASCII
+                next_curr_guesses = {8'h5F, 8'h5F, 8'h5F, 8'h5F, 8'h5F, 8'h5F}; // _ _ _ _ _ _ in ASCII
                 nextTop = {44'b0, curr_word, 44'b0};
+                nextBottom = {40'b0, curr_guesses, 40'b0};
+            end
+            else begin
+                if(correct == 5) begin
+                    nextTop = {52'b0, win, 52'b0};
+                    nextBottom = {44'b0, word, 44'b0};
+                end else begin
+                    if(indexCorrect[0]) begin
+                    curr_word[39:32] = letter;
+                    end               
+                    if(indexCorrect[1]) begin
+                    curr_word[31:24] = letter;
+                    end
+                    if(indexCorrect[2]) begin
+                    curr_word[23:16] = letter;
+                    end
+                    if(indexCorrect[3]) begin
+                    curr_word[15:8] = letter;
+                    end
+                    if(indexCorrect[4]) begin
+                    curr_word[7:0] = letter;
+                    end
+
+                    nextTop = {44'b0, curr_word, 44'b0};
+                end
             end
         end 
         1: begin
-            if(numMistake == 6) begin
-                nextTop = {48'b0, lose, 48'b0};
-                nextBottom = {44'b0, word, 44'b0};
-            end else begin
-                next_curr_guesses = {letter, curr_guesses[47:8]};//bottom row in position bit index becomes the guess letter
+            if(gameEnd_host) begin
+                curr_word = {8'h5F, 8'h5F, 8'h5F, 8'h5F, 8'h5F}; // _ _ _ _ _ in ASCII
+                next_curr_guesses = {8'h5F, 8'h5F, 8'h5F, 8'h5F, 8'h5F, 8'h5F}; // _ _ _ _ _ _ in ASCII
+                nextTop = {44'b0, curr_word, 44'b0};
                 nextBottom = {40'b0, curr_guesses, 40'b0};
             end
+            else begin
+                if(numMistake == 6) begin
+                    nextTop = {48'b0, lose, 48'b0};
+                    nextBottom = {44'b0, word, 44'b0};
+                end else begin
+                    next_curr_guesses = {letter, curr_guesses[47:8]};//bottom row in position bit index becomes the guess letter
+                    nextBottom = {40'b0, curr_guesses, 40'b0};
+                end
+            end 
         end
         default: begin
             curr_word = {8'h5F, 8'h5F, 8'h5F, 8'h5F, 8'h5F}; // _ _ _ _ _ in ASCII
