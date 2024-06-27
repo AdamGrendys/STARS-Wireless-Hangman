@@ -75,7 +75,7 @@ initial begin
     #(CLK_PERIOD * 2);
     tb_ready = 0;
     #(CLK_PERIOD * 2);
-    tb_msg = 8'b01000101;
+    tb_msg = 8'b01000001;
 
     // ***********************************
     // Test Case 3: Ready flip
