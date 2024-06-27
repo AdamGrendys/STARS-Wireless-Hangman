@@ -61,12 +61,12 @@ initial begin
     // ***********************************
     // Test Case 1: Getting a letter wrong
     // ***********************************
+    tb_letter = 8'b01010000; //GUESS P
     #CLK_PERIOD;
     tb_mistake = 1;
     #CLK_PERIOD;
     tb_mistake = 0;
     tb_numMistake = 1;
-    tb_letter = 8'b01010000; //GUESS P
     #(CLK_PERIOD * 25);
 
     // ***********************************
