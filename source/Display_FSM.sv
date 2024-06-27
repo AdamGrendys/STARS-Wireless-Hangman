@@ -12,7 +12,7 @@ logic [79:0] guesses, next_guess;
 
 always_ff @(posedge clk, negedge nRst) begin
     if (~nRst) begin
-        guesses <= {8'h5F, 8'h5F, 8'h5F, 8'h5F, 8'h5F, 8'h5F, 8'h5F, 8'h5F, 8'h5F, 8'h5F}; // _ x10 in ASCII
+        guesses <= {8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111}; // _ x10 in ASCII
     end else begin
         guesses <= next_guess;
     end
