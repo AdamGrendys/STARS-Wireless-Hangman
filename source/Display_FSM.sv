@@ -21,12 +21,12 @@ end
 always_comb begin
     if (ready) begin
         next_guess = {msg, guesses[79:8]};
-        row1 = {60'b0, msg, 60'b0};
+        row1 = {56'b0, msg, 64'b0};
         row2 = {guesses, 48'b0};
     end
     else begin
         next_guess = guesses;
-        row1 = {60'b0, msg, 60'b0};
+        row1 = {56'b0, msg, 64'b0};
         row2 = {guesses, 48'b0};
     end
 end
