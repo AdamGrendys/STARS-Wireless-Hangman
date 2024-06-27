@@ -43,7 +43,7 @@ initial begin
     // Initialize test bench signals
     tb_nRst = 1'b1;
     tb_ready = 0;
-    tb_msg = 8'b01000110;
+    tb_msg = 8'b01000110; // F
 
     // Wait some time before starting first test case
     #(0.1);
@@ -65,17 +65,19 @@ initial begin
     // ***********************************
     tb_ready = 0;
     #(CLK_PERIOD * 2);
-    tb_msg = 8'b01000110;
+    tb_msg = 8'b01000110; // F
     #CLK_PERIOD;
 
     // ***********************************
     // Test Case 2: Ready High
     // ***********************************
+    tb_msg = 8'b01000001; // A
+    #CLK_PERIOD;
     tb_ready = 1;
     #(CLK_PERIOD * 2);
     tb_ready = 0;
     #(CLK_PERIOD * 2);
-    tb_msg = 8'b01000001;
+    
 
     // ***********************************
     // Test Case 3: Ready flip
@@ -83,7 +85,7 @@ initial begin
     tb_ready = 0;
     tb_ready = 1;
     tb_ready = 0;
-    tb_msg = 8'b01000011;
+    tb_msg = 8'b01000011; // C
     #(CLK_PERIOD *1);
     tb_ready = 1;
     #(CLK_PERIOD * 0.5);
