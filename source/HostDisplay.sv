@@ -17,7 +17,7 @@ module HostDisplay (
     logic [47:0] next_curr_guesses;
     logic [23:0] win = {8'h57, 8'h69, 8'h6E};  // Win in ASCII
     logic [31:0] lose = {8'h4C, 8'h6F, 8'h73, 8'h65}; // Lose in ASCII
-    logic [39:0] curr_word; // _ _ _ _ _ in ASCII
+    logic [39:0] curr_word, next_curr_word; // _ _ _ _ _ in ASCII
     logic [47:0] curr_guesses; // _ _ _ _ _ _ in ASCII
 
 always_ff @(posedge clk, negedge nRst) begin
@@ -25,10 +25,12 @@ always_ff @(posedge clk, negedge nRst) begin
         top <= 0;
         bottom <= 0;
         curr_guesses <= 0;
+        curr_word <= 0;
     end else begin
         top <= nextTop;
         bottom <= nextBottom;
         curr_guesses <= next_curr_guesses;
+        curr_word <= next_curr_word;
     end
 end
 
@@ -36,10 +38,11 @@ end
 
 always_comb begin
 next_curr_guesses = curr_guesses;
+next_curr_word = curr_word;
     case(mistake)
         0: begin
             if(gameEnd_host) begin
-                curr_word = {8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111}; // _ _ _ _ _ in ASCII
+                next_curr_word = {8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111}; // _ _ _ _ _ in ASCII
                 next_curr_guesses = {8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111}; // _ _ _ _ _ _ in ASCII
                 nextTop = {44'b0, curr_word, 44'b0};
                 nextBottom = {40'b0, curr_guesses, 40'b0};
@@ -50,19 +53,19 @@ next_curr_guesses = curr_guesses;
                     nextBottom = {44'b0, word, 44'b0};
                 end else begin
                     if(indexCorrect[4]) begin
-                    curr_word[39:32] = letter;
+                    next_curr_word[39:32] = letter;
                     end               
                     if(indexCorrect[3]) begin
-                    curr_word[31:24] = letter;
+                    next_curr_word[31:24] = letter;
                     end
                     if(indexCorrect[2]) begin
-                    curr_word[23:16] = letter;
+                    next_curr_word[23:16] = letter;
                     end
                     if(indexCorrect[1]) begin
-                    curr_word[15:8] = letter;
+                    next_curr_word[15:8] = letter;
                     end
                     if(indexCorrect[0]) begin
-                    curr_word[7:0] = letter;
+                    next_curr_word[7:0] = letter;
                     end
 
                     nextTop = {44'b0, curr_word, 44'b0};
@@ -71,7 +74,7 @@ next_curr_guesses = curr_guesses;
         end 
         1: begin
             if(gameEnd_host) begin
-                curr_word = {8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111}; // _ _ _ _ _ in ASCII
+                next_curr_word = {8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111}; // _ _ _ _ _ in ASCII
                 next_curr_guesses = {8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111}; // _ _ _ _ _ _ in ASCII
                 nextTop = {44'b0, curr_word, 44'b0};
                 nextBottom = {40'b0, curr_guesses, 40'b0};
@@ -87,7 +90,7 @@ next_curr_guesses = curr_guesses;
             end 
         end
         default: begin
-            curr_word = {8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111}; // _ _ _ _ _ in ASCII
+            next_curr_word = {8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111}; // _ _ _ _ _ in ASCII
             next_curr_guesses = {8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111}; // _ _ _ _ _ _ in ASCII
             nextTop = {44'b0, curr_word, 44'b0};
             nextBottom = {40'b0, curr_guesses, 40'b0};
