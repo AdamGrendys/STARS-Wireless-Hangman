@@ -44,7 +44,7 @@ next_curr_word = curr_word;
             if(gameEnd_host) begin
                 next_curr_word = {8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111}; // _ _ _ _ _ in ASCII
                 next_curr_guesses = {8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111}; // _ _ _ _ _ _ in ASCII
-                nextTop = {44'b0, curr_word, 44'b0};
+                nextTop = {48'b0, curr_word, 40'b0};
                 nextBottom = {40'b0, curr_guesses, 40'b0};
             end
             else begin
@@ -76,7 +76,7 @@ next_curr_word = curr_word;
             if(gameEnd_host) begin
                 next_curr_word = {8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111}; // _ _ _ _ _ in ASCII
                 next_curr_guesses = {8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111}; // _ _ _ _ _ _ in ASCII
-                nextTop = {44'b0, curr_word, 44'b0};
+                nextTop = {48'b0, curr_word, 40'b0};
                 nextBottom = {40'b0, curr_guesses, 40'b0};
             end
             else begin
@@ -92,7 +92,7 @@ next_curr_word = curr_word;
         default: begin
             next_curr_word = {8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111}; // _ _ _ _ _ in ASCII
             next_curr_guesses = {8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111}; // _ _ _ _ _ _ in ASCII
-            nextTop = {44'b0, curr_word, 44'b0};
+            nextTop = {48'b0, curr_word, 40'b0};
             nextBottom = {40'b0, curr_guesses, 40'b0};
         end
     endcase
