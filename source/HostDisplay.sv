@@ -6,7 +6,7 @@ module HostDisplay (
     input logic clk, nRst,
     input logic [4:0] indexCorrect,
     input logic [7:0] letter,
-    input logic [2:0] numMistake, correct,
+    input logic [2:0] incorrect, correct,
     input logic [39:0] word,
     input logic mistake,
     input logic gameEnd_host,
@@ -80,7 +80,7 @@ next_curr_word = curr_word;
                 nextBottom = {40'b00100000, curr_guesses, 40'b00100000}; // split evenly by 8
             end
             else begin
-                if(numMistake == 6) begin
+                if(incorrect == 6) begin
                     nextTop = {48'b00100000, lose, 48'b00100000}; // split evenly by 8
                     nextBottom = {48'b00100000, word, 40'b00100000}; // split evenly by 8
                 end else begin

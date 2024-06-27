@@ -21,7 +21,7 @@ INT_TOP_Buff_Rx receive(.clk(clk), .nRst(nRst), .rx_serial(rx_serial), .rec_read
 Game_Logic gamelogic (.clk(clk), .nRst(nRst), .guess(guess), .setWord(setWord), .toggle_state(toggle_state), .letter(letter), .red(red), .green(green),
 .mistake(mistake), .red_busy(red_busy), .game_rdy(game_rdy), .incorrect(incorrect), .correct(correct), .indexCorrect(indexCorrect), .gameEnd(gameEnd_host));
 
-HostDisplay hostdisp (.clk(clk), .nRst(nRst), .indexCorrect(indexCorrect), .letter(letter), .numMistake(incorrect), .correct(correct), .word(setWord), 
-.mistake(mistake), .top(host_row1), .bottom(host_row2));
+HostDisplay hostdisp (.clk(clk), .nRst(nRst), .indexCorrect(indexCorrect), .letter(letter), .incorrect(incorrect), .correct(correct), .word(setWord), 
+.mistake(mistake), .top(host_row1), .bottom(host_row2), .gameEnd_host(gameEnd_host));
 
 endmodule
