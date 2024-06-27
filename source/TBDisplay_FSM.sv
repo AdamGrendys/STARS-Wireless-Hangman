@@ -65,7 +65,7 @@ initial begin
     // ***********************************
     tb_ready = 0;
     #(CLK_PERIOD * 2);
-    tb_msg = 8'b01000001;
+    tb_msg = 8'b01000110;
     #CLK_PERIOD;
 
     // ***********************************
@@ -83,7 +83,7 @@ initial begin
     tb_ready = 0;
     tb_ready = 1;
     tb_ready = 0;
-    tb_msg = 8'b01000001;
+    tb_msg = 8'b01000011;
     #(CLK_PERIOD *1);
     tb_ready = 1;
     #(CLK_PERIOD * 0.5);
