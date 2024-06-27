@@ -110,6 +110,8 @@ initial begin
     tb_numMistake = 0;
     #CLK_PERIOD;
     tb_mistake = 1;
+    #CLK_PERIOD;
+    tb_mistake = 0;
     tb_numMistake = 1;
     tb_letter = 8'b01010000;
      #(CLK_PERIOD * 25);
