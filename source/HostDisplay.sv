@@ -15,8 +15,8 @@ module HostDisplay (
     logic [127:0] nextTop;
     logic [127:0] nextBottom;
     logic [47:0] next_curr_guesses;
-    logic [23:0] win = {8'h57, 8'h69, 8'h6E};  // Win in ASCII
-    logic [31:0] lose = {8'h4C, 8'h6F, 8'h73, 8'h65}; // Lose in ASCII
+    logic [23:0] win = {8'b01010111, 8'b01101001, 8'b01101110};  // Win in ASCII MAKE IT BINARY
+    logic [31:0] lose = {8'b01001100, 8'b01101111, 8'b01110011, 8'b01100101}; // Lose in ASCII MAKE IT BINARY
     logic [39:0] curr_word, next_curr_word; // _ _ _ _ _ in ASCII
     logic [47:0] curr_guesses; // _ _ _ _ _ _ in ASCII
 
@@ -44,13 +44,13 @@ next_curr_word = curr_word;
             if(gameEnd_host) begin
                 next_curr_word = {8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111}; // _ _ _ _ _ in ASCII
                 next_curr_guesses = {8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111}; // _ _ _ _ _ _ in ASCII
-                nextTop = {48'b0, curr_word, 40'b0};
-                nextBottom = {40'b0, curr_guesses, 40'b0};
+                nextTop = {48'b00100000, curr_word, 40'b00100000}; // split evenly by 8
+                nextBottom = {40'b00100000, curr_guesses, 40'b00100000}; // split evenly by 8
             end
             else begin
                 if(correct == 5) begin
-                    nextTop = {52'b0, win, 52'b0};
-                    nextBottom = {44'b0, word, 44'b0};
+                    nextTop = {56'b00100000, win, 48'b00100000}; // split evenly by 8
+                    nextBottom = {48'b00100000, word, 40'b00100000}; // split evenly by 8
                 end else begin
                     if(indexCorrect[4]) begin
                     next_curr_word[39:32] = letter;
@@ -68,7 +68,7 @@ next_curr_word = curr_word;
                     next_curr_word[7:0] = letter;
                     end
 
-                    nextTop = {44'b0, curr_word, 44'b0};
+                    nextTop = {48'b00100000, curr_word, 40'b00100000}; // split evenly by 8
                 end
             end
         end 
@@ -76,25 +76,25 @@ next_curr_word = curr_word;
             if(gameEnd_host) begin
                 next_curr_word = {8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111}; // _ _ _ _ _ in ASCII
                 next_curr_guesses = {8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111}; // _ _ _ _ _ _ in ASCII
-                nextTop = {48'b0, curr_word, 40'b0};
-                nextBottom = {40'b0, curr_guesses, 40'b0};
+                nextTop = {48'b000100000, curr_word, 40'b00100000}; // split evenly by 8
+                nextBottom = {40'b00100000, curr_guesses, 40'b00100000}; // split evenly by 8
             end
             else begin
                 if(numMistake == 6) begin
-                    nextTop = {48'b0, lose, 48'b0};
-                    nextBottom = {44'b0, word, 44'b0};
+                    nextTop = {48'b00100000, lose, 48'b00100000}; // split evenly by 8
+                    nextBottom = {48'b00100000, word, 40'b00100000}; // split evenly by 8
                 end else begin
                     next_curr_guesses = {letter, curr_guesses[47:8]};//bottom row in position bit index becomes the guess letter
-                    nextBottom = {40'b0, curr_guesses, 40'b0};
+                    nextBottom = {40'b00100000, curr_guesses, 40'b00100000}; // split evenly by 8
                 end
             end 
         end
         default: begin
             next_curr_word = {8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111}; // _ _ _ _ _ in ASCII
             next_curr_guesses = {8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111}; // _ _ _ _ _ _ in ASCII
-            nextTop = {48'b0, curr_word, 40'b0};
-            nextBottom = {40'b0, curr_guesses, 40'b0};
-        end
+            nextTop = {48'b00100000, curr_word, 40'b00100000}; // split evenly by 8
+            nextBottom = {40'b00100000, curr_guesses, 40'b00100000}; // split evenly by 8
+        end 
     endcase
 end
 endmodule
