@@ -41,6 +41,7 @@ initial begin
     tb_correct = 0;
     tb_word = 40'b0100110101001111010011110101001001000101; // MOORE
     tb_mistake = 0;
+    tb_gameEnd_host = 0;
 
 
     // Wait some time before starting first test case
@@ -104,16 +105,16 @@ initial begin
     #CLK_PERIOD;
     tb_mistake = 0;
     tb_correct = 1;
-    tb_indexCorrect = 5'b00001;
-    tb_letter = 8'b01001101; //GUESS M
+    tb_indexCorrect = 5'b01100;
+    tb_letter = 8'b01001111; //GUESS O
     #CLK_PERIOD;
     tb_numMistake = 0;
+    tb_letter = 8'b01010000;
     #CLK_PERIOD;
     tb_mistake = 1;
     #CLK_PERIOD;
     tb_mistake = 0;
     tb_numMistake = 1;
-    tb_letter = 8'b01010000;
      #(CLK_PERIOD * 25);
 
 
