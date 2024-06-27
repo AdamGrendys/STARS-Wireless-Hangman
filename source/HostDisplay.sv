@@ -26,7 +26,7 @@ always_ff @(posedge clk, negedge nRst) begin
     if(~nRst) begin
         top <= 0;
         bottom <= 0;
-        curr_guesses <= 0;
+        curr_guesses <= {8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111};
         curr_word <= {8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111};
     end else begin
         top <= nextTop;
