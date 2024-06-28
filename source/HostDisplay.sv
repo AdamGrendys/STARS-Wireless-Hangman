@@ -39,15 +39,15 @@ end
 
 
 always_comb begin
-//next_curr_guesses = curr_guesses;
-//next_curr_word = curr_word;
+next_curr_guesses = curr_guesses;
+next_curr_word = curr_word;
     case(mistake)
         0: begin
             if(gameEnd_host) begin
                 next_curr_word = {8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111}; // _ _ _ _ _ in ASCII
                 next_curr_guesses = {8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111}; // _ _ _ _ _ _ in ASCII
-                nextTop = {space5, space1, curr_word, space5}; // split evenly by 8
-                nextBottom = {space5, curr_guesses, space5}; // split evenly by 8
+                nextTop = {space5, space1, space5, space5}; // split evenly by 8
+                nextBottom = {space5, space5, space1, space5}; // split evenly by 8
             end
             else begin
                 if(correct == 5) begin
@@ -78,8 +78,8 @@ always_comb begin
             if(gameEnd_host) begin
                 next_curr_word = {8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111}; // _ _ _ _ _ in ASCII
                 next_curr_guesses = {8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111}; // _ _ _ _ _ _ in ASCII
-                nextTop = {space5, space1, curr_word, space5}; // split evenly by 8
-                nextBottom = {space5, curr_guesses, space5}; // split evenly by 8
+                nextTop = {space5, space1, space5, space5}; // split evenly by 8
+                nextBottom = {space5, space5, space1, space5}; // split evenly by 8
             end
             else begin
                 if(incorrect == 6) begin
