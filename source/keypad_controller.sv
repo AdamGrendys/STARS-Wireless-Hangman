@@ -1,9 +1,9 @@
 module keypad_controller (
-  input logic clk, nRst,
+  input logic clk, nRst, enable,
   input logic [3:0] read_row,
   output logic [7:0] cur_key, // Input for keypad_fsm
   output logic strobe, // Input for keypad_fsm
-  output logic [3:0] scan_col, sel_col, sel_row
+  output logic [3:0] scan_col//, sel_col, sel_row
 );
   logic [3:0] Q0, Q1, Q1_delay;
   logic [3:0] scan_col_next, sel_col_next;
@@ -20,8 +20,8 @@ module keypad_controller (
       scan_col <= 4'd0;
 
       // Temporary output variables for testing
-      sel_row <= 4'd0;
-      sel_col <= 4'd0;
+      //sel_row <= 4'd0;
+      //sel_col <= 4'd0;
 
     end else begin
       // Pass through FFs for stability and edge detection
@@ -32,10 +32,10 @@ module keypad_controller (
       // Variables for testing purposes
       // Strobe should prompt transition in finite state machine (FSM) module
       // Only if there is an active column, on positive edge of button press (row)
-      if ((strobe) & (|scan_col)) begin
-        sel_row <= read_row;
-        sel_col <= scan_col_next;
-      end
+      //if ((strobe) & (|scan_col)) begin
+        //sel_row <= read_row;
+        //sel_col <= scan_col_next;
+      //end
 
       // Active column changes every clock cycle
       scan_col <= scan_col_next;
@@ -48,7 +48,7 @@ module keypad_controller (
     if (|read_row)
       // Maintain selected column while input button being pressed (non-zero row)
       scan_col_next = scan_col;
-    else
+    else if (enable)
       case (scan_col)
         4'b0000:
           scan_col_next = 4'b1000;
@@ -61,7 +61,7 @@ module keypad_controller (
         4'b0001:
           scan_col_next = 4'b1000;
         default:
-          scan_col_next = 4'd0;
+          scan_col_next = scan_col; //4'd0;
       endcase
   end
 

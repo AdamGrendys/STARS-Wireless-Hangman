@@ -10,13 +10,14 @@ module keypad_fsm (
   
   output logic ready, // Notification of letter submission after selection
   output logic game_end, // End-of-game signal
-  output logic [7:0] data // ASCII character from current key and number of consecutive presses
+  output logic [7:0] data, // ASCII character from current key and number of consecutive presses
+  output logic toggle_state
 );
   // logic [2:0] state;
   logic [2:0] next_state;
   logic [7:0] temp_data, next_data;
   // logic [7:0] prev_key;
-  // logic unlocked;
+  logic next_unlocked;
 
   typedef enum logic [2:0] {
       INIT = 0, S0 = 1, S1 = 2, S2 = 3, S3 = 4, DONE = 5
@@ -28,14 +29,18 @@ module keypad_fsm (
       ready <= 1'b0;
       data <= 8'd0;
       
+      unlocked <= 1'b0;
       prev_key <= 8'd0;
     end else begin
       state <= next_state;
       ready <= (next_state == DONE);
       data <= next_data;
-      
+
+      unlocked <= next_unlocked;
       if (unlocked) // Prevent loading too early
         prev_key <= cur_key;
+      else
+        prev_key <= 8'd0;
     end
   end
   
@@ -68,7 +73,8 @@ module keypad_fsm (
     next_state = state;
     next_data = data;
     game_end = 1'b0;
-    unlocked = 1'b0;
+    next_unlocked = unlocked;
+    toggle_state = 1'b0;
 
     // 0-2. No push button pressed
     if (!strobe) begin
@@ -84,7 +90,8 @@ module keypad_fsm (
       // Invalid: 00 (1), 03 (A), 13 (B), 33 (D)
       // Submit Word: 23 (C)
       next_state = state;
-      unlocked = 1'b0;
+      next_unlocked = 1'b0;
+      toggle_state = 1'b1;
 
     // 2. Valid (active) push button pressed
     end else begin
@@ -138,7 +145,7 @@ module keypad_fsm (
       end
       
       // Allow cur_key to be loaded into prev_key (on the next strobe) only after cur_key has been initialized, post-reset
-      unlocked = 1'b1;
+      next_unlocked = 1'b1;
     end
     
     cur_key_out = cur_key;

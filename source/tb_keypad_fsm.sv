@@ -175,6 +175,7 @@ module tb_keypad_fsm ();
         check_ready_o(1'b0);
         check_game_end_o(1'b0);
         tb_strobe_i = 1'b0;
+        repeat (3) @(posedge tb_clk);
         tb_cur_key_i = 8'd0; // Let go of key to stop hold
 
         // Letter set 2, state S1
