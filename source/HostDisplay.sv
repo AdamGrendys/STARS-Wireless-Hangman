@@ -87,7 +87,7 @@ next_curr_word = curr_word;
                 nextBottom = {space5, space5, space1, space5}; // split evenly by 8
             end
             else begin
-                if(incorrect == 6) begin
+                if(incorrect == 5) begin
                     nextTop = {space5, space1, lose, space5, space1}; // split evenly by 8
                     nextBottom = {space5, space1, word, space5}; // split evenly by 8
                 end else begin
