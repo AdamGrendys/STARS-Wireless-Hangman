@@ -94,6 +94,7 @@ module keypad_fsm (
 
       // Listing valid push button scenarios
       // 2-1. CLEAR or GAME END
+      // 2-1. CLEAR or GAME END
       // Should take priority over other push buttons
       if ((cur_key == clear_key) || 
           (cur_key == game_end_key)) begin
@@ -130,6 +131,7 @@ module keypad_fsm (
         end
 
         // Update pre-submission data (current letter) to preview on display each time
+        next_data = temp_data;
         next_data = temp_data;
       end
       
