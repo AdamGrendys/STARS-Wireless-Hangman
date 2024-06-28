@@ -203,7 +203,7 @@ initial begin
     #CLK_PERIOD;
     tb_nRst = 1;
 
-    #(CLK_PERIOD * 1000);
+    #(CLK_PERIOD * 15000);
 
 
     $finish;
