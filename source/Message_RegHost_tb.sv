@@ -44,6 +44,8 @@ initial begin
     tb_nRst = 1'b1;
     tb_key_ready = 0;
     tb_setLetter = 8'b01000110; // F
+    tb_toggle_state = 0;
+    tb_gameEnd_host = 0;
 
     // Wait some time before starting first test case
     #(0.1);
@@ -66,6 +68,7 @@ initial begin
     tb_key_ready = 0;
     #(CLK_PERIOD * 2);
     tb_setLetter = 8'b01000110; // F
+    single_button_press();
     #CLK_PERIOD;
 
     // ***********************************
@@ -73,25 +76,23 @@ initial begin
     // ***********************************
     tb_setLetter = 8'b01000001; // A
     #CLK_PERIOD;
-    tb_key_ready = 1;
+    single_button_press();
     #(CLK_PERIOD * 2);
-    tb_key_ready = 0;
+    tb_setLetter = 8'b01001110; //N
+    single_button_press();
     #(CLK_PERIOD * 2);
     
 
     // ***********************************
     // Test Case 3: key_ready flip
     // ***********************************
-    tb_key_ready = 0;
-    tb_key_ready = 1;
-    tb_key_ready = 0;
-    tb_setLetter = 8'b01000011; // C
+    tb_setLetter = 8'b01010100; // T
+    #CLK_PERIOD;
+    single_button_press();
+    tb_setLetter = 8'b01000001; // A
     #(CLK_PERIOD *1);
-    tb_key_ready = 1;
-    #(CLK_PERIOD * 0.5);
-    tb_key_ready = 0;
-    #(CLK_PERIOD * 2);
-
+    single_button_press();
+    #(CLK_PERIOD * 25)
     $finish;
 end
 endmodule
