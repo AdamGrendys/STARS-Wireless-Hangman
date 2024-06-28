@@ -56,9 +56,6 @@ next_curr_word = curr_word;
                 if(incorrect == 6) begin
                     nextTop = {space5, space1, lose, space5, space1}; // split evenly by 8
                     nextBottom = {space5, space1, word, space5}; // split evenly by 8
-                end else begin
-                    next_curr_guesses = {letter, curr_guesses[47:8]};//bottom row in position bit index becomes the guess letter
-                    nextBottom = {space5, curr_guesses, space5}; // split evenly by 8
                 end
                 if(correct == 5) begin
                     nextTop = {space5, space1, space1, win, space5, space1}; // split evenly by 8
