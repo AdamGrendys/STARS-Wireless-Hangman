@@ -33,7 +33,6 @@ module top (
 
   logic [7:0] row_col;
   assign row_col = {sel_row_out, sel_col_out};
-  assign discard_strobe = green;
 
   // Row (sel_row)
   ssdec ssdec7 (.in (row_col[7:4]), //(row_col[7:4]),
@@ -74,6 +73,7 @@ module top (
                 .enable (1'b1),
                 .out (ss0[6:0]));
                 
+  assign discard_strobe = green;
   //assign = right[7:0];
   //assign left[7:0] = data_out;
   assign right[7:0] = data_out;
@@ -270,7 +270,7 @@ module keypad_fsm (
   // Handle ASCII character conversion
   ascii_encoder encoder (.row (cur_key[7:4]),
                          .col (cur_key[3:0]),
-                         .state (state),
+                         .state (next_state),
                          .ascii_character (temp_data));
 
   // TODO: Check if ready signal high at right moment

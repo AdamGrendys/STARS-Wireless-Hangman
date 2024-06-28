@@ -58,7 +58,7 @@ module keypad_fsm (
   // Handle ASCII character conversion
   ascii_encoder encoder (.row (cur_key[7:4]),
                          .col (cur_key[3:0]),
-                         .state (state),
+                         .state (next_state),
                          .ascii_character (temp_data));
 
   // TODO: Check if ready signal high at right moment
