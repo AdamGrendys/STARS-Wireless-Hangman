@@ -54,19 +54,19 @@ next_curr_word = curr_word;
                     nextTop = {space5, space1, space1, win, space5, space1}; // split evenly by 8
                     nextBottom = {space5, space1, word, space5}; // split evenly by 8
                 end else begin
-                    if(indexCorrect[4]) begin
+                    if(indexCorrect[4] & next_curr_word[39:32] != 8'b01011111) begin
                     next_curr_word[39:32] = letter;
                     end               
-                    if(indexCorrect[3]) begin
+                    if(indexCorrect[3] & next_curr_word[31:24] != 8'b01011111) begin
                     next_curr_word[31:24] = letter;
                     end
-                    if(indexCorrect[2]) begin
+                    if(indexCorrect[2] & next_curr_word[23:16] != 8'b01011111) begin
                     next_curr_word[23:16] = letter;
                     end
-                    if(indexCorrect[1]) begin
+                    if(indexCorrect[1] & next_curr_word[15:8] != 8'b01011111) begin
                     next_curr_word[15:8] = letter;
                     end
-                    if(indexCorrect[0]) begin
+                    if(indexCorrect[0] & next_curr_word[7:0] != 8'b01011111) begin
                     next_curr_word[7:0] = letter;
                     end
 
