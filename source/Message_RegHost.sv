@@ -39,6 +39,8 @@ always_comb begin
             rec_ready = 0;
             if (key_ready)
                 next_temp_word = {temp_word[31:0], setLetter};
+            else
+                next_temp_word = 40'b0101111101011111010111110101111101011111;
 
             if (toggle_state) begin
                 next_state = COMPARE;
