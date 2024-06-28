@@ -22,6 +22,9 @@ module HostDisplay (
     logic [39:0] space5 = {8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000};
     logic [7:0] space1 = 8'b00100000;
 
+
+
+
 always_ff @(posedge clk, negedge nRst) begin
     if(~nRst) begin
         top <= 0;
@@ -69,8 +72,10 @@ next_curr_word = curr_word;
                     if(indexCorrect[0] & next_curr_word[7:0] == 8'b01011111) begin
                     next_curr_word[7:0] = letter;
                     end
+                    
 
                     nextTop = {space5, space1, curr_word, space5}; // split evenly by 8
+                    nextBottom = {space5, curr_guesses, space5};
                 end
             end
         end 
