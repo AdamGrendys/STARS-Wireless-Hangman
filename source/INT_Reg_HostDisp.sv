@@ -168,7 +168,7 @@ initial begin
     tb_ready = 1;
     #(CLK_PERIOD * 10);
     tb_ready = 0;
-    #(CLK_PERIOD * 30000);
+    #(CLK_PERIOD * 15000);
     tb_gameEnd_host = 1;
     #CLK_PERIOD
     tb_gameEnd_host = 0;
@@ -202,6 +202,8 @@ initial begin
     tb_nRst = 0;
     #CLK_PERIOD;
     tb_nRst = 1;
+
+    #(CLK_PERIOD * 1000);
 
 
     $finish;
