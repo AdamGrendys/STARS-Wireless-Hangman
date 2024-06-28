@@ -98,6 +98,12 @@ initial begin
     @(negedge tb_clk);
     tb_toggle_state = 1'b0;
     @(posedge tb_clk);
+    #(CLK_PERIOD * 2);
+    @(negedge tb_clk);
+    tb_gameEnd_host = 1'b1;
+    @(negedge tb_clk);
+    tb_gameEnd_host = 1'b0;
+    @(posedge tb_clk);
     #(CLK_PERIOD * 25);
     $finish;
 end
