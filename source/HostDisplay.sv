@@ -39,8 +39,8 @@ end
 
 
 always_comb begin
-next_curr_guesses = curr_guesses;
-next_curr_word = curr_word;
+//next_curr_guesses = curr_guesses;
+//next_curr_word = curr_word;
     case(mistake)
         0: begin
             if(gameEnd_host) begin
