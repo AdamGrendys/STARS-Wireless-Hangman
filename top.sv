@@ -3,7 +3,7 @@
 
 module top (
   // I/O ports
-  input  logic hz100, reset,
+  input  logic hz10M, reset,
   input  logic [20:0] pb,
   output logic [7:0] left, right, ss7, ss6, ss5, ss4, ss3, ss2, ss1, ss0,
   output logic red, green, blue,
@@ -20,7 +20,7 @@ module top (
   logic discard_strobe;
   logic [3:0] discard_scan_col, discard_row, discard_col, sel_row_out, sel_col_out;
 
-  keypad_controller kc (.clk (hz100),
+  keypad_controller kc (.clk (hz10M),
                         .nRst (~pb[19]), // Single key for simplicity
                         .read_row (pb[7:4]),
                         .cur_key (input_key), // Input for FSM
@@ -56,7 +56,7 @@ module top (
   logic [7:0] discard_data, data_out, discard_temp_data, prev_key_out;
   logic [2:0] state_out;
 
-  keypad_fsm key_fsm (.clk (hz100),
+  keypad_fsm key_fsm (.clk (hz10M),
                       .nRst (~pb[19]), // Single key for simplicity
                       .strobe (discard_strobe), // Input from controller
 
