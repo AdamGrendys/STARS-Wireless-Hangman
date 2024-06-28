@@ -16,15 +16,9 @@ module top (
 );
 
   // Your code goes here...
-<<<<<<< HEAD
   logic [7:0] input_key, cur_out;
   logic discard_strobe;
   logic [3:0] discard_scan_col, discard_row, discard_col, sel_row_out, sel_col_out;
-=======
-  logic [7:0] input_key;
-  logic discard_strobe;
-  logic [3:0] discard_scan_col, discard_row, discard_col;
->>>>>>> cc30594b3906ae139a0fa1ba8362c297320335f8
 
   keypad_controller kc (.clk (hz100),
                         .nRst (~pb[19]), // Single key for simplicity
@@ -32,7 +26,6 @@ module top (
                         .cur_key (input_key), // Input for FSM
                         .strobe (discard_strobe), // Input for FSM
                         .scan_col (discard_scan_col),
-<<<<<<< HEAD
                         .read_col_in (pb[3:0]),
 
                         .sel_row (sel_row_out), //left[7:4]), // Temporary
@@ -41,11 +34,6 @@ module top (
   logic [7:0] row_col;
   assign row_col = {sel_row_out, sel_col_out};
   assign discard_strobe = green;
-=======
-
-                        .sel_row (left[7:4]), //left[7:4]), // Temporary
-                        .sel_col (left[3:0])); //left[3:0])); // Temporary
->>>>>>> cc30594b3906ae139a0fa1ba8362c297320335f8
 
   // Row (sel_row)
   ssdec ssdec7 (.in (row_col[7:4]), //(row_col[7:4]),
@@ -66,19 +54,14 @@ module top (
                 .out (ss3[6:0]));
 
   logic discard_game_end;
-<<<<<<< HEAD
   logic [7:0] discard_data, data_out, discard_temp_data, prev_key_out;
   logic [2:0] state_out;
-=======
-  logic [7:0] discard_data, discard_temp_data;
->>>>>>> cc30594b3906ae139a0fa1ba8362c297320335f8
 
   keypad_fsm key_fsm (.clk (hz100),
                       .nRst (~pb[19]), // Single key for simplicity
                       .strobe (discard_strobe), // Input from controller
 
                       .cur_key (input_key), // Input from controller
-<<<<<<< HEAD
                       //.cur_key_out (cur_out),
                       .prev_key (prev_key_out),
                       .ready (red), // Output
@@ -86,12 +69,6 @@ module top (
                       .state (state_out),
                       .unlocked (left[7]),
                       .game_end (blue)); // TODO: Output
-=======
-                      .ready (red), // Output
-                      .data (right[7:0]), // Output
-                      .temp_data (discard_temp_data),
-                      .game_end (discard_game_end)); // TODO: Output
->>>>>>> cc30594b3906ae139a0fa1ba8362c297320335f8
 
   ssdec_original ssdec0 (.in ({1'b0, state_out}),
                 .enable (1'b1),
@@ -236,7 +213,6 @@ endmodule
 module keypad_fsm (
   input logic clk, nRst, strobe,
   input logic [7:0] cur_key, // Concatenation of row and column
-<<<<<<< HEAD
   
   // Temporarily set for FPGA testing
   output logic [2:0] state,
@@ -253,14 +229,6 @@ module keypad_fsm (
   logic [7:0] temp_data, next_data;
   // logic [7:0] prev_key;
   // logic unlocked;
-=======
-  output logic ready, // Notification of letter submission after selection
-  output logic game_end, // End-of-game signal
-  output logic [7:0] data, temp_data // ASCII character from current key and number of consecutive presses
-);
-  logic [2:0] state, next_state;
-  logic [7:0] prev_key, next_data;
->>>>>>> cc30594b3906ae139a0fa1ba8362c297320335f8
 
   typedef enum logic [2:0] {
       INIT = 0, S0 = 1, S1 = 2, S2 = 3, S3 = 4, DONE = 5
@@ -271,21 +239,14 @@ module keypad_fsm (
       state <= INIT;
       ready <= 1'b0;
       data <= 8'd0;
-<<<<<<< HEAD
       
-=======
->>>>>>> cc30594b3906ae139a0fa1ba8362c297320335f8
       prev_key <= 8'd0;
     end else begin
       state <= next_state;
       ready <= (next_state == DONE);
       data <= next_data;
-<<<<<<< HEAD
       
       if (unlocked) // Prevent loading too early
-=======
-      if (strobe)
->>>>>>> cc30594b3906ae139a0fa1ba8362c297320335f8
         prev_key <= cur_key;
     end
   end
@@ -313,20 +274,13 @@ module keypad_fsm (
                          .ascii_character (temp_data));
 
   // TODO: Check if ready signal high at right moment
-<<<<<<< HEAD
   
-=======
-
->>>>>>> cc30594b3906ae139a0fa1ba8362c297320335f8
   always_comb begin
     // 0-1. By default
     //next_state = state;
     next_data = data;
     game_end = 1'b0;
-<<<<<<< HEAD
     unlocked = 1'b0;
-=======
->>>>>>> cc30594b3906ae139a0fa1ba8362c297320335f8
 
     // 0-2. No push button pressed
     if (!strobe) begin
@@ -353,12 +307,8 @@ module keypad_fsm (
       // Listing valid push button scenarios
       // 2-1. CLEAR or GAME END
       // Should take priority over other push buttons
-<<<<<<< HEAD
       if ((cur_key == clear_key) || 
           (cur_key == game_end_key)) begin
-=======
-      if (cur_key == (clear_key | game_end_key)) begin
->>>>>>> cc30594b3906ae139a0fa1ba8362c297320335f8
         next_state = INIT;
         next_data = 8'd0;
 
@@ -437,13 +387,8 @@ module ascii_encoder (
       else if (col[1]) // "2" - 0010
         ascii_character = 8'd87;
     end
-<<<<<<< HEAD
     
     if ((1 <= state) && (state <= 4)) // S0 through S3
       ascii_character += ({5'd0, state} - 8'd1);
-=======
-
-    ascii_character += ({5'd0, state} - 8'd1);
->>>>>>> cc30594b3906ae139a0fa1ba8362c297320335f8
   end
 endmodule
