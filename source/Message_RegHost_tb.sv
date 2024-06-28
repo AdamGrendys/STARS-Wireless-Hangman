@@ -104,6 +104,7 @@ initial begin
     @(negedge tb_clk);
     tb_gameEnd_host = 1'b0;
     @(posedge tb_clk);
+    tb_setLetter = 8'b01011111; // A
     #(CLK_PERIOD * 25);
     $finish;
 end
