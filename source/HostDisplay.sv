@@ -53,10 +53,6 @@ next_curr_word = curr_word;
                 nextBottom = {space5, space5, space1, space5}; // split evenly by 8
             end
             else begin
-                if(incorrect == 6) begin
-                    nextTop = {space5, space1, lose, space5, space1}; // split evenly by 8
-                    nextBottom = {space5, space1, word, space5}; // split evenly by 8
-                end
                 if(correct == 5) begin
                     nextTop = {space5, space1, space1, win, space5, space1}; // split evenly by 8
                     nextBottom = {space5, space1, word, space5}; // split evenly by 8
@@ -81,6 +77,10 @@ next_curr_word = curr_word;
                     nextTop = {space5, space1, curr_word, space5}; // split evenly by 8
                     nextBottom = {space5, curr_guesses, space5};
                 end
+            if(incorrect == 6) begin
+                nextTop = {space5, space1, lose, space5, space1}; // split evenly by 8
+                nextBottom = {space5, space1, word, space5}; // split evenly by 8
+            end
             end
         end 
         1: begin
