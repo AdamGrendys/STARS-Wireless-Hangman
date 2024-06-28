@@ -175,9 +175,15 @@ module Game_Logic (
                 end
             end
                 if(gameEnd) begin
+                    tempGreen = 0;
+                    tempRed = 0;
+                    correctCount = 0;
+                    mistakeCount = 0;
                     nextState = SET;
                 end
                 else if((pulse) & !(correct == 5 | incorrect == 6)) begin
+                    correctCount = 0;
+                    mistakeCount = 0;
                     nextState = L0;
                 end else begin
                     nextState = IDLE;
