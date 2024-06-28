@@ -92,7 +92,12 @@ initial begin
     tb_setLetter = 8'b01000001; // A
     #(CLK_PERIOD *1);
     single_button_press();
-    #(CLK_PERIOD * 25)
+    #(CLK_PERIOD * 5)
+    @(negedge tb_clk);
+    tb_toggle_state = 1'b1;
+    @(negedge tb_clk);
+    tb_toggle_state = 1'b0;
+    @(posedge tb_clk);
     $finish;
 end
 endmodule
