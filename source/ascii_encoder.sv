@@ -29,8 +29,8 @@ module ascii_encoder (
       else if (col[1]) // "2" - 0010
         ascii_character = 8'd87;
     end
-
-    if (|{row, col})
+    
+    if ((1 <= state) && (state <= 4)) // S0 through S3
       ascii_character += ({5'd0, state} - 8'd1);
   end
 endmodule
