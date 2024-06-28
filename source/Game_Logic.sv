@@ -13,6 +13,7 @@ module Game_Logic (
     output logic red, green, mistake, red_busy, game_rdy,
     output logic [2:0] incorrect, correct,
     output logic [4:0] indexCorrect
+
 );
     typedef enum logic [3:0] { 
         SET = 0, L0 = 1, L1 = 2, L2 = 3, L3 = 4, L4 = 5, STOP = 6, IDLE = 7, FIRST = 8
