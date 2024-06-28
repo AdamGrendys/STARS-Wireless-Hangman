@@ -98,6 +98,7 @@ initial begin
     @(negedge tb_clk);
     tb_toggle_state = 1'b0;
     @(posedge tb_clk);
+    #(CLK_PERIOD * 25);
     $finish;
 end
 endmodule
