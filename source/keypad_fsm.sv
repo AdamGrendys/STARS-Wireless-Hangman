@@ -65,7 +65,7 @@ module keypad_fsm (
   
   always_comb begin
     // 0-1. By default
-    //next_state = state;
+    next_state = state;
     next_data = data;
     game_end = 1'b0;
     unlocked = 1'b0;
@@ -88,12 +88,7 @@ module keypad_fsm (
 
     // 2. Valid (active) push button pressed
     end else begin
-      if (state == DONE) begin
-        next_state = INIT;
-      end
-
       // Listing valid push button scenarios
-      // 2-1. CLEAR or GAME END
       // 2-1. CLEAR or GAME END
       // Should take priority over other push buttons
       if ((cur_key == clear_key) || 
@@ -104,10 +99,18 @@ module keypad_fsm (
         if (cur_key == game_end_key)
           game_end = 1'b1;
 
+        if (cur_key == game_end_key)
+          game_end = 1'b1;
+
       // 2-2. SUBMIT_LETTER
       end else if ((cur_key == submit_letter_key) && (state != INIT)) begin
         next_state = DONE;
         // Note: ASCII character (data) has already been assigned
+        
+        if (state == DONE) begin
+          next_state = INIT;
+          next_data = 8'd0;
+        end
 
       // 2-3. LETTER SETS 2 to 9
       end else begin
@@ -131,7 +134,6 @@ module keypad_fsm (
         end
 
         // Update pre-submission data (current letter) to preview on display each time
-        next_data = temp_data;
         next_data = temp_data;
       end
       
