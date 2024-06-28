@@ -9,6 +9,8 @@ module ice40hx8k (hwclk,pb,ss7,ss6,ss5,ss4,ss3,ss2,ss1,ss0,left,right,red,green,
     input Rx;
     output Tx, CTSn, DCDn;
 
+    reg hz10M;
+
     reg [15:0] ctr = 0;
     reg hz100 = 0;
     always @ (posedge hwclk)
@@ -51,9 +53,9 @@ module ice40hx8k (hwclk,pb,ss7,ss6,ss5,ss4,ss3,ss2,ss1,ss0,left,right,red,green,
     /* The PLL instance */
     wire BYPASS = 0;
     wire RESETB = 1;
-    wire serclk;
+    wire serclk = 0;
     SB_PLL40_CORE #(
-        .FEEDBACK_PATH("SIMPLE"),           // <== switch to simple mode
+        .FEEDBACK_PATH("PHASE_AND_DELAY"),           // <== switch to simple mode
         .DELAY_ADJUSTMENT_MODE_FEEDBACK("FIXED"),
         .DELAY_ADJUSTMENT_MODE_RELATIVE("FIXED"),
         .PLLOUT_SELECT("SHIFTREG_0deg"),
@@ -62,11 +64,11 @@ module ice40hx8k (hwclk,pb,ss7,ss6,ss5,ss4,ss3,ss2,ss1,ss0,left,right,red,green,
         .FDA_RELATIVE(4'b0000),
         .DIVR(4'b0101),        // 5
         .DIVF(7'b0000100),     // 4
-        .DIVQ(3'b011),         // 3
+        .DIVQ(3'b000),         // 3
         .FILTER_RANGE(3'b001), // 1
     ) pll (
         .REFERENCECLK (hwclk),
-        .PLLOUTCORE   (serclk),
+        .PLLOUTCORE   (hz10M),
         .BYPASS       (BYPASS),
         .RESETB       (RESETB)
         //.LOCK (LOCK)
@@ -108,9 +110,9 @@ module ice40hx8k (hwclk,pb,ss7,ss6,ss5,ss4,ss3,ss2,ss1,ss0,left,right,red,green,
         recv <= 1;
 
     wire reset;
-    reset_on_start ros (reset, hz100, pb[3] && pb[0] && pb[16]);
+    reset_on_start ros (reset, hz10M, pb[3] && pb[0] && pb[16]);
     top top_inst(
-      hz100, reset, pb,
+      hz10M, reset, pb,
       left, right, ss7, ss6, ss5, ss4, ss3, ss2, ss1, ss0,
       red, green, blue,
       txdata,
