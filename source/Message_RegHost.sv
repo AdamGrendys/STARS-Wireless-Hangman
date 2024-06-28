@@ -28,11 +28,7 @@ always_ff @(posedge clk, negedge nRst) begin
 end
 
 always_comb begin
-    if (gameEnd_host) begin
-        next_state = SET;
-        rec_ready = 0;
-        next_temp_word = 40'b0101111101011111010111110101111101011111;
-    end
+    
 
     case(Cstate)
         SET: begin 
@@ -53,5 +49,10 @@ always_comb begin
             next_state = COMPARE;
         end
     endcase
+    if (gameEnd_host) begin
+        next_state = SET;
+        rec_ready = 0;
+        next_temp_word = 40'b0101111101011111010111110101111101011111;
+    end
 end 
 endmodule 
