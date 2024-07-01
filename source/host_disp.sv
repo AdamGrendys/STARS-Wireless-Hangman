@@ -10,7 +10,8 @@ module host_disp (
     input logic [39:0] temp_word,
     input logic toggle_state,
     input logic mistake,
-    input logic gameEnd_host,
+    input logic gameEnd_host, 
+    input logic mode, // If mode is 1, host activates
     output logic [127:0] top, bottom
 );
     logic [127:0] nextTop;
@@ -37,13 +38,12 @@ always_ff @(posedge clk, negedge nRst) begin
 
         curr_guesses <= {8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111};
         curr_word <= {8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111};
-    end else begin
+    end else if (mode) begin
         top <= nextTop;
         bottom <= nextBottom;
         curr_guesses <= next_curr_guesses;
         curr_word <= next_curr_word;
         Cstate <= next_state;
- 
     end
 end
 
@@ -68,8 +68,6 @@ end
             if (toggle_state)
                 next_state = COMPARE;
         end
-
-
         COMPARE: begin
         case(mistake)
             0: begin
