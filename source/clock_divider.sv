@@ -1,5 +1,5 @@
 module clock_divider (
-  input logic clk, nRst, enable, clear
+  input logic clk, nRst, enable, clear,
   input logic [6:0] max,
   output logic at_max
 );
