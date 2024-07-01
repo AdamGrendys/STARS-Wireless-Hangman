@@ -27,7 +27,7 @@ always begin
 end
 
 // Portmap
-INT_TOP_Reg_HostDisp disp0 (.clk(tb_clk), .nRst(tb_nRst), .msg(tb_msg), .ready(tb_ready), .rec_ready(tb_rec_ready), .err_LED(tb_err_LED), .blue(tb_blue), .setWord(tb_setWord), .toggle_state(tb_toggle_state), .red(tb_red), .green(tb_green), .gameEnd_host(tb_gameEnd_host), .host_row1(tb_row1), .host_row2(tb_row2));
+reg_host_int_top disp0 (.clk(tb_clk), .nRst(tb_nRst), .msg(tb_msg), .ready(tb_ready), .rec_ready(tb_rec_ready), .err_LED(tb_err_LED), .blue(tb_blue), .setWord(tb_setWord), .toggle_state(tb_toggle_state), .red(tb_red), .green(tb_green), .gameEnd_host(tb_gameEnd_host), .host_row1(tb_row1), .host_row2(tb_row2));
 
 
 initial begin 

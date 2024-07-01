@@ -30,7 +30,7 @@ always begin
 end
 
 // Portmap
-INT_TOP_GameReg game0 (.clk(tb_clk), .nRst(tb_nRst), .msg(tb_msg), .ready(tb_ready), .rec_ready(tb_rec_ready), .err_LED(tb_err_LED), .blue(tb_blue), .setWord(tb_setWord), .toggle_state(tb_toggle_state), .letter(tb_letter), .red(tb_red), .green(tb_green),
+game_reg_int_top game0 (.clk(tb_clk), .nRst(tb_nRst), .msg(tb_msg), .ready(tb_ready), .rec_ready(tb_rec_ready), .err_LED(tb_err_LED), .blue(tb_blue), .setWord(tb_setWord), .toggle_state(tb_toggle_state), .letter(tb_letter), .red(tb_red), .green(tb_green),
 .mistake(tb_mistake), .red_busy(tb_red_busy), .incorrect(tb_incorrect), .correct(tb_correct), .indexCorrect(tb_indexCorrect), .gameEnd_host(tb_gameEnd_host));
 
 
