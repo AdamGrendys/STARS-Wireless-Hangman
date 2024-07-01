@@ -3,12 +3,11 @@ Descriuption: x
 */
 
 module main (
-    input logic clk, nRst,
+    input logic clk, nRst, role_switch,
     output logic red, green, blue, error,
     output logic [127:0] play_row1, play_row2, host_row1, host_row2
 );
 // Local Variable Declarations for both player and host 
-logic role_switch;
 // Local Variable Declarations - Player 
 logic ready, transmit_ready, tx_ctrl, tx_serial, toggle_state, strobe_player, gameEnd_player;
 logic [7:0] msg, tx_byte, cur_key_player;
@@ -46,6 +45,7 @@ lcd_controller lcdPlayer (.clk(clk), .rst(nRst), .row_1(play_row1), .row_2(play_
 // *********
 // Host Side
 // *********
+
 
 
 keypad_controller keypadHostt (.clk(clk), .nRst(nRst), .read_row(input_row_host), .cur_key(cur_key_host), .strobe(strobe_host), .scan_col(scan_col_host), .enable(role_switch));
