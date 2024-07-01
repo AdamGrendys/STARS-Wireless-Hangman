@@ -4,7 +4,7 @@ Descriuption: x
 
 `timescale 1ms / 100 us
 
-module Message_RegHost_tb ();
+module host_msg_reg_tb ();
 
 // Testbench ports
 localparam CLK_PERIOD = 10; // 100 Hz clk
