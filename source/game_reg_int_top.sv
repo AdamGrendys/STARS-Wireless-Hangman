@@ -2,7 +2,7 @@
 Descriuption: x
 */
 
-module INT_TOP_GameReg(
+module game_reg_int_top (
     input logic clk, nRst, ready, rec_ready, //Input of UART_Rx
     input logic toggle_state, gameEnd_host,
     output logic err_LED, blue, red, green, //output of UART_Rx 

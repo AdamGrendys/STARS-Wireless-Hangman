@@ -4,7 +4,7 @@ Descriuption: x
 
 `timescale 1ms / 100 us
 
-module INT_Reg_Tx ();
+module reg_tx_int ();
 
 // Testbench ports
 localparam CLK_PERIOD = 10; // 100 Hz clk

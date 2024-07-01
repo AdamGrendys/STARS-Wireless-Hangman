@@ -4,7 +4,7 @@ Descriuption: x
 
 `timescale 1ms / 100 us
 
-module INT_GameRxTx ();
+module reg_host_int ();
 
 // Testbench ports
 localparam CLK_PERIOD = 10; // 100 Hz clk
@@ -14,10 +14,7 @@ logic [39:0] tb_setWord; //Input
 logic [7:0] tb_msg;//Input
 
 logic tb_err_LED, tb_blue, tb_red, tb_green; //Output
-logic [2:0] tb_incorrect, tb_correct; //Output
-logic [4:0] tb_indexCorrect; //Output
-logic [7:0] tb_letter; //Output
-logic tb_red_busy, tb_mistake; //Output
+logic [127:0] tb_row1, tb_row2;
 
 
 
@@ -30,8 +27,7 @@ always begin
 end
 
 // Portmap
-INT_TOP_GameReg game0 (.clk(tb_clk), .nRst(tb_nRst), .msg(tb_msg), .ready(tb_ready), .rec_ready(tb_rec_ready), .err_LED(tb_err_LED), .blue(tb_blue), .setWord(tb_setWord), .toggle_state(tb_toggle_state), .letter(tb_letter), .red(tb_red), .green(tb_green),
-.mistake(tb_mistake), .red_busy(tb_red_busy), .incorrect(tb_incorrect), .correct(tb_correct), .indexCorrect(tb_indexCorrect), .gameEnd_host(tb_gameEnd_host));
+INT_TOP_Reg_HostDisp disp0 (.clk(tb_clk), .nRst(tb_nRst), .msg(tb_msg), .ready(tb_ready), .rec_ready(tb_rec_ready), .err_LED(tb_err_LED), .blue(tb_blue), .setWord(tb_setWord), .toggle_state(tb_toggle_state), .red(tb_red), .green(tb_green), .gameEnd_host(tb_gameEnd_host), .host_row1(tb_row1), .host_row2(tb_row2));
 
 
 initial begin 
@@ -41,7 +37,7 @@ initial begin
 
     // Initialize test bench signals
     tb_ready = 0;
-    tb_setWord = 40'b0100110101001111010011110101001001000101;
+    tb_setWord = 40'b0100110101001111010011110101001001000101; // MOORE
     tb_rec_ready = 1;
     tb_toggle_state = 0;
     tb_gameEnd_host = 0;
@@ -112,7 +108,7 @@ initial begin
     tb_ready = 1;
     #(CLK_PERIOD * 10);
     tb_ready = 0;
-    #(CLK_PERIOD * 15000);
+    #(CLK_PERIOD * 35000);
     tb_gameEnd_host = 1;
     #CLK_PERIOD
     tb_gameEnd_host = 0;
@@ -172,7 +168,7 @@ initial begin
     tb_ready = 1;
     #(CLK_PERIOD * 10);
     tb_ready = 0;
-    #(CLK_PERIOD * 15000);
+    #(CLK_PERIOD * 35000);
     tb_gameEnd_host = 1;
     #CLK_PERIOD
     tb_gameEnd_host = 0;
@@ -206,6 +202,8 @@ initial begin
     tb_nRst = 0;
     #CLK_PERIOD;
     tb_nRst = 1;
+
+    #(CLK_PERIOD * 15000);
 
 
     $finish;

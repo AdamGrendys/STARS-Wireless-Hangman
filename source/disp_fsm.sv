@@ -2,7 +2,7 @@
 Descriuption: x
 */
 
-module Display_FSM (
+module disp_fsm (
     input logic clk, nRst, ready,
     input logic [7:0] msg,
     output logic [127:0] row1, row2

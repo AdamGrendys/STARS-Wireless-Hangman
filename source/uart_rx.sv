@@ -5,7 +5,7 @@ typedef enum logic [2:0] {
 IDLE = 3'b001, START = 3'b010, DATAIN = 3'b011, STOP = 3'b100, CLEAN = 3'b101, PARITY = 3'b110
 } curr_state;
 
-module UART_Rx
+module uart_rx
 #(
     parameter Clkperbaud = 1250
 )

@@ -4,7 +4,7 @@ Then the next state compares the user input with the different letters in the wo
 Finally, once the user either guesses the word, or gets 6 incorrect questions, the game
 ends. 
 */
-module Game_Logic (
+module game_logic (
     input logic clk, nRst, gameEnd,
     input logic [7:0] guess,
     input logic [39:0] setWord,
@@ -13,7 +13,6 @@ module Game_Logic (
     output logic red, green, mistake, red_busy, game_rdy,
     output logic [2:0] incorrect, correct,
     output logic [4:0] indexCorrect
-
 );
     typedef enum logic [3:0] { 
         SET = 0, L0 = 1, L1 = 2, L2 = 3, L3 = 4, L4 = 5, STOP = 6, IDLE = 7, FIRST = 8

@@ -2,7 +2,7 @@
 Descriuption: x
 */
 
-module Buffer (
+module buffer (
     input logic [7:0] Rx_byte,
     input logic rx_ready, game_rdy, clk, nRst,
     output logic [7:0] guess

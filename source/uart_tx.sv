@@ -3,7 +3,7 @@ Descriuption: x
 */
 
 
-module UART_Tx
+module uart_tx
 #(
     parameter Clkperbaud = 1250
 )

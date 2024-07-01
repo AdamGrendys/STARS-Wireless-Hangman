@@ -1,4 +1,4 @@
-module INT_TOP_Reg_Tx (
+module reg_tx_int_top (
     input logic clk, nRst, ready,
     output logic tx_serial,
     output logic transmit_ready, blue, tx_ctrl,
