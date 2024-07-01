@@ -14,8 +14,8 @@ logic ready, transmit_ready, tx_ctrl, tx_serial, rec_ready, rx_ready, toggle_sta
 logic [7:0] msg, tx_byte, rx_byte, guess, letter, cur_key_player;
 logic [39:0] setWord;
 logic [2:0] incorrect, correct;
-logic [4:0] indexCorrect, input_row_player, input_row_host, scan_col_player, scan_col_host;
-
+logic [4:0] indexCorrect;
+logic [3:0] input_row_player,scan_col_player;
 // LCD Outputs
 logic [7:0] lcd_data1, lcd_data2;
 logic lcd_en1, lcd_en2, lcd_rw1, lcd_rw2, lcd_rs1, lcd_rs2;
@@ -42,8 +42,11 @@ lcd_controller lcdPlayer (.clk(clk), .rst(nRst), .row_1(play_row1), .row_2(play_
 // *********
 
 logic strobe_host, gameEnd_host, key_ready, rec_ready_host, toggle_state_host;
+logic [3:0] input_row_host, scan_col_host;
 logic [7:0] cur_key_host, setLetter;
 logic [39:0] temp_word; 
+logic [4:0] indexCorrect;
+
 keypad_controller keypadHostt (.clk(clk), .nRst(nRst), .read_row(input_row_host), .cur_key(cur_key_host), .strobe(strobe_host), .scan_col(scan_col_host), .enable(role_switch));
 keypad_fsm keypadFSMHost (.clk(clk), .nRst(nRst), .strobe(strobe_host), .cur_key(cur_key_host), .ready(key_ready), .data(setLetter), .game_end(gameEnd_host), .toggle_state(toggle_state_host));
 
