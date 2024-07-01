@@ -4,7 +4,7 @@ Descriuption: x
 
 `timescale 1ms / 100 us
 
-module Message_RegHost_tb ();
+module host_msg_reg_tb ();
 
 // Testbench ports
 localparam CLK_PERIOD = 10; // 100 Hz clk
@@ -33,7 +33,7 @@ endtask
 
 
 // Portmap
-Message_RegHost tb_disp_fsm(.clk(tb_clk), .nRst(tb_nRst), .rec_ready(tb_rec_ready), .key_ready(tb_key_ready), .setLetter(tb_setLetter), .gameEnd_host(tb_gameEnd_host), .toggle_state(tb_toggle_state), .temp_word(tb_temp_word));
+host_msg_reg tb_disp_fsm(.clk(tb_clk), .nRst(tb_nRst), .rec_ready(tb_rec_ready), .key_ready(tb_key_ready), .setLetter(tb_setLetter), .gameEnd_host(tb_gameEnd_host), .toggle_state(tb_toggle_state), .temp_word(tb_temp_word));
 
 initial begin 
     // Signal dump

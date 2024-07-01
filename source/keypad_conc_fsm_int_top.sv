@@ -2,7 +2,7 @@
  * Description: ...
  */
 
-module INT_TOP_keypad_controller_fsm (
+module keypad_conc_fsm_int_top (
     input logic clk, nRst,
     input logic [3:0] read_row,
     output logic ready, game_end, toggle_state,

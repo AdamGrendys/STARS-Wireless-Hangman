@@ -3,7 +3,7 @@ Descriuption: x
 */
 
 
-module Message_Reg (
+module msg_reg (
     input logic clk, nRst, ready, transmit_ready,
     input logic [7:0] data,
     output logic blue, tx_ctrl,
