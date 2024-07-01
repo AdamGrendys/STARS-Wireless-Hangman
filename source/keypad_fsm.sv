@@ -48,7 +48,7 @@ module keypad_fsm (
                          .ascii_character (temp_data));
   */
 
-  function logic[7:0] ascii_character (input [3:0] row, col, input state);
+  function logic[7:0] ascii_character (input [3:0] row, col, input [2:0] state);
     ascii_character = 8'd0;
 
     if (row[3]) begin // "0" - 1000
@@ -127,6 +127,11 @@ module keypad_fsm (
         next_data = 8'd0;
       end
     end
+
+    //if (|cur_key)
+    //if (next_unlocked) begin
+      //next_data = ascii_character(cur_key[7:4], cur_key[3:0], next_state);
+    //end
 
     if (cur_key == submit_word_key) begin
       next_state = INIT;
