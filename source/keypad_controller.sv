@@ -45,7 +45,7 @@ module keypad_controller (
   always_comb begin
     // Setting active column for button press
     // Rate of switching reflected by all indicator lights turned on
-    if (|read_row)
+    if ((|read_row)) // & (|scan_col))
       // Maintain selected column while input button being pressed (non-zero row)
       scan_col_next = scan_col;
     else if (enable)
@@ -61,7 +61,7 @@ module keypad_controller (
         4'b0001:
           scan_col_next = 4'b1000;
         default:
-          scan_col_next = scan_col; //4'd0;
+          scan_col_next = 4'd0;
       endcase
   end
 

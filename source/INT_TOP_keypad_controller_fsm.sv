@@ -12,16 +12,18 @@ module INT_TOP_keypad_controller_fsm (
     logic [3:0] scan_col;
     logic strobe, new_clk;
 
+/*
 clock_divider clock_div (.clk (clk),
                          .nRst (nRst),
                          .enable (1'b1),
                          .clear (~nRst),
                          .max (7'd100),
                          .at_max (new_clk));
+*/
 
 keypad_controller kc (.clk (clk),
                       .nRst (nRst),
-                      .enable (new_clk),
+                      .enable (1'b1),
                       .read_row (read_row),
                       .cur_key (cur_key),
                       .strobe (strobe),

@@ -35,7 +35,7 @@ module tb_keypad_fsm ();
     task check_data_o;
     input logic [7:0] exp_data_o;
     begin
-        //@(negedge tb_clk);
+        @(negedge tb_clk);
         tb_checking_outputs = 1'b1;
         if (tb_data_o == exp_data_o)
             $info("Correct Data: %b", exp_data_o);
@@ -124,7 +124,6 @@ module tb_keypad_fsm ();
         
         @(negedge tb_clk);
         tb_nRst_i = 1'b0; // Activate reset
-        //tb_read_row_i = 4'd0; // Input value reset
 
         // Wait for a bit before checking for correct functionality
         #(2);
@@ -158,64 +157,48 @@ module tb_keypad_fsm ();
         tb_test_case = "Test Case 1: Toggle through 3-letter set and wrap around";
         $display("\n\n%s", tb_test_case);
 
-        // Letter set 2, state S0
+/*
         @(negedge tb_clk);
-        tb_read_row_i = 4'b1000;
-        //tb_cur_key_i = {4'b1000, 4'b0010}; // R0 C2 -> 'D'
-        repeat (2) @(negedge tb_clk);
+        reset_dut;
 
-        //@(negedge tb_clk); // Because strobe is high, letter set
+        // Letter set 2 (DEF), state S0 (1x)
+        tb_read_row_i = 4'b1000; // {4'b1000, 4'b0010} - R0 C2 -> 'D'
+
+        // Check outputs
+        repeat (2) @(negedge tb_clk);
         check_data_o(8'd68);
-        check_ready_o(1'b0);
-        check_game_end_o(1'b0);
 
-        repeat (3) @(posedge tb_clk);
-        tb_read_row_i = 4'd0; // Let go of key to stop hold
-
-        // Letter set 2, state S1
-        repeat (3) @(negedge tb_clk);
-        tb_read_row_i = 4'b1000;
-        //tb_cur_key_i = {4'b1000, 4'b0010}; // R0 C2 -> 'E'
-        repeat (2) @(negedge tb_clk);
-
+        // Let go of key to stop hold
         @(negedge tb_clk);
-        check_data_o(8'd69);
-        check_ready_o(1'b0);
-        check_game_end_o(1'b0);
-        
-        //tb_cur_key_i = 8'd0; // Let go of key to stop hold
-
-        // Letter set 2, state S2
-        @(negedge tb_clk);
-        tb_read_row_i = 4'b1000;
-
-        //tb_cur_key_i = {4'b1000, 4'b0010}; // R0 C2 -> 'F'
-        repeat (2) @(negedge tb_clk);
-       // @(posedge tb_clk); // Delay of 2 clock cycles
-        //tb_strobe_i = 1'b1;
-
-        @(negedge tb_clk);
-        check_data_o(8'd70);
-        check_ready_o(1'b0);
-        check_game_end_o(1'b0);
-        //tb_strobe_i = 1'b0;
         tb_read_row_i = 4'd0;
-        //tb_cur_key_i = 8'd0; // Let go of key to stop hold
 
-        // Letter set 2, state S0 (wrap around)
-        @(negedge tb_clk);
-        tb_read_row_i = 4'b1000;
-        //tb_cur_key_i = {4'b1000, 4'b0010}; // R0 C2 -> 'D'
+        // Letter set 2 (DEF), state S1 (2x)
+        tb_read_row_i = 4'b1000; // {4'b1000, 4'b0010} - R0 C2 -> 'E'
+
+        // Check outputs
         repeat (2) @(negedge tb_clk);
-        //@(posedge tb_clk); // Delay of 2 clock cycles
-        //tb_strobe_i = 1'b1;
+        check_data_o(8'd69);
+        
+        // Let go of key to stop hold
+        repeat (3) @(negedge tb_clk);
+        tb_read_row_i = 4'd0;
 
-        @(negedge tb_clk);
-        check_data_o(8'd68);
-        check_ready_o(1'b0);
-        check_game_end_o(1'b0);
-        //tb_strobe_i = 1'b0;
-        //tb_cur_key_i = 8'd0; // Let go of key to stop hold
+        // Letter set 2 (DEF), state S2 (3x)
+        repeat (3) @(negedge tb_clk);
+        tb_read_row_i = 4'b1000; // {4'b1000, 4'b0010} - R0 C2 -> 'F'
+
+        // Check outputs
+        repeat (2) @(negedge tb_clk);
+        check_data_o(8'd70);
+
+        tb_read_row_i = 4'b0000;
+
+        #(CLK_PERIOD * 2);
+
+        tb_read_row_i = 4'b1000;
+  */
+
+        // TODO Complete
 
         // **********************
         // Test Case 2: Clear key
@@ -224,12 +207,32 @@ module tb_keypad_fsm ();
         tb_test_case = "Test Case 2: Clear key";
         $display("\n\n%s", tb_test_case);
 
+        @(negedge tb_clk);
+        reset_dut;
+
+        @(negedge tb_clk); // R1 C0 (key_4)
+        tb_read_row_i = 4'b0100;
+
+        repeat (2) @(negedge tb_clk);
+        check_data_o(8'd71); // G
+
+        @(negedge tb_clk);
+        tb_read_row_i = 4'd0;
+
+        @(negedge tb_clk); // R3 C0 (clear_key)
+        tb_read_row_i = 4'b0001;
+
+        repeat (2) @(negedge tb_clk);
+        check_data_o(8'd0); // Cleared
+
         // ************************************************************
         // Test Case 3: Non-default letter of set, change sets, go back
         // ************************************************************
         tb_test_num += 1;
         tb_test_case = "Test Case 3: Non-default letter of set, change sets, go back";
         $display("\n\n%s", tb_test_case);
+
+        // TODO Complete
 
         // **********************************************
         // Test Case 4: Invalid key (no impact on letter)
@@ -238,30 +241,116 @@ module tb_keypad_fsm ();
         tb_test_case = "Test Case 4: Invalid key (no impact on letter)";
         $display("\n\n%s", tb_test_case);
 
+        @(negedge tb_clk);
+        reset_dut;
+
+        repeat (2) @(negedge tb_clk); // R1 C1 (key_5)
+        tb_read_row_i = 4'b0100;
+
+        repeat (2) @(negedge tb_clk);
+        check_data_o(8'd74); // J
+
+        @(negedge tb_clk);
+        tb_read_row_i = 4'd0;
+
+        repeat (2) @(negedge tb_clk); // R0 C0 (key_1, invalid_key)
+        tb_read_row_i = 4'b1000;
+
+        repeat (2) @(negedge tb_clk);
+        check_data_o(8'd74); // No impact on letter (J)
+
         // *****************************************
         // Test Case 5: Submit letter (ready signal)
         // *****************************************
         tb_test_num += 1;
         tb_test_case = "Test Case 5: Submit letter (ready signal)";
-        $display("\n\n%s", tb_test_case); 
+        $display("\n\n%s", tb_test_case);
 
-        // Also: Change to INIT right after
+        @(negedge tb_clk);
+        tb_read_row_i = 4'd0;
 
-        // ********************************************************
-        // Test Case 6: Toggle through 4-letter set and wrap around
-        // ********************************************************
-        tb_test_num += 1;
-        tb_test_case = "Test Case 6: Toggle through 4-letter set and wrap around";
-        $display("\n\n%s", tb_test_case); 
+        @(posedge tb_clk);
+        #(0.5); // R3 C0 (submit_letter_key)
+        tb_read_row_i = 4'b0001;
+
+        @(posedge tb_clk);
+        #(0.5);
+        check_data_o(8'd74); // J, from previous test case (not reset)
+        check_ready_o(1'b1);
+
+        @(posedge tb_clk); // State should change to INIT at next positive clock edge
+        #(0.5);
+        check_data_o(8'd0); // Letter is reset
+        check_ready_o(1'b0);
 
         // *****************************************************
-        // Test Case 7: Game end key (data clear, game end high)
+        // Test Case 6: Game end key (data clear, game end high)
         // *****************************************************
         tb_test_num += 1;
-        tb_test_case = "Test Case 5: Game end key (data clear, game end high)";
-        $display("\n\n%s", tb_test_case); 
+        tb_test_case = "Test Case 6: Game end key (data clear, game end high)";
+        $display("\n\n%s", tb_test_case);
 
-        // TODO
+        @(negedge tb_clk);
+        reset_dut;
+
+        repeat (3) @(negedge tb_clk); // R1 C2
+        tb_read_row_i = 4'd0100;
+
+        repeat (2) @(negedge tb_clk);
+        check_data_o(8'd77); // M
+
+        @(negedge tb_clk);
+        tb_read_row_i = 4'd0;
+
+        @(posedge tb_clk);
+        #(0.5); // R2 C3 (game_end_key)
+        tb_read_row_i = 4'b0010;
+
+        //@(posedge tb_clk);
+        //#(0.5);
+        
+        repeat (3) @(negedge tb_clk);
+        check_game_end_o(1'b1);
+        check_data_o(8'd0); // Letter is reset
+
+        // ********************************************************
+        // Test Case 7: Toggle through 4-letter set and wrap around
+        // ********************************************************
+        tb_test_num += 1;
+        tb_test_case = "Test Case 7: Toggle through 4-letter set and wrap around";
+        $display("\n\n%s", tb_test_case);
+
+        @(negedge tb_clk);
+        reset_dut;
+        
+        #(0.5) // R2 C0
+        tb_read_row_i = 4'b0010;
+
+        repeat (3) @(negedge tb_clk);
+        check_data_o(8'd80);
+
+        @(negedge tb_clk);
+        tb_read_row_i = 4'd0;
+
+        #(CLK_PERIOD * 3);
+        @(posedge tb_clk);
+        #(0.5); // R2 C0
+        tb_read_row_i = 4'b0010;
+
+        //repeat (10) @(negedge tb_clk);
+        check_data_o(8'd81);
+
+        // TODO Complete
+
+        // ********************************************************
+        // Test Case 8: Submit word (data clear, toggle state high)
+        // ********************************************************
+        tb_test_num += 1;
+        tb_test_case = "Test Case 8: Submit word (data clear, toggle state high)";
+        display("\n\n%s", tb_test_case);
+
+        // TODO Complete
+
     $finish;
     end
 endmodule
