@@ -31,7 +31,7 @@ logic lcd_en1, lcd_en2, lcd_rw1, lcd_rw2, lcd_rs1, lcd_rs2;
 // ***********
 logic new_clk, useless; // Clock output signal from clock divider
 
-clock_divider clock_div (.clk (clk), .nRst (nRst), .enable (1'b1), .clear (nRst), .max (21'd100000), .at_max (new_clk));
+clock_divider clock_div (.clk (clk), .nRst (nRst), .enable (1'b1), .clear (nRst), .max (17'd100000), .at_max (new_clk));
 
 keypad_controller keypadplayer (.clk(clk), .nRst(nRst), .read_row(input_row_player), .cur_key(cur_key_player), .strobe(strobe_player), .scan_col(scan_col_player), .enable(new_clk));
 keypad_fsm keypadFSMPlayer (.clk(clk), .nRst(nRst), .strobe(strobe_player), .cur_key(cur_key_player), .ready(ready), .data(msg), .game_end(gameEnd_player), .toggle_state(useless));
@@ -48,8 +48,6 @@ lcd_controller lcdPlayer (.clk(clk), .rst(nRst), .row_1(play_row1), .row_2(play_
 // *********
 // Host Side
 // *********
-
-
 
 keypad_controller keypadHostt (.clk(clk), .nRst(nRst), .read_row(input_row_host), .cur_key(cur_key_host), .strobe(strobe_host), .scan_col(scan_col_host), .enable(role_switch));
 keypad_fsm keypadFSMHost (.clk(clk), .nRst(nRst), .strobe(strobe_host), .cur_key(cur_key_host), .ready(key_ready), .data(setLetter), .game_end(gameEnd_host), .toggle_state(toggle_state_host));

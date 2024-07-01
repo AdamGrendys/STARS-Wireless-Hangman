@@ -1,9 +1,9 @@
 module clock_divider (
   input logic clk, nRst, enable, clear,
-  input logic [6:0] max,
+  input logic [16:0] max,
   output logic at_max
 );
-  logic [6:0] next_count, time_o;
+  logic [16:0] next_count, time_o;
   
   always_ff @(posedge clk, negedge nRst) begin
     if (~nRst)
