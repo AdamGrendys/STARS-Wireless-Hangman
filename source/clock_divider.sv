@@ -1,5 +1,5 @@
 module clock_divider (
-  input logic clk, nRst, enable, clear,
+  input logic clk, nRst, clear,
   input logic [16:0] max,
   output logic at_max
 );
@@ -16,12 +16,9 @@ module clock_divider (
   assign at_max = (time_o == max);
 
   always_comb begin    
-    if (clear)
+    if (~clear)
       next_count = 0;
     else
-      if (enable)
-        next_count = (at_max) ? (0) : (time_o + 1);
-      else
-        next_count = time_o;
+      next_count = (at_max) ? (0) : (time_o + 1);
   end
 endmodule

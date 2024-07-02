@@ -29,7 +29,7 @@ logic lcd_en1, lcd_en2, lcd_rw1, lcd_rw2, lcd_rs1, lcd_rs2;
 // Global 
 // ***********
 
-clock_divider clock_div (.clk (clk), .nRst (nRst), .enable (1'b1), .clear (nRst), .max (17'd100000), .at_max (new_clk));
+clock_divider clock_div (.clk (clk), .nRst (nRst), .clear (nRst), .max (17'd100000), .at_max (new_clk));
 
 // ***********
 // Player Side
