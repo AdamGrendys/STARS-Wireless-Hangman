@@ -359,7 +359,7 @@ module keypad_fsm (
 
       //if (strobe) //& |last_key)
       state <= next_state;
-      ready <= (next_state == DONE);
+      ready <= (state == DONE);
       data <= next_data;
 
       unlocked <= next_unlocked;
@@ -384,6 +384,11 @@ module keypad_fsm (
       //next_state = INIT;
       //next_data = 8'd0;
     //end
+
+     if (state == DONE) begin
+      next_state = INIT;
+    end
+
 
     // Positive edge of pressing push button
     if (strobe & |cur_key) begin
