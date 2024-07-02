@@ -112,14 +112,14 @@ initial begin
     @(negedge tb_clk);
     tb_row_host = 4'd0;
 
-    #(CLK_PERIOD * 300000);
+    #(CLK_PERIOD * 400000);
     tb_row_host = 4'b0100; // R1 C1 -> 'L'
     #(CLK_PERIOD * 100000);
 
     @(negedge tb_clk);
     tb_row_host = 4'd0;
 
-     #(CLK_PERIOD * 300000);
+     #(CLK_PERIOD * 400000);
     tb_row_host = 4'b0100; // R1 C1 -> 'L'
     #(CLK_PERIOD * 100000);
 
@@ -127,7 +127,7 @@ initial begin
     tb_row_host = 4'd0;
 
      @(posedge tb_clk);
-    #(CLK_PERIOD * 400000); // R3 C0 (submit_letter_key)
+    #(CLK_PERIOD * 300000); // R3 C0 (submit_letter_key)
     tb_row_host = 4'b0001;
 
     #(CLK_PERIOD * 100000);
