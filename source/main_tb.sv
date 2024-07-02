@@ -50,7 +50,7 @@ initial begin
     // Test Case 1: Host Side: Setting the word APPLE 
     // ***********************************
     tb_test_num += 1;
-    //@(negedge tb_clk);
+    //START of A
     tb_row_host = 4'b1000; // R0 C1 -> 'A'
 
     #(CLK_PERIOD * 100000);
@@ -67,10 +67,9 @@ initial begin
     @(negedge tb_clk);
     tb_row_host = 4'd0;
     
+
+    // end of pressing A, Start of pressing P1
     #(CLK_PERIOD * 400000);
-
-
-    // @(negedge tb_clk);
     tb_row_host = 4'b0010; // R2 C0 -> 'P'
 
     #(CLK_PERIOD * 100000);
@@ -79,16 +78,16 @@ initial begin
     tb_row_host = 4'd0;
 
     @(posedge tb_clk);
-    #(CLK_PERIOD * 300000); // R3 C0 (submit_letter_key)
+    #(CLK_PERIOD * 400000); // R3 C0 (submit_letter_key)
     tb_row_host = 4'b0001;
 
     #(CLK_PERIOD * 100000);
 
     @(negedge tb_clk);
     tb_row_host = 4'd0;
+    // end of pressing P1, Start of pressing P2
 
     #(CLK_PERIOD * 400000);
-
     tb_row_host = 4'b0010; // R2 C0 -> 'P'
 
     #(CLK_PERIOD * 100000);
@@ -96,7 +95,46 @@ initial begin
     @(negedge tb_clk);
     tb_row_host = 4'd0;
 
+    @(posedge tb_clk);
+    #(CLK_PERIOD * 400000); // R3 C0 (submit_letter_key)
+    tb_row_host = 4'b0001;
+
     #(CLK_PERIOD * 100000);
+
+    @(negedge tb_clk);
+    tb_row_host = 4'd0;
+    
+    // ENd of pressing P2, Start of L
+    #(CLK_PERIOD * 100000);
+    tb_row_host = 4'b0100; // R1 C1 -> 'L'
+    #(CLK_PERIOD * 100000);
+
+    @(negedge tb_clk);
+    tb_row_host = 4'd0;
+
+    #(CLK_PERIOD * 400000);
+    tb_row_host = 4'b0100; // R1 C1 -> 'L'
+    #(CLK_PERIOD * 100000);
+
+    @(negedge tb_clk);
+    tb_row_host = 4'd0;
+
+     #(CLK_PERIOD * 400000);
+    tb_row_host = 4'b0100; // R1 C1 -> 'L'
+    #(CLK_PERIOD * 100000);
+
+    @(negedge tb_clk);
+    tb_row_host = 4'd0;
+
+     @(posedge tb_clk);
+    #(CLK_PERIOD * 300000); // R3 C0 (submit_letter_key)
+    tb_row_host = 4'b0001;
+
+    #(CLK_PERIOD * 100000);
+
+
+
+
 
 
 
