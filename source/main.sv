@@ -43,7 +43,7 @@ msg_reg message_reg (.clk(clk), .nRst(nRst), .ready(ready), .transmit_ready(tran
 
 uart_tx uart_transmitter (.clk(clk), .nRst(nRst), .tx_ctrl(tx_ctrl), .tx_byte(tx_byte), .transmit_ready(transmit_ready), .tx_serial(tx_serial));
 
-lcd_controller lcdPlayer (.clk(clk), .rst(nRst), .row_1(play_row1), .row_2(play_row2), .lcd_en(lcd_en1), .lcd_rw(lcd_rw1), .lcd_rs(lcd_rs1), .lcd_data(lcd_data1));
+// lcd_controller lcdPlayer (.clk(clk), .rst(nRst), .row_1(play_row1), .row_2(play_row2), .lcd_en(lcd_en1), .lcd_rw(lcd_rw1), .lcd_rs(lcd_rs1), .lcd_data(lcd_data1));
 
 
 // *********
@@ -65,6 +65,6 @@ game_logic gamelogic (.clk(clk), .nRst(nRst), .guess(guess), .setWord(temp_word)
 
 host_disp hostdisp (.clk(clk), .nRst(nRst), .indexCorrect(indexCorrect), .letter(letter), .incorrect(incorrect), .correct(correct), .temp_word(temp_word), .setLetter(setLetter), .toggle_state(toggle_state_host), .gameEnd_host(gameEnd_host), .mistake(mistake), .top(host_row1), .bottom(host_row2));
 
-lcd_controller lcdHost (.clk(clk), .rst(nRst), .row_1(host_row1), .row_2(host_row2), .lcd_en(lcd_en2), .lcd_rw(lcd_rw2), .lcd_rs(lcd_rs2), .lcd_data(lcd_data2));
+// lcd_controller lcdHost (.clk(clk), .rst(nRst), .row_1(host_row1), .row_2(host_row2), .lcd_en(lcd_en2), .lcd_rw(lcd_rw2), .lcd_rs(lcd_rs2), .lcd_data(lcd_data2));
 
 endmodule
