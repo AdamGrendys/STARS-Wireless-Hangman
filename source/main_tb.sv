@@ -87,8 +87,8 @@ initial begin
     tb_row_host = 4'd0;
     // end of pressing P1, Start of pressing P2
 
-    #(CLK_PERIOD * 400000);
-    tb_row_host = 4'b0010; // R2 C0 -> 'P'
+    #(CLK_PERIOD * 600000);
+    tb_row_host = 4'b0100; // R2 C0 -> 'P'
 
     #(CLK_PERIOD * 100000);
 
