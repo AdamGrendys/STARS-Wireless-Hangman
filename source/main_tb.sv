@@ -39,14 +39,14 @@ initial begin
     // Test Case 0: Power-on-Reset 
     // ***********************************
     tb_test_num += 1;
-    #(CLK_PERIOD * 2);
+    #(CLK_PERIOD * 2000);
     @(negedge tb_clk);
     tb_nRst = 1'b0; 
     @(negedge tb_clk);
     @(negedge tb_clk);
     tb_nRst = 1'b1;
     @(posedge tb_clk);
-    #(CLK_PERIOD * 2);
+    #(CLK_PERIOD * 2000);
 
      // ***********************************
     // Test Case 1: Host Side: Setting the word APPLE 
