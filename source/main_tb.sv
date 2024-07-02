@@ -52,95 +52,95 @@ initial begin
     // Test Case 1: Host Side: Setting the word APPLE 
     // ***********************************
     tb_test_num += 1;
-    @(negedge tb_clk);
+    //@(negedge tb_clk);
     tb_row_host = 4'b1000; // R0 C1 -> 'A'
 
-    #(CLK_PERIOD * 2000000);
+    #(CLK_PERIOD * 2);
 
     @(negedge tb_clk);
     tb_row_host = 4'd0;
 
 
-     @(posedge tb_clk);
-    #(CLK_PERIOD * 3000000); // R3 C0 (submit_letter_key)
-    tb_row_host = 4'b0001;
-    #(CLK_PERIOD * 2000000);
-    @(negedge tb_clk);
-    tb_row_host = 4'd0;
+    // @(posedge tb_clk);
+    // #(CLK_PERIOD * 3000000); // R3 C0 (submit_letter_key)
+    // tb_row_host = 4'b0001;
+    // #(CLK_PERIOD * 2000000);
+    // @(negedge tb_clk);
+    // tb_row_host = 4'd0;
 
-    @(negedge tb_clk);
-    tb_row_host = 4'b0010; // R2 C0 -> 'P'
+    // @(negedge tb_clk);
+    // tb_row_host = 4'b0010; // R2 C0 -> 'P'
 
-    #(CLK_PERIOD * 2000000);
+    // #(CLK_PERIOD * 2000000);
 
-    @(negedge tb_clk);
-    tb_row_host = 4'd0;
-
-
-     @(posedge tb_clk);
-    #(CLK_PERIOD * 3000000); // R3 C0 (submit_letter_key)
-    tb_row_host = 4'b0001;
-    #(CLK_PERIOD * 2000000)
-    @(negedge tb_clk);
-    tb_row_host = 4'd0;
+    // @(negedge tb_clk);
+    // tb_row_host = 4'd0;
 
 
-
-    @(negedge tb_clk);
-    tb_row_host = 4'b0010; // R2 C0 -> 'P'
-
-    #(CLK_PERIOD * 2000000);
-
-    @(negedge tb_clk);
-    tb_row_host = 4'd0;
+    //  @(posedge tb_clk);
+    // #(CLK_PERIOD * 3000000); // R3 C0 (submit_letter_key)
+    // tb_row_host = 4'b0001;
+    // #(CLK_PERIOD * 2000000)
+    // @(negedge tb_clk);
+    // tb_row_host = 4'd0;
 
 
-     @(posedge tb_clk);
-    #(CLK_PERIOD * 3000000); // R3 C0 (submit_letter_key)
-    tb_row_host = 4'b0001;
-    #(CLK_PERIOD * 2000000)
-    @(negedge tb_clk);
-    tb_row_host = 4'd0;
 
-    repeat (2000) @(negedge tb_clk);
-    tb_row_host = 4'b0100; // R1 C1 -> 'L'
+    // @(negedge tb_clk);
+    // tb_row_host = 4'b0010; // R2 C0 -> 'P'
 
-    #(CLK_PERIOD * 2000000);
+    // #(CLK_PERIOD * 2000000);
 
-    @(negedge tb_clk);
-    tb_row_host = 4'd0;
+    // @(negedge tb_clk);
+    // tb_row_host = 4'd0;
 
 
-     @(posedge tb_clk);
-    #(CLK_PERIOD * 3000000); // R3 C0 (submit_letter_key)
-    tb_row_host = 4'b0001;
-    #(CLK_PERIOD * 2000000)
-    @(negedge tb_clk);
-    tb_row_host = 4'd0;
+    //  @(posedge tb_clk);
+    // #(CLK_PERIOD * 3000000); // R3 C0 (submit_letter_key)
+    // tb_row_host = 4'b0001;
+    // #(CLK_PERIOD * 2000000)
+    // @(negedge tb_clk);
+    // tb_row_host = 4'd0;
 
-    repeat (2000) @(negedge tb_clk);
-    tb_row_host = 4'b1000; // R0 C2 -> 'E'
+    // repeat (2000) @(negedge tb_clk);
+    // tb_row_host = 4'b0100; // R1 C1 -> 'L'
 
-    #(CLK_PERIOD * 2000000);
+    // #(CLK_PERIOD * 2000000);
 
-    @(negedge tb_clk);
-    tb_row_host = 4'd0;
+    // @(negedge tb_clk);
+    // tb_row_host = 4'd0;
 
 
-     @(posedge tb_clk);
-    #(CLK_PERIOD * 3000000); // R3 C0 (submit_letter_key)
-    tb_row_host = 4'b0001;
-    #(CLK_PERIOD * 2000000)
-    @(negedge tb_clk);
-    tb_row_host = 4'd0;
+    //  @(posedge tb_clk);
+    // #(CLK_PERIOD * 3000000); // R3 C0 (submit_letter_key)
+    // tb_row_host = 4'b0001;
+    // #(CLK_PERIOD * 2000000)
+    // @(negedge tb_clk);
+    // tb_row_host = 4'd0;
 
-    repeat (2000) @(negedge tb_clk); // R3 C2 (submit_word_key)
-    tb_row_host = 4'b0001;
-    #(CLK_PERIOD * 2000000)
-    @(negedge tb_clk);
-    tb_row_host = 4'd0;
+    // repeat (2000) @(negedge tb_clk);
+    // tb_row_host = 4'b1000; // R0 C2 -> 'E'
 
-    #(CLK_PERIOD * 2000000)
+    // #(CLK_PERIOD * 2000000);
+
+    // @(negedge tb_clk);
+    // tb_row_host = 4'd0;
+
+
+    //  @(posedge tb_clk);
+    // #(CLK_PERIOD * 3000000); // R3 C0 (submit_letter_key)
+    // tb_row_host = 4'b0001;
+    // #(CLK_PERIOD * 2000000)
+    // @(negedge tb_clk);
+    // tb_row_host = 4'd0;
+
+    // repeat (2000) @(negedge tb_clk); // R3 C2 (submit_word_key)
+    // tb_row_host = 4'b0001;
+    // #(CLK_PERIOD * 2000000)
+    // @(negedge tb_clk);
+    // tb_row_host = 4'd0;
+
+    // #(CLK_PERIOD * 2000000)
 
     $finish;
 end
