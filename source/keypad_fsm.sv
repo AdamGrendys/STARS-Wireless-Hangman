@@ -92,7 +92,7 @@ module keypad_fsm (
 
       unlocked <= next_unlocked;
       // Prevent loading too early
-      if (unlocked)  //& |cur_key) // unlocked & |cur_key
+      if (unlocked  & |cur_key) // unlocked & |cur_key
         prev_key <= cur_key;
     end
   end
@@ -170,7 +170,9 @@ module keypad_fsm (
       // Letter sets 2-9
       end else if (cur_key != submit_letter_key) begin
         if (prev_key == cur_key) begin
-          if (state == S0) begin
+          if(state == INIT)begin
+            next_state = S0;
+          end else if (state == S0) begin
             next_state = S1;
           end else if (state == S1) begin
             next_state = S2;
