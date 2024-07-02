@@ -45,8 +45,7 @@ initial begin
     @(negedge tb_clk);
     @(negedge tb_clk);
     tb_nRst = 1'b1;
-    @(posedge tb_clk);
-    #(CLK_PERIOD * 200000);
+    #(CLK_PERIOD * 100000);
     // ***********************************
     // Test Case 1: Host Side: Setting the word APPLE 
     // ***********************************
@@ -54,7 +53,7 @@ initial begin
     //@(negedge tb_clk);
     tb_row_host = 4'b1000; // R0 C1 -> 'A'
 
-    #(CLK_PERIOD * 2);
+    #(CLK_PERIOD * 100000);
 
     @(negedge tb_clk);
     tb_row_host = 4'd0;
