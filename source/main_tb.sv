@@ -46,9 +46,8 @@ initial begin
     @(negedge tb_clk);
     tb_nRst = 1'b1;
     @(posedge tb_clk);
-    #(CLK_PERIOD * 2000000);
 
-     // ***********************************
+    // ***********************************
     // Test Case 1: Host Side: Setting the word APPLE 
     // ***********************************
     tb_test_num += 1;
