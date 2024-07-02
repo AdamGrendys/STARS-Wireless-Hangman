@@ -67,19 +67,16 @@ initial begin
     @(negedge tb_clk);
     tb_row_host = 4'd0;
     
-    #(CLK_PERIOD * 100000);
+    #(CLK_PERIOD * 400000);
 
 
     // @(negedge tb_clk);
-    // tb_row_host = 4'd0;
+    tb_row_host = 4'b0010; // R2 C0 -> 'P'
 
-    // @(negedge tb_clk);
-    // tb_row_host = 4'b0010; // R2 C0 -> 'P'
+    #(CLK_PERIOD * 2000000);
 
-    // #(CLK_PERIOD * 2000000);
-
-    // @(negedge tb_clk);
-    // tb_row_host = 4'd0;
+    @(negedge tb_clk);
+    tb_row_host = 4'd0;
 
 
     //  @(posedge tb_clk);
