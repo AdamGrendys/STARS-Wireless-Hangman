@@ -29,7 +29,7 @@ initial begin
 
     tb_row_host = 4'd0;
     tb_row_player = 4'd0;
-    tb_role_switch = 0;
+    tb_role_switch = 1;
     tb_test_num = -1;
 
     // Wait some time before starting first test case
