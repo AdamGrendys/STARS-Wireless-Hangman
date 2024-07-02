@@ -3,7 +3,7 @@
 module main_tb ();
 
 // Testbench ports
-localparam CLK_PERIOD = 10000; // 100 Hz clk
+localparam CLK_PERIOD = 10; // 100 Hz clk
 logic tb_clk, tb_nRst, tb_role_switch, tb_red, tb_green, tb_blue, tb_error, tb_msg_sent; //Input
 logic [3:0] tb_row_host, tb_row_player;
 logic [127:0] tb_play_row1, tb_play_row2, tb_host_row1, tb_host_row2;
@@ -39,14 +39,14 @@ initial begin
     // Test Case 0: Power-on-Reset 
     // ***********************************
     tb_test_num += 1;
-    #(CLK_PERIOD * 2000);
+    #(CLK_PERIOD * 2000000);
     @(negedge tb_clk);
     tb_nRst = 1'b0; 
     @(negedge tb_clk);
     @(negedge tb_clk);
     tb_nRst = 1'b1;
     @(posedge tb_clk);
-    #(CLK_PERIOD * 2000);
+    #(CLK_PERIOD * 2000000);
 
      // ***********************************
     // Test Case 1: Host Side: Setting the word APPLE 
@@ -55,32 +55,32 @@ initial begin
     @(negedge tb_clk);
     tb_row_host = 4'b1000; // R0 C1 -> 'A'
 
-    #(CLK_PERIOD * 20000);
+    #(CLK_PERIOD * 2000000);
 
     @(negedge tb_clk);
     tb_row_host = 4'd0;
 
 
      @(posedge tb_clk);
-    #(CLK_PERIOD * 3000); // R3 C0 (submit_letter_key)
+    #(CLK_PERIOD * 3000000); // R3 C0 (submit_letter_key)
     tb_row_host = 4'b0001;
-    #(CLK_PERIOD * 2000)
+    #(CLK_PERIOD * 2000000);
     @(negedge tb_clk);
     tb_row_host = 4'd0;
 
     @(negedge tb_clk);
     tb_row_host = 4'b0010; // R2 C0 -> 'P'
 
-    #(CLK_PERIOD * 20000);
+    #(CLK_PERIOD * 2000000);
 
     @(negedge tb_clk);
     tb_row_host = 4'd0;
 
 
      @(posedge tb_clk);
-    #(CLK_PERIOD * 3000); // R3 C0 (submit_letter_key)
+    #(CLK_PERIOD * 3000000); // R3 C0 (submit_letter_key)
     tb_row_host = 4'b0001;
-    #(CLK_PERIOD * 2000)
+    #(CLK_PERIOD * 2000000)
     @(negedge tb_clk);
     tb_row_host = 4'd0;
 
@@ -89,58 +89,58 @@ initial begin
     @(negedge tb_clk);
     tb_row_host = 4'b0010; // R2 C0 -> 'P'
 
-    #(CLK_PERIOD * 20000);
+    #(CLK_PERIOD * 2000000);
 
     @(negedge tb_clk);
     tb_row_host = 4'd0;
 
 
      @(posedge tb_clk);
-    #(CLK_PERIOD * 3000); // R3 C0 (submit_letter_key)
+    #(CLK_PERIOD * 3000000); // R3 C0 (submit_letter_key)
     tb_row_host = 4'b0001;
-    #(CLK_PERIOD * 2000)
+    #(CLK_PERIOD * 2000000)
     @(negedge tb_clk);
     tb_row_host = 4'd0;
 
     repeat (2000) @(negedge tb_clk);
     tb_row_host = 4'b0100; // R1 C1 -> 'L'
 
-    #(CLK_PERIOD * 20000);
+    #(CLK_PERIOD * 2000000);
 
     @(negedge tb_clk);
     tb_row_host = 4'd0;
 
 
      @(posedge tb_clk);
-    #(CLK_PERIOD * 3000); // R3 C0 (submit_letter_key)
+    #(CLK_PERIOD * 3000000); // R3 C0 (submit_letter_key)
     tb_row_host = 4'b0001;
-    #(CLK_PERIOD * 2000)
+    #(CLK_PERIOD * 2000000)
     @(negedge tb_clk);
     tb_row_host = 4'd0;
 
     repeat (2000) @(negedge tb_clk);
     tb_row_host = 4'b1000; // R0 C2 -> 'E'
 
-    #(CLK_PERIOD * 20000);
+    #(CLK_PERIOD * 2000000);
 
     @(negedge tb_clk);
     tb_row_host = 4'd0;
 
 
      @(posedge tb_clk);
-    #(CLK_PERIOD * 3000); // R3 C0 (submit_letter_key)
+    #(CLK_PERIOD * 3000000); // R3 C0 (submit_letter_key)
     tb_row_host = 4'b0001;
-    #(CLK_PERIOD * 2000)
+    #(CLK_PERIOD * 2000000)
     @(negedge tb_clk);
     tb_row_host = 4'd0;
 
     repeat (2000) @(negedge tb_clk); // R3 C2 (submit_word_key)
     tb_row_host = 4'b0001;
-    #(CLK_PERIOD * 2000)
+    #(CLK_PERIOD * 2000000)
     @(negedge tb_clk);
     tb_row_host = 4'd0;
 
-    #(CLK_PERIOD * 2000)
+    #(CLK_PERIOD * 2000000)
 
     $finish;
 end
