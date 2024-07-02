@@ -8,6 +8,7 @@ module main (
     output logic [127:0] play_row1, play_row2, host_row1, host_row2
 );
 // Local Variable Declarations for both player and host 
+logic new_clk, useless; // Clock output signal from clock divider
 // Local Variable Declarations - Player 
 logic ready, transmit_ready, tx_ctrl, tx_serial, toggle_state, strobe_player, gameEnd_player;
 logic [7:0] msg, tx_byte, cur_key_player;
@@ -19,21 +20,21 @@ logic [7:0] cur_key_host, setLetter, guess, letter, rx_byte;
 logic [39:0] temp_word; 
 logic [2:0] incorrect, correct;
 logic [4:0] indexCorrect;
-
-
 // LCD Outputs
 logic [7:0] lcd_data1, lcd_data2;
 logic lcd_en1, lcd_en2, lcd_rw1, lcd_rw2, lcd_rs1, lcd_rs2;
 
+// ***********
+// Global 
+// ***********
+
+clock_divider clock_div (.clk (clk), .nRst (nRst), .enable (1'b1), .clear (nRst), .max (17'd100000), .at_max (new_clk));
 
 // ***********
 // Player Side
 // ***********
-logic new_clk, useless; // Clock output signal from clock divider
 
-clock_divider clock_div (.clk (clk), .nRst (nRst), .enable (1'b1), .clear (nRst), .max (17'd100000), .at_max (new_clk));
-
-keypad_controller keypadplayer (.clk(clk), .nRst(nRst), .read_row(input_row_player), .cur_key(cur_key_player), .strobe(strobe_player), .scan_col(scan_col_player), .enable(new_clk));
+keypad_controller keypadplayer (.mode(role_switch), .clk(clk), .nRst(nRst), .read_row(input_row_player), .cur_key(cur_key_player), .strobe(strobe_player), .scan_col(scan_col_player), .enable(new_clk));
 keypad_fsm keypadFSMPlayer (.clk(clk), .nRst(nRst), .strobe(strobe_player), .cur_key(cur_key_player), .ready(ready), .data(msg), .game_end(gameEnd_player), .toggle_state(useless));
 
 disp_fsm dispFSM (.clk(clk), .nRst(nRst), .ready(ready), .msg(msg), .row1(play_row1), .row2(play_row2), .gameEnd(gameEnd_player));
@@ -49,7 +50,7 @@ lcd_controller lcdPlayer (.clk(clk), .rst(nRst), .row_1(play_row1), .row_2(play_
 // Host Side
 // *********
 
-keypad_controller keypadHostt (.clk(clk), .nRst(nRst), .read_row(input_row_host), .cur_key(cur_key_host), .strobe(strobe_host), .scan_col(scan_col_host), .enable(role_switch));
+keypad_controller keypadHostt (.mode(~role_switch), .clk(clk), .nRst(nRst), .read_row(input_row_host), .cur_key(cur_key_host), .strobe(strobe_host), .scan_col(scan_col_host), .enable(role_switch));
 keypad_fsm keypadFSMHost (.clk(clk), .nRst(nRst), .strobe(strobe_host), .cur_key(cur_key_host), .ready(key_ready), .data(setLetter), .game_end(gameEnd_host), .toggle_state(toggle_state_host));
 
 host_msg_reg host_message_reg (.clk(clk), .nRst(nRst), .key_ready(key_ready), .toggle_state(toggle_state_host), .setLetter(setLetter), .rec_ready(rec_ready_host), .temp_word(temp_word), .gameEnd_host(gameEnd_host));
