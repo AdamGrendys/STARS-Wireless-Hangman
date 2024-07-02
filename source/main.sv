@@ -4,6 +4,7 @@ Descriuption: x
 
 module main (
     input logic clk, nRst, role_switch,
+    input logic [3:0] input_row_player, input_row_host,
     output logic red, green, blue, error,
     output logic [127:0] play_row1, play_row2, host_row1, host_row2
 );
@@ -12,10 +13,10 @@ logic new_clk, useless; // Clock output signal from clock divider
 // Local Variable Declarations - Player 
 logic ready, transmit_ready, tx_ctrl, tx_serial, toggle_state, strobe_player, gameEnd_player;
 logic [7:0] msg, tx_byte, cur_key_player;
-logic [3:0] input_row_player,scan_col_player;
+logic [3:0] scan_col_player;
 // Local Variable Declarations - Host 
 logic strobe_host, gameEnd_host, key_ready, rec_ready_host, toggle_state_host, mistake, rx_ready, red_busy;
-logic [3:0] input_row_host, scan_col_host;
+logic [3:0] scan_col_host;
 logic [7:0] cur_key_host, setLetter, guess, letter, rx_byte;
 logic [39:0] temp_word; 
 logic [2:0] incorrect, correct;
