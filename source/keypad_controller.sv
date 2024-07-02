@@ -45,6 +45,8 @@ module keypad_controller (
   always_comb begin
     // Setting active column for button press
     // Rate of switching reflected by all indicator lights turned on
+    scan_col_next = scan_col;
+    
     if(mode) begin
       if ((|read_row)) begin// & (|scan_col))
         // Maintain selected column while input button being pressed (non-zero row)
@@ -75,6 +77,6 @@ module keypad_controller (
   end
 
   assign strobe = |((~Q1_delay) & (Q1));
-  //assign cur_key = (|read_row & |(~scan_col)) ? ({read_row, ~scan_col}) : (8'd0);
-  assign cur_key = (|read_row & |scan_col) ? ({read_row, scan_col}) : (8'd0);
+  assign cur_key = (|read_row & |(~scan_col)) ? ({read_row, ~scan_col}) : (8'd0);
+  // assign cur_key = (|read_row & |scan_col) ? ({read_row, scan_col}) : (8'd0);
 endmodule
