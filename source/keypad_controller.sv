@@ -70,7 +70,7 @@ module keypad_controller (
         scan_col_next = scan_col;
       end
     end else begin
-      scan_col_next = 4'b1111;
+      scan_col_next = scan_col;
     end
   end
 
