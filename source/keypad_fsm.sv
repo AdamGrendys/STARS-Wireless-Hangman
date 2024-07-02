@@ -92,7 +92,7 @@ module keypad_fsm (
 
       unlocked <= next_unlocked;
       // Prevent loading too early
-      if (unlocked & |cur_key) // unlocked & |cur_key
+      if (unlocked)  //& |cur_key) // unlocked & |cur_key
         prev_key <= cur_key;
     end
   end
