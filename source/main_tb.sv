@@ -78,6 +78,15 @@ initial begin
     @(negedge tb_clk);
     tb_row_host = 4'd0;
 
+    @(posedge tb_clk);
+    #(CLK_PERIOD * 300000); // R3 C0 (submit_letter_key)
+    tb_row_host = 4'b0001;
+
+    #(CLK_PERIOD * 100000);
+
+    @(negedge tb_clk);
+    tb_row_host = 4'd0;
+
     #(CLK_PERIOD * 400000);
 
     tb_row_host = 4'b0010; // R2 C0 -> 'P'
