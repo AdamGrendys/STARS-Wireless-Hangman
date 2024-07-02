@@ -3,7 +3,7 @@
 module main_tb ();
 
 // Testbench ports
-localparam CLK_PERIOD = 10; // 1000 Hz clk
+localparam CLK_PERIOD = 10000000; // 100 Hz clk
 logic tb_clk, tb_nRst, tb_role_switch, tb_red, tb_green, tb_blue, tb_error, tb_msg_sent; //Input
 logic [3:0] tb_row_host, tb_row_player;
 logic [127:0] tb_play_row1, tb_play_row2, tb_host_row1, tb_host_row2;
