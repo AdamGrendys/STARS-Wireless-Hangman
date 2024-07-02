@@ -29,9 +29,6 @@ initial begin
     tb_row_host = 4'd0;
     tb_row_player = 4'd0;
     tb_role_switch = 0;
-    tb_red = 0;
-    tb_green = 0;
-    tb_blue = 0;
     tb_error = 0;
 
     // Wait some time before starting first test case
@@ -69,41 +66,41 @@ initial begin
     @(negedge tb_clk);
     tb_row_host = 4'd0;
 
+    @(negedge tb_clk);
+    tb_row_host = 4'b0010; // R2 C0 -> 'P'
+
+    #(CLK_PERIOD * 20000);
+
+    @(negedge tb_clk);
+    tb_row_host = 4'd0;
+
+
+     @(posedge tb_clk);
+    #(CLK_PERIOD * 3000); // R3 C0 (submit_letter_key)
+    tb_row_host = 4'b0001;
+    #(CLK_PERIOD * 2000)
+    @(negedge tb_clk);
+    tb_row_host = 4'd0;
+
+
+
+    @(negedge tb_clk);
+    tb_row_host = 4'b0010; // R2 C0 -> 'P'
+
+    #(CLK_PERIOD * 20000);
+
+    @(negedge tb_clk);
+    tb_row_host = 4'd0;
+
+
+     @(posedge tb_clk);
+    #(CLK_PERIOD * 3000); // R3 C0 (submit_letter_key)
+    tb_row_host = 4'b0001;
+    #(CLK_PERIOD * 2000)
+    @(negedge tb_clk);
+    tb_row_host = 4'd0;
+
     repeat (1000) @(negedge tb_clk);
-    tb_row_host = 4'b0010; // R2 C0 -> 'P'
-
-    #(CLK_PERIOD * 20000);
-
-    @(negedge tb_clk);
-    tb_row_host = 4'd0;
-
-
-     @(posedge tb_clk);
-    #(CLK_PERIOD * 3000); // R3 C0 (submit_letter_key)
-    tb_row_host = 4'b0001;
-    #(CLK_PERIOD * 2000)
-    @(negedge tb_clk);
-    tb_row_host = 4'd0;
-
-
-
-    repeat (2000) @(negedge tb_clk);
-    tb_row_host = 4'b0010; // R2 C0 -> 'P'
-
-    #(CLK_PERIOD * 20000);
-
-    @(negedge tb_clk);
-    tb_row_host = 4'd0;
-
-
-     @(posedge tb_clk);
-    #(CLK_PERIOD * 3000); // R3 C0 (submit_letter_key)
-    tb_row_host = 4'b0001;
-    #(CLK_PERIOD * 2000)
-    @(negedge tb_clk);
-    tb_row_host = 4'd0;
-
-    repeat (2000) @(negedge tb_clk);
     tb_row_host = 4'b0100; // R1 C1 -> 'L'
 
     #(CLK_PERIOD * 20000);
