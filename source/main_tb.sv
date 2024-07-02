@@ -103,6 +103,7 @@ initial begin
 
     @(negedge tb_clk);
     tb_row_host = 4'd0;
+    #(CLK_PERIOD * 500000);
     // ENd of pressing P2, Start of L
 
     tb_row_host = 4'b0100; // R1 C1 -> 'L'
