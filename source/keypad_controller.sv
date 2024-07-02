@@ -46,10 +46,11 @@ module keypad_controller (
     // Setting active column for button press
     // Rate of switching reflected by all indicator lights turned on
     if(mode) begin
-      if ((|read_row)) // & (|scan_col))
+      if ((|read_row)) begin// & (|scan_col))
         // Maintain selected column while input button being pressed (non-zero row)
         scan_col_next = scan_col;
-      else if (enable)
+      end
+      else if (enable) begin
         case (scan_col)
           4'b1111:
             scan_col_next = 4'b0111;
@@ -64,8 +65,10 @@ module keypad_controller (
           default:
             scan_col_next = 4'b1111;
         endcase
-        else
+      end
+      else begin
         scan_col_next = scan_col;
+      end
     end else begin
       scan_col_next = 4'b1111;
     end
