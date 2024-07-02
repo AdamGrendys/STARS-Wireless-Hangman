@@ -19,7 +19,7 @@ module keypad_fsm (
   logic unlocked, next_unlocked;
 
   typedef enum logic [2:0] {
-      INIT = 0, S0 = 1, S1 = 2, S2 = 3, S3 = 4, DONE = 5, READY = 6
+      INIT = 0, S0 = 1, S1 = 2, S2 = 3, S3 = 4, DONE = 5
   } keypad_state_t;
 
   // 4-letter sets
@@ -107,12 +107,8 @@ module keypad_fsm (
     toggle_state = 1'b0;
 
     if (state == DONE) begin
-      next_state = READY;
-      next_data = 8'd0;
-    end
-
-    if (state == READY) begin
       next_state = INIT;
+      next_data = 8'd0;
     end
 
     if ((cur_key == submit_letter_key) &&
