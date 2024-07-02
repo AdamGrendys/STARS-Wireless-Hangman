@@ -3,20 +3,18 @@ module keypad_fsm (
   input logic [7:0] cur_key, // Concatenation of row and column
   
   // Temporarily set for FPGA testing
-  /*
-  output logic [2:0] state,
-  output logic [7:0] prev_key,
-  output logic unlocked,
-  output logic [7:0] cur_key_out,
-  */
+  //output logic [7:0] prev_key,
+  //output logic [2:0] state,
+  //output logic [7:0] cur_key_out,
   
   output logic ready, // Notification of letter submission after selection
   output logic game_end, // End-of-game signal
   output logic [7:0] data, // ASCII character from current key and number of consecutive presses
   output logic toggle_state // Notification of word submission
 );
-  logic [2:0] state, next_state;
-  logic [7:0] prev_key, last_key;
+  logic [2:0] state;
+  logic [2:0] next_state;
+  logic [7:0] prev_key;
   logic [7:0] temp_data, next_data;
   logic unlocked, next_unlocked;
 
@@ -41,13 +39,6 @@ module keypad_fsm (
   localparam key_D = 8'b00010001; // R3 C3
 
   // Handle ASCII character conversion
-  /*
-  ascii_encoder encoder (.row (last_key[7:4]),
-                         .col (last_key[3:0]),
-                         .state (next_state),
-                         .ascii_character (temp_data));
-  */
-
   function logic[7:0] ascii_character (input [3:0] row, col, input [2:0] state);
     ascii_character = 8'd0;
 
@@ -78,8 +69,6 @@ module keypad_fsm (
       ascii_character += ({5'd0, state} - 8'd1);
     end
   endfunction
-
-  // TODO: Verify through test benching
 
   always_ff @(posedge clk, negedge nRst) begin
     if (~nRst) begin
@@ -117,15 +106,23 @@ module keypad_fsm (
     game_end = 1'b0;
     toggle_state = 1'b0;
 
-    if ((cur_key == submit_letter_key) &&
-        (state != INIT)) begin
-      next_state = DONE;
-      // Note: ASCII character (data) has already been assigned
-      
-      if (state == DONE) begin
+    if (state == DONE) begin
         next_state = INIT;
         next_data = 8'd0;
-      end
+    end
+
+    if ((cur_key == submit_letter_key) &&
+        (state != INIT) &&
+        (state != DONE)) begin
+      next_state = DONE;
+      next_unlocked = 1'b1;
+
+      // Note: ASCII character (data) has already been assigned
+      
+      //if (state == DONE) begin
+        //next_state = INIT;
+        //next_data = 8'd0;
+      //end
     end
 
     //if (|cur_key)
@@ -153,6 +150,7 @@ module keypad_fsm (
                    (cur_key == game_end_key)) begin
         next_state = INIT;
         next_data = 8'd0;
+	next_unlocked = 1'b1;
 
         if (cur_key == game_end_key)
           game_end = 1'b1;
@@ -194,5 +192,6 @@ module keypad_fsm (
     end else begin
       next_unlocked = 1'b0;
     end
+    //cur_key_out = cur_key;
   end
 endmodule

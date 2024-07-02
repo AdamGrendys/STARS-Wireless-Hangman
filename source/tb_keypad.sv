@@ -98,7 +98,7 @@ module tb_keypad();
     end
 
     // DUT Port Map
-    INT_TOP_keypad_controller_fsm DUT (.clk (tb_clk),
+    keypad_controller_fsm_int_top DUT (.clk (tb_clk),
                                         .nRst (tb_nRst_i),
                                         .read_row (tb_read_row_i),
                                         .ready (tb_ready_o),
