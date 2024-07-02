@@ -11,7 +11,6 @@ module host_disp (
     input logic toggle_state,
     input logic mistake,
     input logic gameEnd_host, 
-    input logic mode, // If mode is 1, host activates
     output logic [127:0] top, bottom
 );
     logic [127:0] nextTop;
@@ -38,7 +37,7 @@ always_ff @(posedge clk, negedge nRst) begin
 
         curr_guesses <= {8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111};
         curr_word <= {8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111};
-    end else if (mode) begin
+    end else begin
         top <= nextTop;
         bottom <= nextBottom;
         curr_guesses <= next_curr_guesses;

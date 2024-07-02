@@ -3,7 +3,7 @@ Descriuption: x
 */
 
 module disp_fsm (
-    input logic clk, nRst, ready, gameEnd, mode,
+    input logic clk, nRst, ready, gameEnd,
     input logic [7:0] msg,
     output logic [127:0] row1, row2
 );
@@ -19,7 +19,7 @@ always_ff @(posedge clk, negedge nRst) begin
 end
 
 always_comb begin
-    if (ready & mode) begin
+    if (ready) begin
         next_guess = {msg, guesses[79:8]};
         row1 = {8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, msg, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000};
         row2 = {guesses, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000};
