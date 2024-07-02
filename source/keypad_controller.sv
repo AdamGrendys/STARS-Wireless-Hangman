@@ -17,7 +17,7 @@ module keypad_controller (
       Q1_delay <= 4'd0;
 
       // Note: Deactivating the scanning of columns should prevent key input
-      scan_col <= 4'd0;
+      scan_col <= 4'b1111;
 
       // Temporary output variables for testing
       //sel_row <= 4'd0;
