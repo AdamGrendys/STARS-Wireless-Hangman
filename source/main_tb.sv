@@ -8,6 +8,7 @@ logic tb_clk, tb_nRst, tb_role_switch, tb_red, tb_green, tb_blue, tb_error, tb_m
 logic [3:0] tb_row_host, tb_row_player;
 logic [127:0] tb_play_row1, tb_play_row2, tb_host_row1, tb_host_row2;
 
+integer tb_test_num;
 
 // Clock generation block
 always begin
@@ -29,6 +30,7 @@ initial begin
     tb_row_host = 4'd0;
     tb_row_player = 4'd0;
     tb_role_switch = 0;
+    tb_test_num = -1;
 
     // Wait some time before starting first test case
     #(0.1);
@@ -36,6 +38,7 @@ initial begin
     // ***********************************
     // Test Case 0: Power-on-Reset 
     // ***********************************
+    tb_test_num += 1;
     #(CLK_PERIOD * 2);
     @(negedge tb_clk);
     tb_nRst = 1'b0; 
@@ -48,7 +51,7 @@ initial begin
      // ***********************************
     // Test Case 1: Host Side: Setting the word APPLE 
     // ***********************************
-
+    tb_test_num += 1;
     @(negedge tb_clk);
     tb_row_host = 4'b1000; // R0 C1 -> 'A'
 
