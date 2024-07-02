@@ -1,5 +1,5 @@
 module keypad_controller (
-  input logic clk, nRst, enable,
+  input logic clk, nRst, enable, mode,
   input logic [3:0] read_row,
   output logic [7:0] cur_key, // Input for keypad_fsm
   output logic strobe, // Input for keypad_fsm
@@ -45,24 +45,30 @@ module keypad_controller (
   always_comb begin
     // Setting active column for button press
     // Rate of switching reflected by all indicator lights turned on
-    if ((|read_row)) // & (|scan_col))
-      // Maintain selected column while input button being pressed (non-zero row)
-      scan_col_next = scan_col;
-    else if (enable)
-      case (scan_col)
-        4'b0000:
-          scan_col_next = 4'b1000;
-        4'b1000:
-          scan_col_next = 4'b0100;
-        4'b0100:
-          scan_col_next = 4'b0010;
-        4'b0010:
-          scan_col_next = 4'b0001;
-        4'b0001:
-          scan_col_next = 4'b1000;
-        default:
-          scan_col_next = 4'd0;
-      endcase
+    if(mode) begin
+      if ((|read_row)) // & (|scan_col))
+        // Maintain selected column while input button being pressed (non-zero row)
+        scan_col_next = scan_col;
+      else if (enable)
+        case (scan_col)
+          4'b1111:
+            scan_col_next = 4'b0111;
+          4'b0111:
+            scan_col_next = 4'b1011;
+          4'b1011:
+            scan_col_next = 4'b1101;
+          4'b1101:
+            scan_col_next = 4'b1110;
+          4'b1110:
+            scan_col_next = 4'b0111;
+          default:
+            scan_col_next = 4'b1111;
+        endcase
+        else
+        scan_col_next = scan_col;
+    end else begin
+      scan_col_next = 4'b1111;
+    end
   end
 
   assign strobe = |((~Q1_delay) & (Q1));
