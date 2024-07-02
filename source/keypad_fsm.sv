@@ -16,7 +16,7 @@ module keypad_fsm (
   logic [2:0] next_state;
   logic [7:0] prev_key;
   logic [7:0] temp_data, next_data;
-  logic unlocked, next_unlocked, next_ready;
+  logic unlocked, next_unlocked;
 
   typedef enum logic [2:0] {
       INIT = 0, S0 = 1, S1 = 2, S2 = 3, S3 = 4, DONE = 5, READY = 6
@@ -87,7 +87,7 @@ module keypad_fsm (
 
       //if (strobe) //& |last_key)
       state <= next_state;
-      ready <= next_ready;
+      ready <= (state == DONE);
       data <= next_data;
 
       unlocked <= next_unlocked;
@@ -102,20 +102,17 @@ module keypad_fsm (
     next_state = state;
     next_data = data; // ascii_character(cur_key[7:4], cur_key[3:0], next_state);
     next_unlocked = unlocked;
-    next_ready = ready;
 
     game_end = 1'b0;
     toggle_state = 1'b0;
 
     if (state == DONE) begin
-      next_ready = 1'b1;
       next_state = READY;
       next_data = 8'd0;
     end
 
     if (state == READY) begin
       next_state = INIT;
-      next_ready = 0;
     end
 
     if ((cur_key == submit_letter_key) &&
