@@ -102,7 +102,7 @@ initial begin
     @(negedge tb_clk);
     tb_row_host = 4'd0;
 
-    repeat (1000) @(negedge tb_clk);
+    repeat (2000) @(negedge tb_clk);
     tb_row_host = 4'b0100; // R1 C1 -> 'L'
 
     #(CLK_PERIOD * 20000);
