@@ -76,7 +76,7 @@ module keypad_fsm (
 
       state <= INIT;
       ready <= 0;
-      data <= 8'd0;
+      data <= 8'b01011111;
       
       unlocked <= 1'b0;
       prev_key <= 8'd0;
@@ -131,7 +131,7 @@ module keypad_fsm (
 
     if (cur_key == submit_word_key) begin
       next_state = INIT;
-      next_data = 8'd0;
+      next_data = 8'b01011111;
       toggle_state = 1'b1;
     end
 
@@ -148,7 +148,7 @@ module keypad_fsm (
       end else if ((cur_key == clear_key) || 
                    (cur_key == game_end_key)) begin
         next_state = INIT;
-        next_data = 8'd0;
+        next_data = 8'b01011111;
 	next_unlocked = 1'b1;
 
         if (cur_key == game_end_key)
