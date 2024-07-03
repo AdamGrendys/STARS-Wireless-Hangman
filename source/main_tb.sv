@@ -177,7 +177,7 @@ initial begin
     tb_role_switch = 1;
 
     // GUESS first letter P
-    #(CLK_PERIOD * 400000);
+    #(CLK_PERIOD * 500000);
     tb_row_player = 4'b0010; // R2 C0 -> 'P'
 
     #(CLK_PERIOD * 100000);
