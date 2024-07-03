@@ -300,7 +300,7 @@ initial begin
 
     @(negedge tb_clk);
     tb_row_player = 4'd0;
-    #(CLK_PERIOD * 400000);
+    #(CLK_PERIOD * 600000);
 
     // ***********************************
     // Test Case 1: Host Side: Setting the word  MOORE 
