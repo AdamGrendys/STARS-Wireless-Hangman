@@ -132,8 +132,9 @@ module keypad_fsm (
 
     if (cur_key == submit_word_key) begin
       next_state = INIT;
-      next_data = 8'b01011111;
+      next_data = 8'd0;
       toggle_state = 1'b1;
+      next_unlocked = 1'b1;
     end
 
     // Positive edge of pressing push button
