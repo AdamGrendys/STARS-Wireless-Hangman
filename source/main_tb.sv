@@ -137,7 +137,7 @@ initial begin
 
     //end pressing L, Start pressing E 
 
-    #(CLK_PERIOD * 300000);
+    #(CLK_PERIOD * 400000);
     tb_row_host = 4'b1000; //for E
     #(CLK_PERIOD * 100000);
 
