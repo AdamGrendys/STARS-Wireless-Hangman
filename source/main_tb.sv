@@ -334,7 +334,7 @@ initial begin
 
     @(negedge tb_clk);
     tb_row_host = 4'd0;
-    #(CLK_PERIOD * 100000);
+    #(CLK_PERIOD * 200000);
 
     // START E
 
@@ -359,7 +359,9 @@ initial begin
 
     @(negedge tb_clk);
     tb_row_host = 4'd0;
-    #(CLK_PERIOD * 300000);
+    #(CLK_PERIOD * 500000);
+
+    // PRESS R
     
 
 
