@@ -263,8 +263,6 @@ initial begin
     #(CLK_PERIOD * 100000);
 
     // presss L 
-
-    #(CLK_PERIOD * 100000);
     tb_row_player = 4'b0100; // R1 C1 -> 'L'
     #(CLK_PERIOD * 100000);
 
@@ -293,6 +291,8 @@ initial begin
 
     @(negedge tb_clk);
     tb_row_player = 4'd0;
+    #(CLK_PERIOD * 300000);
+    #(CLK_PERIOD * 300000);
     
 
 
