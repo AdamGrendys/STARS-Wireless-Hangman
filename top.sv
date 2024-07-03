@@ -323,7 +323,7 @@ module keypad_fsm (
       //last_key <= 8'd0;
 
       state <= INIT;
-      ready <= 0;
+      //ready <= 0;
       data <= 8'b01011111;
       
       unlocked <= 1'b0;
@@ -335,7 +335,7 @@ module keypad_fsm (
 
       //if (strobe) //& |last_key)
       state <= next_state;
-      ready <= (state == DONE);      
+      //ready <= (state == DONE);      
       data <= next_data;
 
       unlocked <= next_unlocked;
@@ -352,6 +352,7 @@ module keypad_fsm (
     next_state = state;
     next_data = data;
     next_unlocked = unlocked; // 1'b0
+    ready = 1'b0;
     game_end = 1'b0;
     toggle_state = 1'b0;
 
@@ -378,6 +379,7 @@ module keypad_fsm (
           next_state = INIT;
         end else begin
           next_state = DONE;
+          ready = 1'b1;
           //next_unlocked = 1'b1;
           // Note: ASCII character (data) has already been assigned
         end
