@@ -108,6 +108,7 @@ module keypad_fsm (
 
     if (state == DONE) begin
       next_state = INIT;
+      next_data = 8'b01011111;
     end
 
     if ((cur_key == submit_letter_key) &&
