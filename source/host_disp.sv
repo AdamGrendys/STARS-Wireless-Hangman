@@ -50,6 +50,8 @@ always_comb begin
 next_curr_guesses = curr_guesses;
 next_curr_word = curr_word;
 next_state = Cstate;
+nextTop = top;
+nextBottom = bottom;
 
 if(gameEnd_host) begin
     next_curr_word = {8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111, 8'b01011111}; // _ _ _ _ _ in ASCII
