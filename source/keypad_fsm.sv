@@ -87,7 +87,7 @@ module keypad_fsm (
 
       //if (strobe) //& |last_key)
       state <= next_state;
-      ready <= (state == DONE);
+      ready <= (state == DONE);      
       data <= next_data;
 
       unlocked <= next_unlocked;
@@ -108,7 +108,10 @@ module keypad_fsm (
 
     if (state == DONE) begin
       next_state = INIT;
-      next_data = 8'b01011111;
+    end
+
+    if ((state == INIT) && (cur_key != submit_word_key)) begin
+        next_data = 8'b01011111;
     end
 
     if ((cur_key == submit_letter_key) &&
