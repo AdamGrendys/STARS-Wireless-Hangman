@@ -1,10 +1,10 @@
-module lcd_controller #(parameter clk_div = 24_000)(
+module lcd1602 #(parameter clk_div = 24_000)(
     input clk,
     input rst,
     // Data to be displayed
     input [127:0] row_1,
     input [127:0] row_2,
-    
+   
     // LCD control signal
     output lcd_en,
     output lcd_rw,
@@ -12,26 +12,24 @@ module lcd_controller #(parameter clk_div = 24_000)(
     output reg [7:0] lcd_data
     );
 
-    logic lcd_ctrl; // added declaration
-
-    reg [7:0] currentState; // updated bits from 6 to 8
-    reg [7:0] nextState; // updated bits from 6 to 8
+    reg [5:0] currentState;
+    reg [5:0] nextState;
     reg [17:0] cnt_20ms;
     reg [14:0] cnt_500hz;
     wire delay_done;
-  
-    localparam TIME_500HZ = clk_div; 
+ 
+    localparam TIME_500HZ = clk_div;
     // Wait for 20 ms before intializing.
     localparam TIME_20MS = TIME_500HZ * 10;
-    
+   
     // Set lcd_data accroding to datasheet
     localparam IDLE = 8'h00,                
-               SET_FUNCTION = 8'h01,       
+               SET_FUNCTION = 8'h01,      
                DISP_OFF = 8'h03,
                DISP_CLEAR = 8'h02,
                ENTRY_MODE = 8'h06,
                DISP_ON = 8'h07,
-               ROW1_ADDR = 8'h05,       
+               ROW1_ADDR = 8'h05,      
                ROW1_0 = 8'h04,
                ROW1_1 = 8'h0C,
                ROW1_2 = 8'h0D,
@@ -76,7 +74,7 @@ module lcd_controller #(parameter clk_div = 24_000)(
         end
         else
             cnt_20ms <= cnt_20ms + 1;
-    end 
+    end
 
     //500HZ for lcd
     always  @(posedge clk) begin
@@ -93,7 +91,7 @@ module lcd_controller #(parameter clk_div = 24_000)(
             cnt_500hz <= 0;
     end
 
-    assign lcd_en = (cnt_500hz > (TIME_500HZ-1)/2)? 1'b0 : 1'b1; 
+    assign lcd_en = (cnt_500hz > (TIME_500HZ-1)/2)? 1'b0 : 1'b1;
     assign lcd_ctrl = (cnt_500hz == TIME_500HZ - 1) ? 1'b1 : 1'b0;
 
     always  @(posedge clk) begin
@@ -129,7 +127,7 @@ module lcd_controller #(parameter clk_div = 24_000)(
             ROW1_C: nextState = ROW1_D;
             ROW1_D: nextState = ROW1_E;
             ROW1_E: nextState = ROW1_F;
-            ROW1_F: nextState = ROW2_ADDR;
+            ROW1_F: nextState = ROW2_ADDR    ;
             ROW2_ADDR: nextState = ROW2_0;
             ROW2_0: nextState = ROW2_1;
             ROW2_1: nextState = ROW2_2;
@@ -148,8 +146,8 @@ module lcd_controller #(parameter clk_div = 24_000)(
             ROW2_E: nextState = ROW2_F;
             ROW2_F: nextState = ROW1_ADDR;
             default: nextState = IDLE;
-        endcase 
-    end   
+        endcase
+    end  
 
     // LCD control sigal
     assign lcd_rw = 1'b0;
@@ -166,8 +164,8 @@ module lcd_controller #(parameter clk_div = 24_000)(
         end
         else begin
             lcd_rs <= lcd_rs;
-        end     
-    end                   
+        end    
+    end                  
 
     always  @(posedge clk) begin
         if (!rst) begin
@@ -217,10 +215,10 @@ module lcd_controller #(parameter clk_div = 24_000)(
                 ROW2_E: lcd_data <= row_2 [ 15:  8];
                 ROW2_F: lcd_data <= row_2 [  7:  0];
                 default: lcd_data <= 8'hxx;
-            endcase                     
+            endcase                    
         end
         else
-            lcd_data <= lcd_data;
+            lcd_data <= lcd_data ;
     end
 
 endmodule
