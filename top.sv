@@ -4,7 +4,7 @@ Descriuption: x
 
 module top (
     // FPGA Ports
-    input logic hz10M, reset, role_switch, 
+    input logic hz10M, reset, 
     input  logic [20:0] pb,
     output logic red, green, blue,
     output logic [7:0] left, right, ss7, ss6, ss5, ss4, ss3, ss2, ss1, ss0,
@@ -39,35 +39,29 @@ logic [127:0] play_row1, play_row2, host_row1, host_row2;
 // Global 
 // ***********
 
-<<<<<<< HEAD
 clock_divider clock_div (.clk(hz10M), .nRst(~reset), .max(17'd100000), .at_max(new_clk));
 
 // ***********
 // Player Side
 // ***********
 
-keypad_controller keypadplayer (.mode(role_switch), .clk(hz10M), .nRst(~reset), .read_row(pb[3:0]), .cur_key(cur_key_player), .strobe(strobe_player), .scan_col(scan_col_player), .enable(new_clk));
-keypad_fsm keypadFSMPlayer (.clk(hz10M), .nRst(~reset), .strobe(strobe_player), .cur_key(cur_key_player), .ready(ready), .data(msg), .game_end(gameEnd_player), .toggle_state(useless));
-=======
-  logic [7:0] row_col;
-  //assign row_col = {sel_row_out, sel_col_out};
->>>>>>> 106f640781f9749b1dba1fb8f6886045dec9d214
+// keypad_controller keypadplayer (.mode(pb[19]), .clk(hz10M), .nRst(~reset), .read_row(pb[3:0]), .cur_key(cur_key_player), .strobe(strobe_player), .scan_col(right[4:1]), .enable(new_clk));
+// keypad_fsm keypadFSMPlayer (.clk(hz10M), .nRst(~reset), .strobe(strobe_player), .cur_key(cur_key_player), .ready(ready), .data(msg), .game_end(gameEnd_player), .toggle_state(useless));
 
-disp_fsm dispFSM (.clk(hz10M), .nRst(~reset), .ready(ready), .msg(msg), .row1(play_row1), .row2(play_row2), .gameEnd(gameEnd_player));
+// disp_fsm dispFSM (.clk(hz10M), .nRst(~reset), .ready(ready), .msg(msg), .row1(play_row1), .row2(play_row2), .gameEnd(gameEnd_player));
 
-msg_reg message_reg (.clk(hz10M), .nRst(~reset), .ready(ready), .transmit_ready(transmit_ready), .data(msg), .blue(blue), .tx_ctrl(tx_ctrl), .tx_byte(tx_byte));
+// msg_reg message_reg (.clk(hz10M), .nRst(~reset), .ready(ready), .transmit_ready(transmit_ready), .data(msg), .blue(blue), .tx_ctrl(tx_ctrl), .tx_byte(tx_byte));
 
-uart_Tx uart_transmitter (.clk(hz10M), .nRst(~reset), .tx_ctrl(tx_ctrl), .tx_byte(tx_byte), .transmit_ready(transmit_ready), .tx_serial(tx_serial));
+// uart_Tx uart_transmitter (.clk(hz10M), .nRst(~reset), .tx_ctrl(tx_ctrl), .tx_byte(tx_byte), .transmit_ready(transmit_ready), .tx_serial(tx_serial));
 
-lcd_controller lcdPlayer (.clk(hz10M), .rst(~reset), .row_1(play_row1), .row_2(play_row2), .lcd_en(right[7]), .lcd_rw(right[6]), .lcd_rs(right[5]), .lcd_data(ss0));
+// lcd_controller lcdPlayer (.clk(hz10M), .rst(~reset), .row_1(play_row1), .row_2(play_row2), .lcd_en(right[7]), .lcd_rw(right[6]), .lcd_rs(right[5]), .lcd_data(ss0[7:0]));
 
-<<<<<<< HEAD
 
 // *********
 // Host Side
 // *********
 
-keypad_controller keypadHostt (.mode(~role_switch), .clk(hz10M), .nRst(~reset), .read_row(pb[7:4]), .cur_key(cur_key_host), .strobe(strobe_host), .scan_col(scan_col_host), .enable(new_clk));
+keypad_controller keypadHostt (.mode(~pb[19]), .clk(hz10M), .nRst(~reset), .read_row(pb[7:4]), .cur_key(cur_key_host), .strobe(strobe_host), .scan_col(left[4:1]), .enable(new_clk));
 keypad_fsm keypadFSMHost (.clk(hz10M), .nRst(~reset), .strobe(strobe_host), .cur_key(cur_key_host), .ready(key_ready), .data(setLetter), .game_end(gameEnd_host), .toggle_state(toggle_state_host));
 
 host_msg_reg host_message_reg (.clk(hz10M), .nRst(~reset), .key_ready(key_ready), .toggle_state(toggle_state_host), .setLetter(setLetter), .rec_ready(rec_ready_host), .temp_word(temp_word), .gameEnd_host(gameEnd_host));
@@ -82,17 +76,9 @@ game_logic gamelogic (.clk(hz10M), .nRst(~reset), .guess(guess), .setWord(temp_w
 
 host_disp hostdisp (.clk(hz10M), .nRst(~reset), .indexCorrect(indexCorrect), .letter(letter), .incorrect(incorrect), .correct(correct), .temp_word(temp_word), .setLetter(setLetter), .toggle_state(toggle_state_host), .gameEnd_host(gameEnd_host), .mistake(mistake), .top(host_row1), .bottom(host_row2));
 
-lcd_controller lcdHost (.clk(hz10M), .rst(~reset), .row_1(host_row1), .row_2(host_row2), .lcd_en(left[7]), .lcd_rw(left[6]), .lcd_rs(left[5]), .lcd_data(ss7));
+lcd_controller lcdHost (.clk(hz10M), .rst(~reset), .row_1({128'b0}), .row_2({128'b0}), .lcd_en(left[7]), .lcd_rw(left[6]), .lcd_rs(left[5]), .lcd_data(ss7[7:0]));
 
-=======
-  ssdec_original ssdec0 (.in ({1'b0, state_out}),
-                .enable (1'b1),
-                .out (ss0[6:0]));
-                
-  assign green = discard_strobe;
->>>>>>> 106f640781f9749b1dba1fb8f6886045dec9d214
 endmodule
-
 
 module clock_divider (
   input logic clk, nRst,
@@ -207,30 +193,18 @@ module keypad_fsm (
   input logic [7:0] cur_key, // Concatenation of row and column
   
   // Temporarily set for FPGA testing
-<<<<<<< HEAD
   //output logic [7:0] prev_key,
   //output logic [2:0] state,
   //output logic [7:0] cur_key_out,
-=======
-  output logic [7:0] prev_key,
-  output logic [2:0] state,
-  output logic [7:0] cur_key_out,
->>>>>>> 106f640781f9749b1dba1fb8f6886045dec9d214
   
   output logic ready, // Notification of letter submission after selection
   output logic game_end, // End-of-game signal
   output logic [7:0] data, // ASCII character from current key and number of consecutive presses
   output logic toggle_state // Notification of word submission
 );
-<<<<<<< HEAD
   logic [2:0] state;
   logic [2:0] next_state;
   logic [7:0] prev_key;
-=======
-  //logic [2:0] state;
-  logic [2:0] next_state;
-  //logic [7:0] prev_key;
->>>>>>> 106f640781f9749b1dba1fb8f6886045dec9d214
   logic [7:0] temp_data, next_data;
   logic unlocked, next_unlocked;
 
@@ -291,11 +265,7 @@ module keypad_fsm (
       //last_key <= 8'd0;
 
       state <= INIT;
-<<<<<<< HEAD
       ready <= 0;
-=======
-      //ready <= 0;
->>>>>>> 106f640781f9749b1dba1fb8f6886045dec9d214
       data <= 8'b01011111;
       
       unlocked <= 1'b0;
@@ -307,16 +277,12 @@ module keypad_fsm (
 
       //if (strobe) //& |last_key)
       state <= next_state;
-      //ready <= (state == DONE);      
+      ready <= (state == DONE);
       data <= next_data;
 
       unlocked <= next_unlocked;
       // Prevent loading too early
-<<<<<<< HEAD
       if (unlocked  & |cur_key) // unlocked & |cur_key
-=======
-      if (unlocked & |cur_key)
->>>>>>> 106f640781f9749b1dba1fb8f6886045dec9d214
         prev_key <= cur_key;
     end
   end
@@ -324,22 +290,17 @@ module keypad_fsm (
   always_comb begin
     // 0-1. By default
     next_state = state;
-    next_data = data;
-    next_unlocked = unlocked; // 1'b0
-    ready = 1'b0;
+    next_data = data; // ascii_character(cur_key[7:4], cur_key[3:0], next_state);
+    next_unlocked = unlocked;
+
     game_end = 1'b0;
     toggle_state = 1'b0;
 
     if (state == DONE) begin
       next_state = INIT;
-    
-    end else if (state == INIT) begin
-      if ((cur_key == submit_letter_key) || (cur_key == clear_key)) begin
-        next_data = 8'b01011111;
-      end
+      next_data = 8'b01011111;
     end
 
-<<<<<<< HEAD
     if ((cur_key == submit_letter_key) &&
         (state != INIT) &&
         (state != DONE)) begin
@@ -369,10 +330,6 @@ module keypad_fsm (
     // Positive edge of pressing push button
     if (strobe & |cur_key) begin
 
-=======
-    // Positive edge of pressing push button
-    if (strobe & |cur_key) begin
->>>>>>> 106f640781f9749b1dba1fb8f6886045dec9d214
       // Invalid keys
       if ((cur_key == key_1) ||
         (cur_key == key_A) ||
@@ -380,37 +337,15 @@ module keypad_fsm (
         (cur_key == key_D)) begin
         next_state = state;
 
-      end else if (cur_key == submit_letter_key) begin
-        if ((state == INIT) || (state == DONE)) begin
-          next_state = INIT;
-        end else begin
-          next_state = DONE;
-          ready = 1'b1;
-          //next_unlocked = 1'b1;
-          // Note: ASCII character (data) has already been assigned
-        end
-
-      end else if (cur_key == clear_key) begin
+      end else if ((cur_key == clear_key) || 
+                   (cur_key == game_end_key)) begin
         next_state = INIT;
-        //next_unlocked = 1'b1;
-
-      end else if (cur_key == submit_word_key) begin
-        next_state = INIT;
-<<<<<<< HEAD
         next_data = 8'b01011111;
 	next_unlocked = 1'b1;
-=======
-        next_data = 8'd0;
-        toggle_state = 1'b1;
->>>>>>> 106f640781f9749b1dba1fb8f6886045dec9d214
 
-      end else if (cur_key == game_end_key) begin
-        next_state = INIT;
-        next_data = 8'd0;
-        //next_unlocked = 1'b1;
-        game_end = 1'b1;
+        if (cur_key == game_end_key)
+          game_end = 1'b1;
 
-<<<<<<< HEAD
       /*
       end else if ((cur_key == submit_letter_key) && 
                    (state != INIT)) begin
@@ -422,19 +357,11 @@ module keypad_fsm (
           next_data = 8'd0;
         end
       */
-=======
-        //if (prev_key == game_end_key)
-          //game_end = 1'b1;
->>>>>>> 106f640781f9749b1dba1fb8f6886045dec9d214
 
       // Letter sets 2-9
       end else if (cur_key != submit_letter_key) begin
         if (prev_key == cur_key) begin
-<<<<<<< HEAD
           if(state == INIT)begin
-=======
-          if (state == INIT) begin
->>>>>>> 106f640781f9749b1dba1fb8f6886045dec9d214
             next_state = S0;
           end else if (state == S0) begin
             next_state = S1;
@@ -458,10 +385,7 @@ module keypad_fsm (
     end else begin
       next_unlocked = 1'b0;
     end
-<<<<<<< HEAD
     //cur_key_out = cur_key;
-=======
->>>>>>> 106f640781f9749b1dba1fb8f6886045dec9d214
   end
 endmodule
 
@@ -1300,13 +1224,13 @@ end
 end
 endmodule
 
-module lcd_controller #(parameter clk_div = 24_000)(
+module lcd1602 #(parameter clk_div = 24_000)(
     input clk,
     input rst,
     // Data to be displayed
     input [127:0] row_1,
     input [127:0] row_2,
-    
+   
     // LCD control signal
     output lcd_en,
     output lcd_rw,
@@ -1314,26 +1238,26 @@ module lcd_controller #(parameter clk_div = 24_000)(
     output reg [7:0] lcd_data
     );
 
-    logic lcd_ctrl; // added declaration
+    logic lcd_ctrl;
 
-    reg [7:0] currentState; // updated bits from 6 to 8
-    reg [7:0] nextState; // updated bits from 6 to 8
+    reg [7:0] currentState;
+    reg [7:0] nextState;
     reg [17:0] cnt_20ms;
     reg [14:0] cnt_500hz;
     wire delay_done;
-  
-    localparam TIME_500HZ = clk_div; 
+ 
+    localparam TIME_500HZ = clk_div;
     // Wait for 20 ms before intializing.
     localparam TIME_20MS = TIME_500HZ * 10;
-    
+   
     // Set lcd_data accroding to datasheet
     localparam IDLE = 8'h00,                
-               SET_FUNCTION = 8'h01,       
+               SET_FUNCTION = 8'h01,      
                DISP_OFF = 8'h03,
                DISP_CLEAR = 8'h02,
                ENTRY_MODE = 8'h06,
                DISP_ON = 8'h07,
-               ROW1_ADDR = 8'h05,       
+               ROW1_ADDR = 8'h05,      
                ROW1_0 = 8'h04,
                ROW1_1 = 8'h0C,
                ROW1_2 = 8'h0D,
@@ -1378,7 +1302,7 @@ module lcd_controller #(parameter clk_div = 24_000)(
         end
         else
             cnt_20ms <= cnt_20ms + 1;
-    end 
+    end
 
     //500HZ for lcd
     always  @(posedge clk) begin
@@ -1395,7 +1319,7 @@ module lcd_controller #(parameter clk_div = 24_000)(
             cnt_500hz <= 0;
     end
 
-    assign lcd_en = (cnt_500hz > (TIME_500HZ-1)/2)? 1'b0 : 1'b1; 
+    assign lcd_en = (cnt_500hz > (TIME_500HZ-1)/2)? 1'b0 : 1'b1;
     assign lcd_ctrl = (cnt_500hz == TIME_500HZ - 1) ? 1'b1 : 1'b0;
 
     always  @(posedge clk) begin
@@ -1431,7 +1355,7 @@ module lcd_controller #(parameter clk_div = 24_000)(
             ROW1_C: nextState = ROW1_D;
             ROW1_D: nextState = ROW1_E;
             ROW1_E: nextState = ROW1_F;
-            ROW1_F: nextState = ROW2_ADDR;
+            ROW1_F: nextState = ROW2_ADDR    ;
             ROW2_ADDR: nextState = ROW2_0;
             ROW2_0: nextState = ROW2_1;
             ROW2_1: nextState = ROW2_2;
@@ -1450,8 +1374,8 @@ module lcd_controller #(parameter clk_div = 24_000)(
             ROW2_E: nextState = ROW2_F;
             ROW2_F: nextState = ROW1_ADDR;
             default: nextState = IDLE;
-        endcase 
-    end   
+        endcase
+    end  
 
     // LCD control sigal
     assign lcd_rw = 1'b0;
@@ -1468,8 +1392,8 @@ module lcd_controller #(parameter clk_div = 24_000)(
         end
         else begin
             lcd_rs <= lcd_rs;
-        end     
-    end                   
+        end    
+    end                  
 
     always  @(posedge clk) begin
         if (!rst) begin
@@ -1519,10 +1443,10 @@ module lcd_controller #(parameter clk_div = 24_000)(
                 ROW2_E: lcd_data <= row_2 [ 15:  8];
                 ROW2_F: lcd_data <= row_2 [  7:  0];
                 default: lcd_data <= 8'hxx;
-            endcase                     
+            endcase                    
         end
         else
-            lcd_data <= lcd_data;
+            lcd_data <= lcd_data ;
     end
 
 endmodule
