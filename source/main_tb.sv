@@ -169,9 +169,9 @@ initial begin
     #(CLK_PERIOD * 400000);
 
     // ***********************************
-    // Test Case 1: Player Side: Winning by guessing apple 
+    // Test Case 2: Player Side: Winning by guessing apple 
     // ***********************************
-
+    tb_test_num += 1;
     tb_row_host = 4'd0;
     tb_row_player = 4'd0;
     tb_role_switch = 1;
@@ -186,6 +186,29 @@ initial begin
     tb_row_player = 4'd0;
 
     @(posedge tb_clk);
+    #(CLK_PERIOD * 400000); // R3 C0 (submit_letter_key)
+    tb_row_player = 4'b0001;
+
+    #(CLK_PERIOD * 100000);
+
+    @(negedge tb_clk);
+    tb_row_player = 4'd0;
+    #(CLK_PERIOD * 400000);
+
+    //GUESS second letter N
+    tb_row_player = 4'b0100; //N 
+    #(CLK_PERIOD * 100000);
+
+    @(negedge tb_clk);
+    tb_row_player = 4'd0;
+     #(CLK_PERIOD * 400000);
+    tb_row_player = 4'b0100; // R1 C1 -> 'L'
+    #(CLK_PERIOD * 100000);
+
+    @(negedge tb_clk);
+    tb_row_player = 4'd0;
+
+     @(posedge tb_clk);
     #(CLK_PERIOD * 400000); // R3 C0 (submit_letter_key)
     tb_row_player = 4'b0001;
 
