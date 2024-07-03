@@ -110,7 +110,7 @@ module keypad_fsm (
       next_state = INIT;
     end
 
-    if ((state == INIT) && (cur_key != submit_word_key)) begin
+    if ((state == INIT) && (prev_key != submit_word_key) && (prev_key != game_end_key)) begin
         next_data = 8'b01011111;
     end
 

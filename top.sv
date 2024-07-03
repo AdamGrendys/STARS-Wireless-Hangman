@@ -370,7 +370,7 @@ module keypad_fsm (
       next_state = INIT;
     end
 
-    if ((state == INIT) && (prev_key != submit_word_key)) begin
+    if ((state == INIT) && (prev_key != submit_word_key) && (prev_key != game_end_key)) begin
         next_data = 8'b01011111;
     end
 
@@ -413,11 +413,13 @@ module keypad_fsm (
       end else if ((cur_key == clear_key) || 
                    (cur_key == game_end_key)) begin
         next_state = INIT;
-        next_data = 8'b01011111;
-	next_unlocked = 1'b1;
+        //next_data = 8'b01011111;
+	      next_unlocked = 1'b1;
 
-        if (cur_key == game_end_key)
+        if (cur_key == game_end_key) begin
           game_end = 1'b1;
+          next_data = 8'd0;
+        end
 
       /*
       end else if ((cur_key == submit_letter_key) && 
