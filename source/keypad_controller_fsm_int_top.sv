@@ -14,7 +14,7 @@ module keypad_controller_fsm_int_top (
 
 clock_divider clock_div (.clk (clk),
                          .nRst (nRst),
-                         .clear (~nRst),
+                         //.clear (~nRst),
                          .max (17'd100000),
                          .at_max (new_clk));
 

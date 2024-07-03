@@ -39,6 +39,7 @@ logic [127:0] play_row1, play_row2, host_row1, host_row2;
 // Global 
 // ***********
 
+<<<<<<< HEAD
 clock_divider clock_div (.clk(hz10M), .nRst(~reset), .max(17'd100000), .at_max(new_clk));
 
 // ***********
@@ -47,6 +48,10 @@ clock_divider clock_div (.clk(hz10M), .nRst(~reset), .max(17'd100000), .at_max(n
 
 keypad_controller keypadplayer (.mode(role_switch), .clk(hz10M), .nRst(~reset), .read_row(pb[3:0]), .cur_key(cur_key_player), .strobe(strobe_player), .scan_col(scan_col_player), .enable(new_clk));
 keypad_fsm keypadFSMPlayer (.clk(hz10M), .nRst(~reset), .strobe(strobe_player), .cur_key(cur_key_player), .ready(ready), .data(msg), .game_end(gameEnd_player), .toggle_state(useless));
+=======
+  logic [7:0] row_col;
+  //assign row_col = {sel_row_out, sel_col_out};
+>>>>>>> 106f640781f9749b1dba1fb8f6886045dec9d214
 
 disp_fsm dispFSM (.clk(hz10M), .nRst(~reset), .ready(ready), .msg(msg), .row1(play_row1), .row2(play_row2), .gameEnd(gameEnd_player));
 
@@ -56,6 +61,7 @@ uart_Tx uart_transmitter (.clk(hz10M), .nRst(~reset), .tx_ctrl(tx_ctrl), .tx_byt
 
 lcd_controller lcdPlayer (.clk(hz10M), .rst(~reset), .row_1(play_row1), .row_2(play_row2), .lcd_en(right[7]), .lcd_rw(right[6]), .lcd_rs(right[5]), .lcd_data(ss0));
 
+<<<<<<< HEAD
 
 // *********
 // Host Side
@@ -78,6 +84,13 @@ host_disp hostdisp (.clk(hz10M), .nRst(~reset), .indexCorrect(indexCorrect), .le
 
 lcd_controller lcdHost (.clk(hz10M), .rst(~reset), .row_1(host_row1), .row_2(host_row2), .lcd_en(left[7]), .lcd_rw(left[6]), .lcd_rs(left[5]), .lcd_data(ss7));
 
+=======
+  ssdec_original ssdec0 (.in ({1'b0, state_out}),
+                .enable (1'b1),
+                .out (ss0[6:0]));
+                
+  assign green = discard_strobe;
+>>>>>>> 106f640781f9749b1dba1fb8f6886045dec9d214
 endmodule
 
 
@@ -194,18 +207,30 @@ module keypad_fsm (
   input logic [7:0] cur_key, // Concatenation of row and column
   
   // Temporarily set for FPGA testing
+<<<<<<< HEAD
   //output logic [7:0] prev_key,
   //output logic [2:0] state,
   //output logic [7:0] cur_key_out,
+=======
+  output logic [7:0] prev_key,
+  output logic [2:0] state,
+  output logic [7:0] cur_key_out,
+>>>>>>> 106f640781f9749b1dba1fb8f6886045dec9d214
   
   output logic ready, // Notification of letter submission after selection
   output logic game_end, // End-of-game signal
   output logic [7:0] data, // ASCII character from current key and number of consecutive presses
   output logic toggle_state // Notification of word submission
 );
+<<<<<<< HEAD
   logic [2:0] state;
   logic [2:0] next_state;
   logic [7:0] prev_key;
+=======
+  //logic [2:0] state;
+  logic [2:0] next_state;
+  //logic [7:0] prev_key;
+>>>>>>> 106f640781f9749b1dba1fb8f6886045dec9d214
   logic [7:0] temp_data, next_data;
   logic unlocked, next_unlocked;
 
@@ -266,7 +291,11 @@ module keypad_fsm (
       //last_key <= 8'd0;
 
       state <= INIT;
+<<<<<<< HEAD
       ready <= 0;
+=======
+      //ready <= 0;
+>>>>>>> 106f640781f9749b1dba1fb8f6886045dec9d214
       data <= 8'b01011111;
       
       unlocked <= 1'b0;
@@ -278,12 +307,16 @@ module keypad_fsm (
 
       //if (strobe) //& |last_key)
       state <= next_state;
-      ready <= (state == DONE);
+      //ready <= (state == DONE);      
       data <= next_data;
 
       unlocked <= next_unlocked;
       // Prevent loading too early
+<<<<<<< HEAD
       if (unlocked  & |cur_key) // unlocked & |cur_key
+=======
+      if (unlocked & |cur_key)
+>>>>>>> 106f640781f9749b1dba1fb8f6886045dec9d214
         prev_key <= cur_key;
     end
   end
@@ -291,17 +324,22 @@ module keypad_fsm (
   always_comb begin
     // 0-1. By default
     next_state = state;
-    next_data = data; // ascii_character(cur_key[7:4], cur_key[3:0], next_state);
-    next_unlocked = unlocked;
-
+    next_data = data;
+    next_unlocked = unlocked; // 1'b0
+    ready = 1'b0;
     game_end = 1'b0;
     toggle_state = 1'b0;
 
     if (state == DONE) begin
       next_state = INIT;
-      next_data = 8'b01011111;
+    
+    end else if (state == INIT) begin
+      if ((cur_key == submit_letter_key) || (cur_key == clear_key)) begin
+        next_data = 8'b01011111;
+      end
     end
 
+<<<<<<< HEAD
     if ((cur_key == submit_letter_key) &&
         (state != INIT) &&
         (state != DONE)) begin
@@ -331,6 +369,10 @@ module keypad_fsm (
     // Positive edge of pressing push button
     if (strobe & |cur_key) begin
 
+=======
+    // Positive edge of pressing push button
+    if (strobe & |cur_key) begin
+>>>>>>> 106f640781f9749b1dba1fb8f6886045dec9d214
       // Invalid keys
       if ((cur_key == key_1) ||
         (cur_key == key_A) ||
@@ -338,15 +380,37 @@ module keypad_fsm (
         (cur_key == key_D)) begin
         next_state = state;
 
-      end else if ((cur_key == clear_key) || 
-                   (cur_key == game_end_key)) begin
+      end else if (cur_key == submit_letter_key) begin
+        if ((state == INIT) || (state == DONE)) begin
+          next_state = INIT;
+        end else begin
+          next_state = DONE;
+          ready = 1'b1;
+          //next_unlocked = 1'b1;
+          // Note: ASCII character (data) has already been assigned
+        end
+
+      end else if (cur_key == clear_key) begin
         next_state = INIT;
+        //next_unlocked = 1'b1;
+
+      end else if (cur_key == submit_word_key) begin
+        next_state = INIT;
+<<<<<<< HEAD
         next_data = 8'b01011111;
 	next_unlocked = 1'b1;
+=======
+        next_data = 8'd0;
+        toggle_state = 1'b1;
+>>>>>>> 106f640781f9749b1dba1fb8f6886045dec9d214
 
-        if (cur_key == game_end_key)
-          game_end = 1'b1;
+      end else if (cur_key == game_end_key) begin
+        next_state = INIT;
+        next_data = 8'd0;
+        //next_unlocked = 1'b1;
+        game_end = 1'b1;
 
+<<<<<<< HEAD
       /*
       end else if ((cur_key == submit_letter_key) && 
                    (state != INIT)) begin
@@ -358,11 +422,19 @@ module keypad_fsm (
           next_data = 8'd0;
         end
       */
+=======
+        //if (prev_key == game_end_key)
+          //game_end = 1'b1;
+>>>>>>> 106f640781f9749b1dba1fb8f6886045dec9d214
 
       // Letter sets 2-9
       end else if (cur_key != submit_letter_key) begin
         if (prev_key == cur_key) begin
+<<<<<<< HEAD
           if(state == INIT)begin
+=======
+          if (state == INIT) begin
+>>>>>>> 106f640781f9749b1dba1fb8f6886045dec9d214
             next_state = S0;
           end else if (state == S0) begin
             next_state = S1;
@@ -386,7 +458,10 @@ module keypad_fsm (
     end else begin
       next_unlocked = 1'b0;
     end
+<<<<<<< HEAD
     //cur_key_out = cur_key;
+=======
+>>>>>>> 106f640781f9749b1dba1fb8f6886045dec9d214
   end
 endmodule
 
