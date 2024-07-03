@@ -216,7 +216,7 @@ initial begin
 
     @(negedge tb_clk);
     tb_row_player = 4'd0;
-    #(CLK_PERIOD * 400000);
+    #(CLK_PERIOD * 500000);
 
     // GUESS A
     tb_row_player = 4'b1000; // R0 C1 -> 'A'
