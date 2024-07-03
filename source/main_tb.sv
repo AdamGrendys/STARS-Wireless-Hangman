@@ -291,6 +291,14 @@ initial begin
 
     @(negedge tb_clk);
     tb_row_player = 4'd0;
+    #(CLK_PERIOD * 400000);
+    
+    tb_row_player = 4'b0001;
+
+    #(CLK_PERIOD * 100000);
+
+    @(negedge tb_clk);
+    tb_row_player = 4'd0;
     #(CLK_PERIOD * 300000);
     #(CLK_PERIOD * 300000);
     
