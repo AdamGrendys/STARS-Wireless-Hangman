@@ -295,14 +295,12 @@ initial begin
     
     // game end
     tb_row_player = 4'b0010;
-    tb_row_host = 4'b0010;
 
     #(CLK_PERIOD * 100000);
 
     @(negedge tb_clk);
     tb_row_player = 4'd0;
-    tb_row_host = 4'd0;
-    #(CLK_PERIOD * 600000);
+    #(CLK_PERIOD * 400000);
 
     // ***********************************
     // Test Case 1: Host Side: Setting the word  MOORE 
@@ -311,6 +309,11 @@ initial begin
     tb_row_host = 4'd0;
     tb_row_player = 4'd0;
     tb_role_switch = 0;
+
+    tb_row_host = 4'b0010;
+    #(CLK_PERIOD * 100000);
+    tb_row_host = 4'd0;
+    #(CLK_PERIOD * 400000);
 
     tb_test_num += 1;
     //START of A
