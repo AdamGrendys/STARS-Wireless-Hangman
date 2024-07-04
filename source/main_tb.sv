@@ -53,7 +53,7 @@ initial begin
     //START of A
     tb_row_host = 4'b1000; // R0 C1 -> 'A'
 
-    #(CLK_PERIOD * 100000);
+    #(CLK_PERIOD * 1000000);
 
     @(negedge tb_clk);
     tb_row_host = 4'd0;
@@ -67,7 +67,7 @@ initial begin
     @(negedge tb_clk);
     tb_row_host = 4'd0;
 
-    #(CLK_PERIOD * 1000000);
+    #(CLK_PERIOD * 100000);
     
 
     // // end of pressing A, Start of pressing P1
