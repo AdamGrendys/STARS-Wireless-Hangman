@@ -66,459 +66,461 @@ initial begin
 
     @(negedge tb_clk);
     tb_row_host = 4'd0;
+
+    #(CLK_PERIOD * 100000000);
     
 
-    // end of pressing A, Start of pressing P1
-    #(CLK_PERIOD * 400000);
-    tb_row_host = 4'b0010; // R2 C0 -> 'P'
+    // // end of pressing A, Start of pressing P1
+    // #(CLK_PERIOD * 400000);
+    // tb_row_host = 4'b0010; // R2 C0 -> 'P'
 
-    #(CLK_PERIOD * 100000);
+    // #(CLK_PERIOD * 100000);
 
-    @(negedge tb_clk);
-    tb_row_host = 4'd0;
+    // @(negedge tb_clk);
+    // tb_row_host = 4'd0;
 
-    @(posedge tb_clk);
-    #(CLK_PERIOD * 400000); // R3 C0 (submit_letter_key)
-    tb_row_host = 4'b0001;
+    // @(posedge tb_clk);
+    // #(CLK_PERIOD * 400000); // R3 C0 (submit_letter_key)
+    // tb_row_host = 4'b0001;
 
-    #(CLK_PERIOD * 100000);
+    // #(CLK_PERIOD * 100000);
 
-    @(negedge tb_clk);
-    tb_row_host = 4'd0;
-    // end of pressing P1, Start of pressing P2
+    // @(negedge tb_clk);
+    // tb_row_host = 4'd0;
+    // // end of pressing P1, Start of pressing P2
 
-    #(CLK_PERIOD * 400000);
-    tb_row_host = 4'b0010; // R2 C0 -> 'P'
+    // #(CLK_PERIOD * 400000);
+    // tb_row_host = 4'b0010; // R2 C0 -> 'P'
 
-    #(CLK_PERIOD * 100000);
+    // #(CLK_PERIOD * 100000);
 
-    @(negedge tb_clk);
-    tb_row_host = 4'd0;
+    // @(negedge tb_clk);
+    // tb_row_host = 4'd0;
 
-    @(posedge tb_clk);
-    #(CLK_PERIOD * 400000); // R3 C0 (submit_letter_key)
-    tb_row_host = 4'b0001;
+    // @(posedge tb_clk);
+    // #(CLK_PERIOD * 400000); // R3 C0 (submit_letter_key)
+    // tb_row_host = 4'b0001;
 
-    #(CLK_PERIOD * 100000);
+    // #(CLK_PERIOD * 100000);
 
-    @(negedge tb_clk);
-    tb_row_host = 4'd0;
+    // @(negedge tb_clk);
+    // tb_row_host = 4'd0;
     
-    // ENd of pressing P2, Start of L
-    #(CLK_PERIOD * 100000);
-    tb_row_host = 4'b0100; // R1 C1 -> 'L'
-    #(CLK_PERIOD * 100000);
+    // // ENd of pressing P2, Start of L
+    // #(CLK_PERIOD * 100000);
+    // tb_row_host = 4'b0100; // R1 C1 -> 'L'
+    // #(CLK_PERIOD * 100000);
 
-    @(negedge tb_clk);
-    tb_row_host = 4'd0;
+    // @(negedge tb_clk);
+    // tb_row_host = 4'd0;
 
-    #(CLK_PERIOD * 400000);
-    tb_row_host = 4'b0100; // R1 C1 -> 'L'
-    #(CLK_PERIOD * 100000);
+    // #(CLK_PERIOD * 400000);
+    // tb_row_host = 4'b0100; // R1 C1 -> 'L'
+    // #(CLK_PERIOD * 100000);
 
-    @(negedge tb_clk);
-    tb_row_host = 4'd0;
+    // @(negedge tb_clk);
+    // tb_row_host = 4'd0;
 
-     #(CLK_PERIOD * 400000);
-    tb_row_host = 4'b0100; // R1 C1 -> 'L'
-    #(CLK_PERIOD * 100000);
+    //  #(CLK_PERIOD * 400000);
+    // tb_row_host = 4'b0100; // R1 C1 -> 'L'
+    // #(CLK_PERIOD * 100000);
 
-    @(negedge tb_clk);
-    tb_row_host = 4'd0;
+    // @(negedge tb_clk);
+    // tb_row_host = 4'd0;
 
-     @(posedge tb_clk);
-    #(CLK_PERIOD * 300000); // R3 C0 (submit_letter_key)
-    tb_row_host = 4'b0001;
+    //  @(posedge tb_clk);
+    // #(CLK_PERIOD * 300000); // R3 C0 (submit_letter_key)
+    // tb_row_host = 4'b0001;
 
-    #(CLK_PERIOD * 100000);
+    // #(CLK_PERIOD * 100000);
 
-    @(negedge tb_clk);
-    tb_row_host = 4'd0;
+    // @(negedge tb_clk);
+    // tb_row_host = 4'd0;
 
-    //end pressing L, Start pressing E 
+    // //end pressing L, Start pressing E 
 
-    #(CLK_PERIOD * 600000);
-    tb_row_host = 4'b1000; //for E
-    #(CLK_PERIOD * 100000);
+    // #(CLK_PERIOD * 600000);
+    // tb_row_host = 4'b1000; //for E
+    // #(CLK_PERIOD * 100000);
 
-    @(negedge tb_clk);
-    tb_row_host = 4'd0;
+    // @(negedge tb_clk);
+    // tb_row_host = 4'd0;
 
-    #(CLK_PERIOD * 400000);
-    tb_row_host = 4'b1000; // 'E'
-    #(CLK_PERIOD * 100000);
+    // #(CLK_PERIOD * 400000);
+    // tb_row_host = 4'b1000; // 'E'
+    // #(CLK_PERIOD * 100000);
 
-    @(negedge tb_clk);
-    tb_row_host = 4'd0;
+    // @(negedge tb_clk);
+    // tb_row_host = 4'd0;
 
-    @(posedge tb_clk);
-    #(CLK_PERIOD * 200000); // R3 C0 (submit_letter_key)
-    tb_row_host = 4'b0001;
+    // @(posedge tb_clk);
+    // #(CLK_PERIOD * 200000); // R3 C0 (submit_letter_key)
+    // tb_row_host = 4'b0001;
 
-    #(CLK_PERIOD * 100000);
+    // #(CLK_PERIOD * 100000);
 
-    @(negedge tb_clk);
-    tb_row_host = 4'd0;
-    #(CLK_PERIOD * 100000);
+    // @(negedge tb_clk);
+    // tb_row_host = 4'd0;
+    // #(CLK_PERIOD * 100000);
 
-    #(CLK_PERIOD * 500000);
-     tb_row_host = 4'b0001;
-     #(CLK_PERIOD * 100000);
-     @(negedge tb_clk);
-    tb_row_host = 4'd0;
-    #(CLK_PERIOD * 500000);
+    // #(CLK_PERIOD * 500000);
+    //  tb_row_host = 4'b0001;
+    //  #(CLK_PERIOD * 100000);
+    //  @(negedge tb_clk);
+    // tb_row_host = 4'd0;
+    // #(CLK_PERIOD * 500000);
 
-    // ***********************************
-    // Test Case 2: Player Side: Winning by guessing apple 
-    // ***********************************
-    tb_test_num += 1;
-    tb_row_host = 4'd0;
-    tb_row_player = 4'd0;
-    tb_role_switch = 1;
+    // // ***********************************
+    // // Test Case 2: Player Side: Winning by guessing apple 
+    // // ***********************************
+    // tb_test_num += 1;
+    // tb_row_host = 4'd0;
+    // tb_row_player = 4'd0;
+    // tb_role_switch = 1;
 
-    // GUESS first letter P
-    #(CLK_PERIOD * 500000);
-    tb_row_player = 4'b0010; // R2 C0 -> 'P'
+    // // GUESS first letter P
+    // #(CLK_PERIOD * 500000);
+    // tb_row_player = 4'b0010; // R2 C0 -> 'P'
 
-    #(CLK_PERIOD * 100000);
+    // #(CLK_PERIOD * 100000);
 
-    @(negedge tb_clk);
-    tb_row_player = 4'd0;
+    // @(negedge tb_clk);
+    // tb_row_player = 4'd0;
 
-    @(posedge tb_clk);
-    #(CLK_PERIOD * 400000); // R3 C0 (submit_letter_key)
-    tb_row_player = 4'b0001;
+    // @(posedge tb_clk);
+    // #(CLK_PERIOD * 400000); // R3 C0 (submit_letter_key)
+    // tb_row_player = 4'b0001;
 
-    #(CLK_PERIOD * 100000);
+    // #(CLK_PERIOD * 100000);
 
-    @(negedge tb_clk);
-    tb_row_player = 4'd0;
-    #(CLK_PERIOD * 400000);
+    // @(negedge tb_clk);
+    // tb_row_player = 4'd0;
+    // #(CLK_PERIOD * 400000);
 
-    //GUESS second letter H
-    tb_row_player = 4'b0100; //H 
-    #(CLK_PERIOD * 100000);
+    // //GUESS second letter H
+    // tb_row_player = 4'b0100; //H 
+    // #(CLK_PERIOD * 100000);
 
-    @(negedge tb_clk);
-    tb_row_player = 4'd0;
-     #(CLK_PERIOD * 400000);
-    tb_row_player = 4'b0100; // R1 C1 -> 'H'
-    #(CLK_PERIOD * 100000);
+    // @(negedge tb_clk);
+    // tb_row_player = 4'd0;
+    //  #(CLK_PERIOD * 400000);
+    // tb_row_player = 4'b0100; // R1 C1 -> 'H'
+    // #(CLK_PERIOD * 100000);
 
-    @(negedge tb_clk);
-    tb_row_player = 4'd0;
+    // @(negedge tb_clk);
+    // tb_row_player = 4'd0;
 
-     @(posedge tb_clk);
-    #(CLK_PERIOD * 400000); // R3 C0 (submit_letter_key)
-    tb_row_player = 4'b0001;
+    //  @(posedge tb_clk);
+    // #(CLK_PERIOD * 400000); // R3 C0 (submit_letter_key)
+    // tb_row_player = 4'b0001;
 
-    #(CLK_PERIOD * 100000);
+    // #(CLK_PERIOD * 100000);
 
-    @(negedge tb_clk);
-    tb_row_player = 4'd0;
-    #(CLK_PERIOD * 500000);
+    // @(negedge tb_clk);
+    // tb_row_player = 4'd0;
+    // #(CLK_PERIOD * 500000);
 
-    // GUESS A
-    tb_row_player = 4'b1000; // R0 C1 -> 'A'
+    // // GUESS A
+    // tb_row_player = 4'b1000; // R0 C1 -> 'A'
 
-    #(CLK_PERIOD * 100000);
+    // #(CLK_PERIOD * 100000);
 
-    @(negedge tb_clk);
-    tb_row_player = 4'd0;
+    // @(negedge tb_clk);
+    // tb_row_player = 4'd0;
 
-    @(posedge tb_clk);
-    #(CLK_PERIOD * 300000); // R3 C0 (submit_letter_key)
-    tb_row_player = 4'b0001;
+    // @(posedge tb_clk);
+    // #(CLK_PERIOD * 300000); // R3 C0 (submit_letter_key)
+    // tb_row_player = 4'b0001;
 
-    #(CLK_PERIOD * 100000);
+    // #(CLK_PERIOD * 100000);
 
-    @(negedge tb_clk);
-    tb_row_player = 4'd0;
-     #(CLK_PERIOD * 400000);
+    // @(negedge tb_clk);
+    // tb_row_player = 4'd0;
+    //  #(CLK_PERIOD * 400000);
 
-    // press E
+    // // press E
 
-    #(CLK_PERIOD * 600000);
-    tb_row_player = 4'b1000; //for E
-    #(CLK_PERIOD * 100000);
+    // #(CLK_PERIOD * 600000);
+    // tb_row_player = 4'b1000; //for E
+    // #(CLK_PERIOD * 100000);
 
-    @(negedge tb_clk);
-    tb_row_player = 4'd0;
+    // @(negedge tb_clk);
+    // tb_row_player = 4'd0;
 
-    #(CLK_PERIOD * 400000);
-    tb_row_player = 4'b1000; // 'E'
-    #(CLK_PERIOD * 100000);
+    // #(CLK_PERIOD * 400000);
+    // tb_row_player = 4'b1000; // 'E'
+    // #(CLK_PERIOD * 100000);
 
-    @(negedge tb_clk);
-    tb_row_player = 4'd0;
+    // @(negedge tb_clk);
+    // tb_row_player = 4'd0;
 
-    @(posedge tb_clk);
-    #(CLK_PERIOD * 200000); // R3 C0 (submit_letter_key)
-    tb_row_player = 4'b0001;
+    // @(posedge tb_clk);
+    // #(CLK_PERIOD * 200000); // R3 C0 (submit_letter_key)
+    // tb_row_player = 4'b0001;
 
-    #(CLK_PERIOD * 100000);
+    // #(CLK_PERIOD * 100000);
 
-    @(negedge tb_clk);
-    tb_row_player = 4'd0;
-    #(CLK_PERIOD * 100000);
+    // @(negedge tb_clk);
+    // tb_row_player = 4'd0;
+    // #(CLK_PERIOD * 100000);
 
-    // presss L 
-    tb_row_player = 4'b0100; // R1 C1 -> 'L'
-    #(CLK_PERIOD * 100000);
+    // // presss L 
+    // tb_row_player = 4'b0100; // R1 C1 -> 'L'
+    // #(CLK_PERIOD * 100000);
 
-    @(negedge tb_clk);
-    tb_row_player = 4'd0;
+    // @(negedge tb_clk);
+    // tb_row_player = 4'd0;
 
-    #(CLK_PERIOD * 400000);
-    tb_row_player = 4'b0100; // R1 C1 -> 'L'
-    #(CLK_PERIOD * 100000);
+    // #(CLK_PERIOD * 400000);
+    // tb_row_player = 4'b0100; // R1 C1 -> 'L'
+    // #(CLK_PERIOD * 100000);
 
-    @(negedge tb_clk);
-    tb_row_player = 4'd0;
+    // @(negedge tb_clk);
+    // tb_row_player = 4'd0;
 
-     #(CLK_PERIOD * 400000);
-    tb_row_player = 4'b0100; // R1 C1 -> 'L'
-    #(CLK_PERIOD * 100000);
+    //  #(CLK_PERIOD * 400000);
+    // tb_row_player = 4'b0100; // R1 C1 -> 'L'
+    // #(CLK_PERIOD * 100000);
 
-    @(negedge tb_clk);
-    tb_row_player = 4'd0;
+    // @(negedge tb_clk);
+    // tb_row_player = 4'd0;
 
-     @(posedge tb_clk);
-    #(CLK_PERIOD * 300000); // R3 C0 (submit_letter_key)
-    tb_row_player = 4'b0001;
+    //  @(posedge tb_clk);
+    // #(CLK_PERIOD * 300000); // R3 C0 (submit_letter_key)
+    // tb_row_player = 4'b0001;
 
-    #(CLK_PERIOD * 100000);
+    // #(CLK_PERIOD * 100000);
 
-    @(negedge tb_clk);
-    tb_row_player = 4'd0;
-    #(CLK_PERIOD * 300000);
+    // @(negedge tb_clk);
+    // tb_row_player = 4'd0;
+    // #(CLK_PERIOD * 300000);
     
-    // game end
-    tb_row_player = 4'b0010;
+    // // game end
+    // tb_row_player = 4'b0010;
 
-    #(CLK_PERIOD * 100000);
+    // #(CLK_PERIOD * 100000);
 
-    @(negedge tb_clk);
-    tb_row_player = 4'd0;
-    #(CLK_PERIOD * 100000);
+    // @(negedge tb_clk);
+    // tb_row_player = 4'd0;
+    // #(CLK_PERIOD * 100000);
 
-    // ***********************************
-    // Test Case 1: Host Side: Setting the word  MOORE 
-    // ***********************************
+    // // ***********************************
+    // // Test Case 1: Host Side: Setting the word  MOORE 
+    // // ***********************************
 
-    tb_row_host = 4'd0;
-    tb_row_player = 4'd0;
-    tb_role_switch = 0;
+    // tb_row_host = 4'd0;
+    // tb_row_player = 4'd0;
+    // tb_role_switch = 0;
 
 
-    tb_row_host = 4'b0010;
-    #(CLK_PERIOD * 100000);
-    tb_row_host = 4'd0;
-    #(CLK_PERIOD * 400000);
+    // tb_row_host = 4'b0010;
+    // #(CLK_PERIOD * 100000);
+    // tb_row_host = 4'd0;
+    // #(CLK_PERIOD * 400000);
 
-    tb_test_num += 1;
-    //START of A
-    #(CLK_PERIOD * 200000);
-    tb_row_host = 4'b1000; // R0 C1 -> 'A'
+    // tb_test_num += 1;
+    // //START of A
+    // #(CLK_PERIOD * 200000);
+    // tb_row_host = 4'b1000; // R0 C1 -> 'A'
 
-    #(CLK_PERIOD * 100000);
+    // #(CLK_PERIOD * 100000);
 
-    @(negedge tb_clk);
-    tb_row_host = 4'd0;
+    // @(negedge tb_clk);
+    // tb_row_host = 4'd0;
 
-    @(posedge tb_clk);
-    #(CLK_PERIOD * 300000); // R3 C0 (submit_letter_key)
-    tb_row_host = 4'b0001;
+    // @(posedge tb_clk);
+    // #(CLK_PERIOD * 300000); // R3 C0 (submit_letter_key)
+    // tb_row_host = 4'b0001;
 
-    #(CLK_PERIOD * 100000);
+    // #(CLK_PERIOD * 100000);
 
-    @(negedge tb_clk);
-    tb_row_host = 4'd0;
-    #(CLK_PERIOD * 200000);
+    // @(negedge tb_clk);
+    // tb_row_host = 4'd0;
+    // #(CLK_PERIOD * 200000);
 
-    // START E
+    // // START E
 
-    tb_row_host = 4'b1000; //for E
-    #(CLK_PERIOD * 100000);
+    // tb_row_host = 4'b1000; //for E
+    // #(CLK_PERIOD * 100000);
 
-    @(negedge tb_clk);
-    tb_row_host = 4'd0;
+    // @(negedge tb_clk);
+    // tb_row_host = 4'd0;
 
-    #(CLK_PERIOD * 400000);
-    tb_row_host = 4'b1000; // 'E'
-    #(CLK_PERIOD * 100000);
+    // #(CLK_PERIOD * 400000);
+    // tb_row_host = 4'b1000; // 'E'
+    // #(CLK_PERIOD * 100000);
 
-    @(negedge tb_clk);
-    tb_row_host = 4'd0;
+    // @(negedge tb_clk);
+    // tb_row_host = 4'd0;
 
-    @(posedge tb_clk);
-    #(CLK_PERIOD * 200000); // R3 C0 (submit_letter_key)
-    tb_row_host = 4'b0001;
+    // @(posedge tb_clk);
+    // #(CLK_PERIOD * 200000); // R3 C0 (submit_letter_key)
+    // tb_row_host = 4'b0001;
 
-    #(CLK_PERIOD * 100000);
+    // #(CLK_PERIOD * 100000);
 
-    @(negedge tb_clk);
-    tb_row_host = 4'd0;
-    #(CLK_PERIOD * 500000);
+    // @(negedge tb_clk);
+    // tb_row_host = 4'd0;
+    // #(CLK_PERIOD * 500000);
 
-    // PRESS A
+    // // PRESS A
 
-    tb_row_host = 4'b1000; // R0 C1 -> 'A'
+    // tb_row_host = 4'b1000; // R0 C1 -> 'A'
 
-    #(CLK_PERIOD * 100000);
+    // #(CLK_PERIOD * 100000);
 
-    @(negedge tb_clk);
-    tb_row_host = 4'd0;
+    // @(negedge tb_clk);
+    // tb_row_host = 4'd0;
 
-    @(posedge tb_clk);
-    #(CLK_PERIOD * 300000); // R3 C0 (submit_letter_key)
-    tb_row_host = 4'b0001;
+    // @(posedge tb_clk);
+    // #(CLK_PERIOD * 300000); // R3 C0 (submit_letter_key)
+    // tb_row_host = 4'b0001;
 
-    #(CLK_PERIOD * 100000);
+    // #(CLK_PERIOD * 100000);
 
-    @(negedge tb_clk);
-    tb_row_host = 4'd0;
-     #(CLK_PERIOD * 100000);
+    // @(negedge tb_clk);
+    // tb_row_host = 4'd0;
+    //  #(CLK_PERIOD * 100000);
 
-    // PRESS I
-    #(CLK_PERIOD * 300000);
-    tb_row_host = 4'b0100; // R1 C1 -> 'I'
-    #(CLK_PERIOD * 100000);
+    // // PRESS I
+    // #(CLK_PERIOD * 300000);
+    // tb_row_host = 4'b0100; // R1 C1 -> 'I'
+    // #(CLK_PERIOD * 100000);
 
-    @(negedge tb_clk);
-    tb_row_host = 4'd0;
+    // @(negedge tb_clk);
+    // tb_row_host = 4'd0;
 
-    #(CLK_PERIOD * 400000);
-    tb_row_host = 4'b0100; // R1 C1 -> 'I'
-    #(CLK_PERIOD * 100000);
+    // #(CLK_PERIOD * 400000);
+    // tb_row_host = 4'b0100; // R1 C1 -> 'I'
+    // #(CLK_PERIOD * 100000);
 
-    @(negedge tb_clk);
-    tb_row_host = 4'd0;
+    // @(negedge tb_clk);
+    // tb_row_host = 4'd0;
 
-     #(CLK_PERIOD * 400000);
-    tb_row_host = 4'b0100; // R1 C1 -> 'I'
-    #(CLK_PERIOD * 100000);
+    //  #(CLK_PERIOD * 400000);
+    // tb_row_host = 4'b0100; // R1 C1 -> 'I'
+    // #(CLK_PERIOD * 100000);
 
-    @(negedge tb_clk);
-    tb_row_host = 4'd0;
+    // @(negedge tb_clk);
+    // tb_row_host = 4'd0;
 
-     @(posedge tb_clk);
-    #(CLK_PERIOD * 500000); // R3 C0 (clear_letter_key)
-    tb_row_host = 4'b0001;
+    //  @(posedge tb_clk);
+    // #(CLK_PERIOD * 500000); // R3 C0 (clear_letter_key)
+    // tb_row_host = 4'b0001;
 
-    #(CLK_PERIOD * 100000);
+    // #(CLK_PERIOD * 100000);
 
-    @(negedge tb_clk);
-    tb_row_host = 4'd0;
-    #(CLK_PERIOD * 300000);
+    // @(negedge tb_clk);
+    // tb_row_host = 4'd0;
+    // #(CLK_PERIOD * 300000);
 
-    // PRESS R
+    // // PRESS R
 
-     tb_row_host = 4'b0010; // 'R'
-    #(CLK_PERIOD * 100000);
+    //  tb_row_host = 4'b0010; // 'R'
+    // #(CLK_PERIOD * 100000);
 
-    @(negedge tb_clk);
-    tb_row_host = 4'd0;
+    // @(negedge tb_clk);
+    // tb_row_host = 4'd0;
 
-    #(CLK_PERIOD * 400000);
-    tb_row_host = 4'b0010; // 'R'
-    #(CLK_PERIOD * 100000);
+    // #(CLK_PERIOD * 400000);
+    // tb_row_host = 4'b0010; // 'R'
+    // #(CLK_PERIOD * 100000);
 
-    @(negedge tb_clk);
-    tb_row_host = 4'd0;
+    // @(negedge tb_clk);
+    // tb_row_host = 4'd0;
 
-     #(CLK_PERIOD * 400000);
-    tb_row_host = 4'b0010; // 'R'
-    #(CLK_PERIOD * 100000);
+    //  #(CLK_PERIOD * 400000);
+    // tb_row_host = 4'b0010; // 'R'
+    // #(CLK_PERIOD * 100000);
 
-    @(negedge tb_clk);
-    tb_row_host = 4'd0;
+    // @(negedge tb_clk);
+    // tb_row_host = 4'd0;
 
-     @(posedge tb_clk);
-    #(CLK_PERIOD * 400000); // R3 C0 (submit_letter_key)
-    tb_row_host = 4'b0001;
+    //  @(posedge tb_clk);
+    // #(CLK_PERIOD * 400000); // R3 C0 (submit_letter_key)
+    // tb_row_host = 4'b0001;
 
-    #(CLK_PERIOD * 100000);
+    // #(CLK_PERIOD * 100000);
 
-    @(negedge tb_clk);
-    tb_row_host = 4'd0;
-    #(CLK_PERIOD * 100000);
+    // @(negedge tb_clk);
+    // tb_row_host = 4'd0;
+    // #(CLK_PERIOD * 100000);
 
-    // PRESS T
+    // // PRESS T
 
-    tb_row_host = 4'b0010; // 'T'
-    #(CLK_PERIOD * 100000);
+    // tb_row_host = 4'b0010; // 'T'
+    // #(CLK_PERIOD * 100000);
 
-    @(negedge tb_clk);
-    tb_row_host = 4'd0;
+    // @(negedge tb_clk);
+    // tb_row_host = 4'd0;
 
-     @(posedge tb_clk);
-    #(CLK_PERIOD * 300000); // R3 C0 (submit_letter_key)
-    tb_row_host = 4'b0001;
+    //  @(posedge tb_clk);
+    // #(CLK_PERIOD * 300000); // R3 C0 (submit_letter_key)
+    // tb_row_host = 4'b0001;
 
-    #(CLK_PERIOD * 100000);
+    // #(CLK_PERIOD * 100000);
 
-    @(negedge tb_clk);
-    tb_row_host = 4'd0;
-    #(CLK_PERIOD * 400000);
+    // @(negedge tb_clk);
+    // tb_row_host = 4'd0;
+    // #(CLK_PERIOD * 400000);
 
-    //PRESS H
+    // //PRESS H
 
 
-    tb_row_host = 4'b0100; //H 
-    #(CLK_PERIOD * 100000);
+    // tb_row_host = 4'b0100; //H 
+    // #(CLK_PERIOD * 100000);
 
-    @(negedge tb_clk);
-    tb_row_host = 4'd0;
-     #(CLK_PERIOD * 400000);
-    tb_row_host = 4'b0100; // R1 C1 -> 'H'
-    #(CLK_PERIOD * 100000);
+    // @(negedge tb_clk);
+    // tb_row_host = 4'd0;
+    //  #(CLK_PERIOD * 400000);
+    // tb_row_host = 4'b0100; // R1 C1 -> 'H'
+    // #(CLK_PERIOD * 100000);
 
-    @(negedge tb_clk);
-    tb_row_host = 4'd0;
+    // @(negedge tb_clk);
+    // tb_row_host = 4'd0;
 
-     @(posedge tb_clk);
-    #(CLK_PERIOD * 400000); // R3 C0 (submit_letter_key)
-    tb_row_host = 4'b0001;
+    //  @(posedge tb_clk);
+    // #(CLK_PERIOD * 400000); // R3 C0 (submit_letter_key)
+    // tb_row_host = 4'b0001;
 
-    #(CLK_PERIOD * 100000);
+    // #(CLK_PERIOD * 100000);
 
-    @(negedge tb_clk);
-    tb_row_host = 4'd0;
-    #(CLK_PERIOD * 600000);
+    // @(negedge tb_clk);
+    // tb_row_host = 4'd0;
+    // #(CLK_PERIOD * 600000);
 
-    tb_row_host = 4'b0001; // (submit word key)
-    #(CLK_PERIOD * 100000);
-    @(negedge tb_clk);
-    tb_row_host = 4'd0;
-    #(CLK_PERIOD * 600000);
+    // tb_row_host = 4'b0001; // (submit word key)
+    // #(CLK_PERIOD * 100000);
+    // @(negedge tb_clk);
+    // tb_row_host = 4'd0;
+    // #(CLK_PERIOD * 500000);
 
-     // ***********************************
-    // Test Case 4: Player Side: losing ;-;
-    // ***********************************
+    //  // ***********************************
+    // // Test Case 4: Player Side: losing ;-;
+    // // ***********************************
 
-    tb_test_num += 1;
-    tb_row_host = 4'd0;
-    tb_row_player = 4'd0;
-    tb_role_switch = 1;
+    // tb_test_num += 1;
+    // tb_row_host = 4'd0;
+    // tb_row_player = 4'd0;
+    // tb_role_switch = 1;
 
-    #(CLK_PERIOD * 500000);
-    tb_row_player = 4'b0010; // R2 C0 -> 'P'
+    // #(CLK_PERIOD * 400000);
+    // tb_row_player = 4'b0010; // R2 C0 -> 'P'
 
-    #(CLK_PERIOD * 100000);
+    // #(CLK_PERIOD * 100000);
 
-    @(negedge tb_clk);
-    tb_row_player = 4'd0;
+    // @(negedge tb_clk);
+    // tb_row_player = 4'd0;
 
-    @(posedge tb_clk);
-    #(CLK_PERIOD * 400000); // R3 C0 (submit_letter_key)
-    tb_row_player = 4'b0001;
+    // @(posedge tb_clk);
+    // #(CLK_PERIOD * 400000); // R3 C0 (submit_letter_key)
+    // tb_row_player = 4'b0001;
 
-    #(CLK_PERIOD * 100000);
+    // #(CLK_PERIOD * 100000);
 
-    @(negedge tb_clk);
-    tb_row_player = 4'd0;
-    #(CLK_PERIOD * 400000);
+    // @(negedge tb_clk);
+    // tb_row_player = 4'd0;
+    // #(CLK_PERIOD * 400000);
 
 
 
