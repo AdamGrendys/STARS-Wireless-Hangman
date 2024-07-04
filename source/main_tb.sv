@@ -53,7 +53,7 @@ initial begin
     //START of A
     tb_row_host = 4'b1000; // R0 C1 -> 'A'
 
-    #(CLK_PERIOD * 1000000);
+    #(CLK_PERIOD * 100000);
 
     @(negedge tb_clk);
     tb_row_host = 4'd0;
@@ -62,7 +62,7 @@ initial begin
     #(CLK_PERIOD * 300000); // R3 C0 (submit_letter_key)
     tb_row_host = 4'b0001;
 
-    #(CLK_PERIOD * 1000000);
+    #(CLK_PERIOD * 100000);
 
     @(negedge tb_clk);
     tb_row_host = 4'd0;
