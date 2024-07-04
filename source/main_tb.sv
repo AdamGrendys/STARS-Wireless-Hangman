@@ -493,6 +493,34 @@ initial begin
     tb_row_host = 4'd0;
     #(CLK_PERIOD * 500000);
 
+     // ***********************************
+    // Test Case 4: Player Side: losing ;-;
+    // ***********************************
+
+    tb_test_num += 1;
+    tb_row_host = 4'd0;
+    tb_row_player = 4'd0;
+    tb_role_switch = 1;
+
+    #(CLK_PERIOD * 500000);
+    tb_row_player = 4'b0010; // R2 C0 -> 'P'
+
+    #(CLK_PERIOD * 100000);
+
+    @(negedge tb_clk);
+    tb_row_player = 4'd0;
+
+    @(posedge tb_clk);
+    #(CLK_PERIOD * 400000); // R3 C0 (submit_letter_key)
+    tb_row_player = 4'b0001;
+
+    #(CLK_PERIOD * 100000);
+
+    @(negedge tb_clk);
+    tb_row_player = 4'd0;
+    #(CLK_PERIOD * 400000);
+
+
 
 
 
