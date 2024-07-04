@@ -62,12 +62,12 @@ initial begin
     #(CLK_PERIOD * 300000); // R3 C0 (submit_letter_key)
     tb_row_host = 4'b0001;
 
-    #(CLK_PERIOD * 100000);
+    #(CLK_PERIOD * 1000000);
 
     @(negedge tb_clk);
     tb_row_host = 4'd0;
 
-    #(CLK_PERIOD * 10000000);
+    #(CLK_PERIOD * 1000000);
     
 
     // // end of pressing A, Start of pressing P1
