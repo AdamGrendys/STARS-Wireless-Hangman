@@ -504,7 +504,7 @@ initial begin
     tb_row_player = 4'd0;
     tb_role_switch = 1;
 
-    #(CLK_PERIOD * 200000);
+    #(CLK_PERIOD * 100000);
     tb_row_player = 4'b0010; // R2 C0 -> 'P'
 
     #(CLK_PERIOD * 100000);
@@ -513,7 +513,7 @@ initial begin
     tb_row_player = 4'd0;
 
     @(posedge tb_clk);
-    #(CLK_PERIOD * 500000); // R3 C0 (submit_letter_key)
+    #(CLK_PERIOD * 300000); // R3 C0 (submit_letter_key)
     tb_row_player = 4'b0001;
 
     #(CLK_PERIOD * 100000);
