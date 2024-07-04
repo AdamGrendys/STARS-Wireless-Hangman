@@ -6,8 +6,8 @@ module top (
     // FPGA Ports
     input logic hz10M, reset, 
     input  logic [20:0] pb,
-    output logic red, green, blue,
     output logic [7:0] left, right, ss7, ss6, ss5, ss4, ss3, ss2, ss1, ss0,
+    output logic red, green, blue,
 
     // UART ports
     output logic [7:0] txdata,
