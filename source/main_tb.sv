@@ -504,7 +504,7 @@ initial begin
     tb_row_player = 4'd0;
     tb_role_switch = 1;
 
-    #(CLK_PERIOD * 300000);
+    #(CLK_PERIOD * 200000);
     tb_row_player = 4'b0010; // R2 C0 -> 'P'
 
     #(CLK_PERIOD * 100000);
