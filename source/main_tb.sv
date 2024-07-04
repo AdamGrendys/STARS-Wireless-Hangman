@@ -491,7 +491,7 @@ initial begin
     #(CLK_PERIOD * 100000);
     @(negedge tb_clk);
     tb_row_host = 4'd0;
-    #(CLK_PERIOD * 500000);
+    #(CLK_PERIOD * 600000);
 
      // ***********************************
     // Test Case 4: Player Side: losing ;-;
