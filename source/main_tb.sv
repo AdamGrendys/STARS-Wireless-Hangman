@@ -305,16 +305,14 @@ initial begin
     #(CLK_PERIOD * 100000);
 
     // ***********************************
-    // Test Case 1: Host Side: Setting the word  MOORE 
+    // Test Case 3: Host Side: Setting the word  MOORE 
     // ***********************************
 
-    tb_row_host = 4'd0;
     tb_row_player = 4'd0;
     tb_role_switch = 0;
 
     tb_test_num += 1;
     //game end
-    #(CLK_PERIOD * 400000);
     tb_row_host = 4'b0010;
 
     #(CLK_PERIOD * 100000);
