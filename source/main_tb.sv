@@ -313,16 +313,16 @@ initial begin
     tb_role_switch = 0;
 
     tb_test_num += 1;
-    //START of A
+    //game end
     #(CLK_PERIOD * 400000);
-    tb_row_player = 4'b0010;
+    tb_row_host = 4'b0010;
 
     #(CLK_PERIOD * 100000);
 
     @(negedge tb_clk);
-    tb_row_player = 4'd0;
+    tb_row_host = 4'd0;
     #(CLK_PERIOD * 400000);
-
+    // press A
     tb_row_host = 4'b1000; // R0 C1 -> 'A'
 
     #(CLK_PERIOD * 100000);
