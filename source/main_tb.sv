@@ -309,14 +309,14 @@ initial begin
     // ***********************************
 
     tb_test_num += 1;
-    //game end
-    tb_row_host = 4'b0010;
+    // //game end
+    // tb_row_host = 4'b0010;
 
-    #(CLK_PERIOD * 100000);
+    // #(CLK_PERIOD * 100000);
 
-    @(negedge tb_clk);
-    tb_row_host = 4'd0;
-    #(CLK_PERIOD * 600000);
+    // @(negedge tb_clk);
+    // tb_row_host = 4'd0;
+    // #(CLK_PERIOD * 600000);
     // press A
     tb_row_host = 4'b1000; // R0 C1 -> 'A'
 

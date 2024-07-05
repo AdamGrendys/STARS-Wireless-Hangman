@@ -45,7 +45,7 @@ clock_divider clock_div (.clk(hz10M), .nRst(~reset), .max(17'd100000), .at_max(n
 // Player Side
 // ***********
 
-keypad_controller keypadplayer (.mode(pb[19]), .clk(hz10M), .nRst(~reset), .read_row(pb[3:0]), .cur_key(cur_key_player), .strobe(strobe_player), .scan_col(right[4:1]), .enable(new_clk));
+keypad_controller keypadplayer (.mode(pb[19]), .clk(hz10M), .nRst(~reset), .read_row(pb[11:8]), .cur_key(cur_key_player), .strobe(strobe_player), .scan_col(right[4:1]), .enable(new_clk));
 keypad_fsm keypadFSMPlayer (.clk(hz10M), .nRst(~reset), .strobe(strobe_player), .cur_key(cur_key_player), .ready(ready), .data(msg), .game_end(gameEnd_player), .toggle_state(useless));
 
 disp_fsm dispFSM (.clk(hz10M), .nRst(~reset), .ready(ready), .msg(msg), .row1(play_row1), .row2(play_row2), .gameEnd(gameEnd_player));
