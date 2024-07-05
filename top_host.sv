@@ -45,38 +45,38 @@ clock_divider clock_div (.clk(hz10M), .nRst(~reset), .max(17'd100000), .at_max(n
 // Player Side
 // ***********
 
-keypad_controller keypadplayer (.mode(pb[19]), .clk(hz10M), .nRst(~reset), .read_row(pb[3:0]), .cur_key(cur_key_player), .strobe(strobe_player), .scan_col(right[4:1]), .enable(new_clk));
-keypad_fsm keypadFSMPlayer (.clk(hz10M), .nRst(~reset), .strobe(strobe_player), .cur_key(cur_key_player), .ready(ready), .data(msg), .game_end(gameEnd_player), .toggle_state(useless));
+// keypad_controller keypadplayer (.mode(pb[19]), .clk(hz10M), .nRst(~reset), .read_row(pb[3:0]), .cur_key(cur_key_player), .strobe(strobe_player), .scan_col(right[4:1]), .enable(new_clk));
+// keypad_fsm keypadFSMPlayer (.clk(hz10M), .nRst(~reset), .strobe(strobe_player), .cur_key(cur_key_player), .ready(ready), .data(msg), .game_end(gameEnd_player), .toggle_state(useless));
 
-disp_fsm dispFSM (.clk(hz10M), .nRst(~reset), .ready(ready), .msg(msg), .row1(play_row1), .row2(play_row2), .gameEnd(gameEnd_player));
+// disp_fsm dispFSM (.clk(hz10M), .nRst(~reset), .ready(ready), .msg(msg), .row1(play_row1), .row2(play_row2), .gameEnd(gameEnd_player));
 
-msg_reg message_reg (.clk(hz10M), .nRst(~reset), .ready(ready), .transmit_ready(transmit_ready), .data(msg), .blue(blue), .tx_ctrl(tx_ctrl), .tx_byte(tx_byte));
+// msg_reg message_reg (.clk(hz10M), .nRst(~reset), .ready(ready), .transmit_ready(transmit_ready), .data(msg), .blue(blue), .tx_ctrl(tx_ctrl), .tx_byte(tx_byte));
 
-uart_Tx uart_transmitter (.clk(hz10M), .nRst(~reset), .tx_ctrl(tx_ctrl), .tx_byte(tx_byte), .transmit_ready(transmit_ready), .tx_serial(tx_serial));
+// uart_Tx uart_transmitter (.clk(hz10M), .nRst(~reset), .tx_ctrl(tx_ctrl), .tx_byte(tx_byte), .transmit_ready(transmit_ready), .tx_serial(tx_serial));
 
-lcd_controller lcdPlayer (.clk(hz10M), .rst(~reset), .row_1(128'b00110001001100100011001101100001011000100110001101000001010000100100001100110001001100100011001101000001010000100100001100110000), .row_2(play_row2), .lcd_en(right[7]), .lcd_rw(right[6]), .lcd_rs(right[5]), .lcd_data(ss0[7:0]));
+// lcd_controller lcdPlayer (.clk(hz10M), .rst(~reset), .row_1(play_row1), .row_2(play_row2), .lcd_en(right[7]), .lcd_rw(right[6]), .lcd_rs(right[5]), .lcd_data(ss0[7:0]));
 
 
 // *********
 // Host Side
 // *********
 
-// keypad_controller keypadHostt (.mode(~pb[19]), .clk(hz10M), .nRst(~reset), .read_row(pb[7:4]), .cur_key(cur_key_host), .strobe(strobe_host), .scan_col(left[4:1]), .enable(new_clk));
-// keypad_fsm keypadFSMHost (.clk(hz10M), .nRst(~reset), .strobe(strobe_host), .cur_key(cur_key_host), .ready(key_ready), .data(setLetter), .game_end(gameEnd_host), .toggle_state(toggle_state_host));
+keypad_controller keypadHostt (.mode(~pb[19]), .clk(hz10M), .nRst(~reset), .read_row(pb[7:4]), .cur_key(cur_key_host), .strobe(strobe_host), .scan_col(left[4:1]), .enable(new_clk));
+keypad_fsm keypadFSMHost (.clk(hz10M), .nRst(~reset), .strobe(strobe_host), .cur_key(cur_key_host), .ready(key_ready), .data(setLetter), .game_end(gameEnd_host), .toggle_state(toggle_state_host));
 
-// host_msg_reg host_message_reg (.clk(hz10M), .nRst(~reset), .key_ready(key_ready), .toggle_state(toggle_state_host), .setLetter(setLetter), .rec_ready(rec_ready_host), .temp_word(temp_word), .gameEnd_host(gameEnd_host));
+host_msg_reg host_message_reg (.clk(hz10M), .nRst(~reset), .key_ready(key_ready), .toggle_state(toggle_state_host), .setLetter(setLetter), .rec_ready(rec_ready_host), .temp_word(temp_word), .gameEnd_host(gameEnd_host));
 
-// uart_Rx uart_receiver (.clk(hz10M), .nRst(~reset), .rx_serial(tx_serial), .rec_ready(rec_ready_host), .rx_ready(rx_ready), .rx_byte(rx_byte), 
-// .error_led(right[0]));
+uart_Rx uart_receiver (.clk(hz10M), .nRst(~reset), .rx_serial(tx_serial), .rec_ready(rec_ready_host), .rx_ready(rx_ready), .rx_byte(rx_byte), 
+.error_led(right[0]));
 
-// buffer buffer (.clk(hz10M), .nRst(~reset), .Rx_byte(rx_byte), .rx_ready(rx_ready), .game_rdy(game_rdy), .guess(guess));
+buffer buffer (.clk(hz10M), .nRst(~reset), .Rx_byte(rx_byte), .rx_ready(rx_ready), .game_rdy(game_rdy), .guess(guess));
 
-// game_logic gamelogic (.clk(hz10M), .nRst(~reset), .guess(guess), .setWord(temp_word), .toggle_state(toggle_state_host), .letter(letter), .red(red), .green(green),
-// .mistake(mistake), .red_busy(red_busy), .game_rdy(game_rdy), .incorrect(incorrect), .correct(correct), .indexCorrect(indexCorrect), .gameEnd(gameEnd_host));
+game_logic gamelogic (.clk(hz10M), .nRst(~reset), .guess(guess), .setWord(temp_word), .toggle_state(toggle_state_host), .letter(letter), .red(red), .green(green),
+.mistake(mistake), .red_busy(red_busy), .game_rdy(game_rdy), .incorrect(incorrect), .correct(correct), .indexCorrect(indexCorrect), .gameEnd(gameEnd_host));
 
-// host_disp hostdisp (.clk(hz10M), .nRst(~reset), .indexCorrect(indexCorrect), .letter(letter), .incorrect(incorrect), .correct(correct), .temp_word(temp_word), .setLetter(setLetter), .toggle_state(toggle_state_host), .gameEnd_host(gameEnd_host), .mistake(mistake), .top(host_row1), .bottom(host_row2));
+host_disp hostdisp (.clk(hz10M), .nRst(~reset), .indexCorrect(indexCorrect), .letter(letter), .incorrect(incorrect), .correct(correct), .temp_word(temp_word), .setLetter(setLetter), .toggle_state(toggle_state_host), .gameEnd_host(gameEnd_host), .mistake(mistake), .top(host_row1), .bottom(host_row2));
 
-// lcd_controller lcdHost (.clk(hz10M), .rst(~reset), .row_1({128'b0}), .row_2({128'b0}), .lcd_en(left[7]), .lcd_rw(left[6]), .lcd_rs(left[5]), .lcd_data(ss7[7:0]));
+lcd_controller lcdHost (.clk(hz10M), .rst(~reset), .row_1({128'b0}), .row_2({128'b0}), .lcd_en(left[7]), .lcd_rw(left[6]), .lcd_rs(left[5]), .lcd_data(ss7[7:0]));
 
 endmodule
 
@@ -1224,7 +1224,7 @@ end
 end
 endmodule
 
-module lcd_controller #(parameter clk_div = 24_000)(
+module lcd1602 #(parameter clk_div = 24_000)(
     input clk,
     input rst,
     // Data to be displayed
