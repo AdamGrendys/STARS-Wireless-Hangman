@@ -35,11 +35,14 @@ logic [4:0] indexCorrect;
 // LCD Outputs
 logic [127:0] play_row1, play_row2, host_row1, host_row2;
 
+logic [2:0] state1;
+
 // ***********
 // Global 
 // ***********
 
-clock_divider clock_div (.clk(hz10M), .nRst(~reset), .max(17'd100000), .at_max(new_clk));
+
+clock_divider clock_div (.clk (hz10M), .nRst (~reset), .clear (~reset), .max (30'd100000), .at_max (new_clk));
 
 // ***********
 // Player Side
@@ -61,12 +64,19 @@ clock_divider clock_div (.clk(hz10M), .nRst(~reset), .max(17'd100000), .at_max(n
 // Host Side
 // *********
 
-keypad_controller keypadHostt (.mode(~pb[19]), .clk(hz10M), .nRst(~reset), .read_row(pb[7:4]), .cur_key(cur_key_host), .strobe(strobe_host), .scan_col(left[4:1]), .enable(new_clk));
-keypad_fsm keypadFSMHost (.clk(hz10M), .nRst(~reset), .strobe(strobe_host), .cur_key(cur_key_host), .ready(key_ready), .data(setLetter), .game_end(gameEnd_host), .toggle_state(toggle_state_host));
+logic [127:0] temp;
+assign temp  =  {120'b0, pb[7:4], left[4:1]};
+
+logic new_clk1;
+
+clock_divider clock_div1 (.clk (hz10M), .nRst (~reset), .clear (~reset), .max (30'd10000), .at_max (new_clk1));
+
+keypad_controller keypadHostt (.clk(hz10M), .mode(~pb[19]), .nRst(~reset), .read_row(pb[7:4]), .cur_key(cur_key_host), .strobe(strobe_host), .scan_col(left[4:1]), .enable(new_clk));
+keypad_fsm keypadFSMHost (.clk(hz10M), .state(state1), .nRst(~reset), .strobe(strobe_host), .cur_key(cur_key_host), .ready(key_ready), .data(setLetter), .game_end(gameEnd_host), .toggle_state(toggle_state_host));
 
 host_msg_reg host_message_reg (.clk(hz10M), .nRst(~reset), .key_ready(key_ready), .toggle_state(toggle_state_host), .setLetter(setLetter), .rec_ready(rec_ready_host), .temp_word(temp_word), .gameEnd_host(gameEnd_host));
 
-uart_Rx uart_receiver (.clk(hz10M), .nRst(~reset), .rx_serial(tx_serial), .rec_ready(rec_ready_host), .rx_ready(rx_ready), .rx_byte(rx_byte), 
+uart_Rx uart_receiver (.clk(hz10M), .nRst(~reset), .rx_serial(pb[18]), .rec_ready(rec_ready_host), .rx_ready(rx_ready), .rx_byte(rx_byte), 
 .error_led(right[0]));
 
 buffer buffer (.clk(hz10M), .nRst(~reset), .Rx_byte(rx_byte), .rx_ready(rx_ready), .game_rdy(game_rdy), .guess(guess));
@@ -76,32 +86,38 @@ game_logic gamelogic (.clk(hz10M), .nRst(~reset), .guess(guess), .setWord(temp_w
 
 host_disp hostdisp (.clk(hz10M), .nRst(~reset), .indexCorrect(indexCorrect), .letter(letter), .incorrect(incorrect), .correct(correct), .temp_word(temp_word), .setLetter(setLetter), .toggle_state(toggle_state_host), .gameEnd_host(gameEnd_host), .mistake(mistake), .top(host_row1), .bottom(host_row2));
 
-lcd_controller lcdHost (.clk(hz10M), .rst(~reset), .row_1({128'b0}), .row_2({128'b0}), .lcd_en(left[7]), .lcd_rw(left[6]), .lcd_rs(left[5]), .lcd_data(ss7[7:0]));
+lcd_controller lcdHost (.clk(hz10M), .rst(~reset), .strobe(strobe_host), .row_1({pb[7:4], left[4:1], state1, host_row1[116:0]}), .row_2(host_row2), .lcd_en(left[7]), .lcd_rw(left[6]), .lcd_rs(left[5]), .lcd_data(ss7[7:0]));
 
 endmodule
 
 module clock_divider (
-  input logic clk, nRst,
-  input logic [16:0] max,
+  input logic clk, nRst, clear,
+  input logic [29:0] max,
   output logic at_max
 );
-  logic [16:0] next_count, time_o;
+  logic [29:0] next_count, count;
   
   always_ff @(posedge clk, negedge nRst) begin
     if (~nRst)
-      time_o <= 0;
+      count <= 0;
     else
-      time_o <= next_count;
+      count <= next_count;
   end
 
-  // Next state logic
-  assign at_max = (time_o == max);
+  always_comb begin  
+    //at_max = 0;
+    at_max = (count == max);
+    next_count = count;
 
-  always_comb begin    
-    if (~nRst)
+    if (clear)
+      next_count = 0;
+    //else
+      //at_max = (count == max);
+
+    if (at_max)
       next_count = 0;
     else
-      next_count = (at_max) ? (0) : (time_o + 1);
+      next_count = count + 1;
   end
 endmodule
 
@@ -114,6 +130,7 @@ module keypad_controller (
 );
   logic [3:0] Q0, Q1, Q1_delay;
   logic [3:0] scan_col_next, sel_col_next;
+  logic strobe_next;
 
   // Synchronizer and rising (positive) edge detector - 3 FFs
   always_ff @(posedge clk, negedge nRst) begin
@@ -124,7 +141,8 @@ module keypad_controller (
       Q1_delay <= 4'd0;
 
       // Note: Deactivating the scanning of columns should prevent key input
-      scan_col <= 4'b1111;
+      scan_col <= 4'b0000;
+      strobe<= 1'b0;
 
       // Temporary output variables for testing
       //sel_row <= 4'd0;
@@ -135,6 +153,7 @@ module keypad_controller (
       Q0 <= read_row;
       Q1 <= Q0;
       Q1_delay <= Q1;
+      strobe<= strobe_next;
 
       // Variables for testing purposes
       // Strobe should prompt transition in finite state machine (FSM) module
@@ -153,26 +172,32 @@ module keypad_controller (
     // Setting active column for button press
     // Rate of switching reflected by all indicator lights turned on
     scan_col_next = scan_col;
+    strobe_next = strobe;
     
     if(mode) begin
       if ((|read_row)) begin// & (|scan_col))
         // Maintain selected column while input button being pressed (non-zero row)
         scan_col_next = scan_col;
+        if(enable)
+            strobe_next = 1'b1;
+
+        
       end
       else if (enable) begin
+        strobe_next = 1'b0;
         case (scan_col)
-          4'b1111:
-            scan_col_next = 4'b0111;
-          4'b0111:
-            scan_col_next = 4'b1011;
-          4'b1011:
-            scan_col_next = 4'b1101;
-          4'b1101:
-            scan_col_next = 4'b1110;
-          4'b1110:
-            scan_col_next = 4'b0111;
+          4'b0000:
+            scan_col_next = 4'b1000;
+          4'b1000:
+            scan_col_next = 4'b0100;
+          4'b0100:
+            scan_col_next = 4'b0010;
+          4'b0010:
+            scan_col_next = 4'b0001;
+          4'b0001:
+            scan_col_next = 4'b1000;
           default:
-            scan_col_next = 4'b1111;
+            scan_col_next = 4'b0000;
         endcase
       end
       else begin
@@ -183,30 +208,29 @@ module keypad_controller (
     end
   end
 
-  assign strobe = |((~Q1_delay) & (Q1));
-  assign cur_key = (|read_row & |(~scan_col)) ? ({read_row, ~scan_col}) : (8'd0);
-  // assign cur_key = (|read_row & |scan_col) ? ({read_row, scan_col}) : (8'd0);
+  //assign strobe_next = |((~Q1_delay) & (Q1));
+  //assign cur_key = (|read_row & |(~scan_col)) ? ({read_row, ~scan_col}) : (8'd0);
+  assign cur_key = (|read_row & |scan_col) ? ({read_row, scan_col}) : (8'd0);
 endmodule
 
 module keypad_fsm (
   input logic clk, nRst, strobe,
   input logic [7:0] cur_key, // Concatenation of row and column
-  
-  // Temporarily set for FPGA testing
-  //output logic [7:0] prev_key,
-  //output logic [2:0] state,
-  //output logic [7:0] cur_key_out,
-  
+  //input logic enable,
   output logic ready, // Notification of letter submission after selection
   output logic game_end, // End-of-game signal
   output logic [7:0] data, // ASCII character from current key and number of consecutive presses
+  output logic [2:0] state,
   output logic toggle_state // Notification of word submission
 );
-  logic [2:0] state;
+ // logic [2:0] state;
   logic [2:0] next_state;
   logic [7:0] prev_key;
-  logic [7:0] temp_data, next_data;
+  logic [7:0] next_data;
   logic unlocked, next_unlocked;
+  logic strobe_edge;
+  logic strobe_edge1;
+  logic edge1;
 
   typedef enum logic [2:0] {
       INIT = 0, S0 = 1, S1 = 2, S2 = 3, S3 = 4, DONE = 5
@@ -229,7 +253,7 @@ module keypad_fsm (
   localparam key_D = 8'b00010001; // R3 C3
 
   // Handle ASCII character conversion
-  function logic[7:0] ascii_character (input [3:0] row, col, input [2:0] state);
+  function logic[7:0] ascii_character ( input[3:0] row, input [3:0] col, input [2:0] state);
     ascii_character = 8'd0;
 
     if (row[3]) begin // "0" - 1000
@@ -262,108 +286,96 @@ module keypad_fsm (
 
   always_ff @(posedge clk, negedge nRst) begin
     if (~nRst) begin
-      //last_key <= 8'd0;
-
       state <= INIT;
-      ready <= 0;
+      //ready <= 0;
       data <= 8'b01011111;
       
       unlocked <= 1'b0;
       prev_key <= 8'd0;
+      strobe_edge <= 1'b0;
+      strobe_edge1 <= 1'b0;
 
     end else begin
-      //if (|cur_key)
-        //last_key <= cur_key;
-
-      //if (strobe) //& |last_key)
       state <= next_state;
-      ready <= (state == DONE);
+      //ready <= (state == DONE);      
       data <= next_data;
+
+      strobe_edge <= strobe;
+      strobe_edge1 <= strobe_edge;
 
       unlocked <= next_unlocked;
       // Prevent loading too early
-      if (unlocked  & |cur_key) // unlocked & |cur_key
+      if (unlocked & |cur_key)
         prev_key <= cur_key;
     end
   end
 
+  assign edge1 = ((~strobe_edge1) & (strobe_edge));
+
   always_comb begin
     // 0-1. By default
     next_state = state;
-    next_data = data; // ascii_character(cur_key[7:4], cur_key[3:0], next_state);
-    next_unlocked = unlocked;
-
+    next_data = data;
+    next_unlocked = unlocked; // 1'b0
+    ready = 1'b0;
     game_end = 1'b0;
     toggle_state = 1'b0;
 
     if (state == DONE) begin
       next_state = INIT;
-      next_data = 8'b01011111;
-    end
-
-    if ((cur_key == submit_letter_key) &&
-        (state != INIT) &&
-        (state != DONE)) begin
-      next_state = DONE;
-      next_unlocked = 1'b1;
-
-      // Note: ASCII character (data) has already been assigned
-      
-      //if (state == DONE) begin
-        //next_state = INIT;
-        //next_data = 8'd0;
-      //end
-    end
-
-    //if (|cur_key)
-    //if (next_unlocked) begin
-      //next_data = ascii_character(cur_key[7:4], cur_key[3:0], next_state);
-    //end
-
-    if (cur_key == submit_word_key) begin
-      next_state = INIT;
-      next_data = 8'd0;
-      toggle_state = 1'b1;
-      next_unlocked = 1'b1;
+    
+    end else if (state == INIT) begin
+      if ((cur_key == submit_letter_key) || (cur_key == clear_key)) begin
+        next_data = 8'b01011111;
+      end
     end
 
     // Positive edge of pressing push button
-    if (strobe & |cur_key) begin
-
+    if (edge1) begin //changed curkey to specify row bits
       // Invalid keys
       if ((cur_key == key_1) ||
         (cur_key == key_A) ||
         (cur_key == key_B) ||
         (cur_key == key_D)) begin
         next_state = state;
+        next_data =data;
 
-      end else if ((cur_key == clear_key) || 
-                   (cur_key == game_end_key)) begin
-        next_state = INIT;
-        next_data = 8'b01011111;
-	next_unlocked = 1'b1;
-
-        if (cur_key == game_end_key)
-          game_end = 1'b1;
-
-      /*
-      end else if ((cur_key == submit_letter_key) && 
-                   (state != INIT)) begin
-        next_state = DONE;
-        // Note: ASCII character (data) has already been assigned
-        
-        if (state == DONE) begin
+      end else if (cur_key == submit_letter_key) begin
+        if ((state == INIT) || (state == DONE)) begin
           next_state = INIT;
-          next_data = 8'd0;
+        end else begin
+          next_state = DONE;
+          ready = 1'b1;
+          //next_unlocked = 1'b1;
+          // Note: ASCII character (data) has already been assigned
         end
-      */
+
+      end else if (cur_key == clear_key) begin
+        next_state = INIT;
+        //next_unlocked = 1'b1;
+
+      end else if (cur_key == submit_word_key) begin
+        next_state = INIT;
+        next_data = 8'd0;
+        toggle_state = 1'b1;
+
+      end else if (cur_key == game_end_key) begin
+        next_state = INIT;
+        next_data = 8'h2d;
+        //next_unlocked = 1'b1;
+        game_end = 1'b1;
+
+        //if (prev_key == game_end_key)
+          //game_end = 1'b1;
 
       // Letter sets 2-9
-      end else if (cur_key != submit_letter_key) begin
+      end else begin //else if (cur_key != submit_letter_key) begin
         if (prev_key == cur_key) begin
-          if(state == INIT)begin
+
+          if (state == INIT) begin
             next_state = S0;
-          end else if (state == S0) begin
+          end 
+          else if (state == S0) begin
             next_state = S1;
           end else if (state == S1) begin
             next_state = S2;
@@ -378,14 +390,13 @@ module keypad_fsm (
         end
 
         next_unlocked = 1'b1;
-        next_data = ascii_character(cur_key[7:4], cur_key[3:0], next_state);
-      end
+        next_data = ascii_character(cur_key[7:4], cur_key[3:0], next_state); //changed to state from next_state
+    end
     
     // Strobe is low
     end else begin
       next_unlocked = 1'b0;
     end
-    //cur_key_out = cur_key;
   end
 endmodule
 
@@ -1224,12 +1235,13 @@ end
 end
 endmodule
 
-module lcd1602 #(parameter clk_div = 24_000)(
+module lcd_controller #(parameter clk_div = 20_000)( //100,000 -< 24k
     input clk,
     input rst,
     // Data to be displayed
     input [127:0] row_1,
     input [127:0] row_2,
+    input strobe,
    
     // LCD control signal
     output lcd_en,
@@ -1242,9 +1254,12 @@ module lcd1602 #(parameter clk_div = 24_000)(
 
     reg [7:0] currentState;
     reg [7:0] nextState;
-    reg [17:0] cnt_20ms;
-    reg [14:0] cnt_500hz;
+    reg [20:0] cnt_20ms;
+    reg [20:0] cnt_500hz;
     wire delay_done;
+
+    logic [15:0] lcd_data1;
+    logic [7:0] lcd_data2;
  
     localparam TIME_500HZ = clk_div;
     // Wait for 20 ms before intializing.
@@ -1330,6 +1345,44 @@ module lcd1602 #(parameter clk_div = 24_000)(
         else
             currentState <= currentState;
     end
+logic [7:0] lcd_data3;
+
+always_comb begin
+    case (row_1[127:124]) 
+        4'b1000: lcd_data1[7:0] = 8'd48;
+        4'b0100: lcd_data1[7:0] = 8'd49;
+        4'b0010: lcd_data1[7:0] = 8'd50;
+        4'b0001: lcd_data1[7:0] = 8'd51;
+        4'b0000: lcd_data1[7:0] = 8'd45;
+        default: lcd_data1[7:0] = 8'd45;
+    endcase
+
+    case (row_1[123:120]) 
+        4'b1000: lcd_data1[15:8] = 8'd48;
+        4'b0100: lcd_data1[15:8] = 8'd49;
+        4'b0010: lcd_data1[15:8] = 8'd50;
+        4'b0001: lcd_data1[15:8] = 8'd51;
+        4'b0000: lcd_data1[15:8] = 8'd45;
+        default: lcd_data1[15:8] = 8'd45;
+    endcase
+
+    case (row_1[119:117])
+        3'b000: lcd_data3 = 8'd48;
+        3'b001: lcd_data3 = 8'd49;
+        3'b010: lcd_data3 = 8'd50;
+        3'b011: lcd_data3 = 8'd51;
+        3'b100: lcd_data3 = 8'd52;
+        3'b101: lcd_data3 = 8'd53;
+        default: lcd_data3 = 8'd48;
+    endcase
+
+    if(strobe)
+        lcd_data2 = 8'd49;
+    else 
+        lcd_data2 = 8'd48;
+
+end
+
 
     always  @(*) begin
         case (currentState)
@@ -1360,6 +1413,19 @@ module lcd1602 #(parameter clk_div = 24_000)(
             ROW2_0: nextState = ROW2_1;
             ROW2_1: nextState = ROW2_2;
             ROW2_2: nextState = ROW2_3;
+            
+            
+            // always_comb begin
+//     case (row_1[3:0]) 
+//         4'b1000: lcd_data1 = 8'd48;
+//         4'b0100: lcd_data1 = 8'd49;
+//         4'b0010: lcd_data1 = 8'd50;
+//         4'b0001: lcd_data1 = 8'd51;
+//         4'b0000: lcd_data1 = 8'd45;
+//         default: lcd_data1 = 8'd45;
+//     endcase
+
+// end
             ROW2_3: nextState = ROW2_4;
             ROW2_4: nextState = ROW2_5;
             ROW2_5: nextState = ROW2_6;
@@ -1408,9 +1474,9 @@ module lcd1602 #(parameter clk_div = 24_000)(
                 ENTRY_MODE: lcd_data <= 8'h06;
                 DISP_ON: lcd_data <= 8'h0C;  //Display ON, cursor OFF
                 ROW1_ADDR: lcd_data <= 8'h80; //Force cursor to beginning of first line
-                ROW1_0: lcd_data <= row_1 [127:120];
-                ROW1_1: lcd_data <= row_1 [119:112];
-                ROW1_2: lcd_data <= row_1 [111:104];
+                ROW1_0: lcd_data <= lcd_data2;
+                ROW1_1: lcd_data <= lcd_data1[7:0];
+                ROW1_2: lcd_data <= lcd_data1[15:8];
                 ROW1_3: lcd_data <= row_1 [103: 96];
                 ROW1_4: lcd_data <= row_1 [ 95: 88];
                 ROW1_5: lcd_data <= row_1 [ 87: 80];
@@ -1422,8 +1488,8 @@ module lcd1602 #(parameter clk_div = 24_000)(
                 ROW1_B: lcd_data <= row_1 [ 39: 32];
                 ROW1_C: lcd_data <= row_1 [ 31: 24];
                 ROW1_D: lcd_data <= row_1 [ 23: 16];
-                ROW1_E: lcd_data <= row_1 [ 15:  8];
-                ROW1_F: lcd_data <= row_1 [  7:  0];
+                ROW1_E: lcd_data <= row_1 [ 15: 8];
+                ROW1_F: lcd_data <= lcd_data3;
 
                 ROW2_ADDR: lcd_data <= 8'hC0;      //Force cursor to beginning of second line
                 ROW2_0: lcd_data <= row_2 [127:120];
