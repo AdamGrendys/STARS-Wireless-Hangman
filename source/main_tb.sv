@@ -603,14 +603,14 @@ initial begin
     tb_row_player = 4'd0;
 
     @(posedge tb_clk);
-    #(CLK_PERIOD * 300000); // R3 C0 (submit_letter_key)
+    #(CLK_PERIOD * 200000); // R3 C0 (submit_letter_key)
     tb_row_player = 4'b0001;
 
     #(CLK_PERIOD * 100000);
 
     @(negedge tb_clk);
     tb_row_player = 4'd0;
-     #(CLK_PERIOD * 100000);
+     #(CLK_PERIOD * 300000);
 
 
 
