@@ -536,7 +536,7 @@ initial begin
 
     @(negedge tb_clk);
     tb_row_player = 4'd0;
-    #(CLK_PERIOD * 200000);
+    #(CLK_PERIOD * 100000);
 
     tb_row_player = 4'b1000; //for B
     #(CLK_PERIOD * 100000);
@@ -559,9 +559,9 @@ initial begin
 
     @(negedge tb_clk);
     tb_row_player = 4'd0;
-    #(CLK_PERIOD * 500000);
+    #(CLK_PERIOD * 600000);
 
-    tb_row_player = 4'b0100; // R0 C1 -> 'G'
+    tb_row_player = 4'b0100; // R0 C1 -> 'J'
 
     #(CLK_PERIOD * 100000);
 
