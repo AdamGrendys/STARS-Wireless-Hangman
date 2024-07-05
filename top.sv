@@ -54,7 +54,7 @@ msg_reg message_reg (.clk(hz10M), .nRst(~reset), .ready(ready), .transmit_ready(
 
 uart_Tx uart_transmitter (.clk(hz10M), .nRst(~reset), .tx_ctrl(tx_ctrl), .tx_byte(tx_byte), .transmit_ready(transmit_ready), .tx_serial(tx_serial));
 
-lcd_controller lcdPlayer (.clk(hz10M), .rst(~reset), .row_1(128'b00110001001100100011001101100001011000100110001101000001010000100100001100110001001100100011001101000001010000100100001100110000), .row_2(play_row2), .lcd_en(right[7]), .lcd_rw(right[6]), .lcd_rs(right[5]), .lcd_data(ss0[7:0]));
+lcd_controller lcdPlayer (.clk(hz10M), .rst(~reset), .row_1(play_row1), .row_2(play_row2), .lcd_en(right[7]), .lcd_rw(right[6]), .lcd_rs(right[5]), .lcd_data(ss0[7:0]));
 
 
 // *********
