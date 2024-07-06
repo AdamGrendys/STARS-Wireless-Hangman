@@ -50,7 +50,7 @@ clock_divider clock_div (.clk (hz10M), .nRst (~reset), .clear (~reset), .max (30
 logic [127:0] temp2;
 assign temp2  =  {120'b0, pb[7:4], left[4:1]};
 
-logic [2:0] final_state;
+logic [7:0] final_state;
 logic [7:0] lcd_data_player, lcd_data_host;
 logic [3:0] play_col, host_col;
 
@@ -60,13 +60,13 @@ always_comb begin
         left[4:1] = play_col;
         final_row1 = play_row1;
         final_row2 = play_row2;
-        final_state = state1;
+        final_state = 8'b01010000;
     end else begin
         ss7 = lcd_data_host;
         left[4:1] = host_col;
         final_row1 = host_row1;
         final_row2 = host_row2;
-        final_state = state2;
+        final_state = 8'b01001000;
     end
 
 
@@ -82,7 +82,7 @@ msg_reg message_reg (.clk(hz10M), .nRst(~reset), .ready(ready), .transmit_ready(
 
 uart_Tx uart_transmitter (.clk(hz10M), .nRst(~reset), .tx_ctrl(tx_ctrl), .tx_byte(tx_byte), .transmit_ready(transmit_ready), .tx_serial(left[0]));
 
-lcd_controller lcdPlayer (.clk(hz10M), .rst(~reset), .row_1({pb[7:4], left[4:1], final_state, final_row1[116:0]}), .row_2(final_row2), .lcd_en(left[7]), .lcd_rw(left[6]), .lcd_rs(left[5]), .lcd_data(lcd_data_player), .strobe(strobe_player));
+lcd_controller lcdPlayer (.clk(hz10M), .rst(~reset), .row_1({final_row1[119:0], final_state}), .row_2(final_row2), .lcd_en(left[7]), .lcd_rw(left[6]), .lcd_rs(left[5]), .lcd_data(lcd_data_player), .strobe(strobe_player));
 
 
 // *********
@@ -445,13 +445,13 @@ end
 always_comb begin
     if (ready) begin
         next_guess = {msg, guesses[79:8]};
-        row1 = {8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, msg, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000};
-        row2 = {guesses, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000};
+        row1 = {8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, msg, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000};
+        row2 = {8'b00100000, 8'b00100000, 8'b00100000, guesses, 8'b00100000, 8'b00100000, 8'b00100000};
     end
     else begin
         next_guess = guesses;
-        row1 = {8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, msg, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000};
-        row2 = {guesses, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000};
+        row1 = {8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, msg, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000, 8'b00100000};
+        row2 = {8'b00100000, 8'b00100000, 8'b00100000, guesses, 8'b00100000, 8'b00100000, 8'b00100000};
     end
 end
 endmodule
@@ -1201,8 +1201,8 @@ end
 
     case (Cstate)
         SET: begin
-            nextTop = {space5, space1, space1, setLetter, space5, space1, space1, space1};
-            nextBottom = {space5, space1, temp_word, space5};
+            nextTop = {space5, space1, space1, space1, setLetter, space5, space1, space1};
+            nextBottom = {space5, temp_word, space1, space5};
 
             if (toggle_state)
                 next_state = COMPARE;
@@ -1369,43 +1369,43 @@ module lcd_controller #(parameter clk_div = 20_000)( //100,000 -< 24k
         else
             currentState <= currentState;
     end
-logic [7:0] lcd_data3;
+// logic [7:0] lcd_data3;
 
-always_comb begin
-    case (row_1[127:124]) 
-        4'b1000: lcd_data1[7:0] = 8'd48;
-        4'b0100: lcd_data1[7:0] = 8'd49;
-        4'b0010: lcd_data1[7:0] = 8'd50;
-        4'b0001: lcd_data1[7:0] = 8'd51;
-        4'b0000: lcd_data1[7:0] = 8'd45;
-        default: lcd_data1[7:0] = 8'd45;
-    endcase
+// always_comb begin
+//     case (row_1[127:124]) 
+//         4'b1000: lcd_data1[7:0] = 8'd48;
+//         4'b0100: lcd_data1[7:0] = 8'd49;
+//         4'b0010: lcd_data1[7:0] = 8'd50;
+//         4'b0001: lcd_data1[7:0] = 8'd51;
+//         4'b0000: lcd_data1[7:0] = 8'd45;
+//         default: lcd_data1[7:0] = 8'd45;
+//     endcase
 
-    case (row_1[123:120]) 
-        4'b1000: lcd_data1[15:8] = 8'd48;
-        4'b0100: lcd_data1[15:8] = 8'd49;
-        4'b0010: lcd_data1[15:8] = 8'd50;
-        4'b0001: lcd_data1[15:8] = 8'd51;
-        4'b0000: lcd_data1[15:8] = 8'd45;
-        default: lcd_data1[15:8] = 8'd45;
-    endcase
+//     case (row_1[123:120]) 
+//         4'b1000: lcd_data1[15:8] = 8'd48;
+//         4'b0100: lcd_data1[15:8] = 8'd49;
+//         4'b0010: lcd_data1[15:8] = 8'd50;
+//         4'b0001: lcd_data1[15:8] = 8'd51;
+//         4'b0000: lcd_data1[15:8] = 8'd45;
+//         default: lcd_data1[15:8] = 8'd45;
+//     endcase
 
-    case (row_1[119:117])
-        3'b000: lcd_data3 = 8'd48;
-        3'b001: lcd_data3 = 8'd49;
-        3'b010: lcd_data3 = 8'd50;
-        3'b011: lcd_data3 = 8'd51;
-        3'b100: lcd_data3 = 8'd52;
-        3'b101: lcd_data3 = 8'd53;
-        default: lcd_data3 = 8'd48;
-    endcase
+//     case (row_1[119:117])
+//         3'b000: lcd_data3 = 8'd48;
+//         3'b001: lcd_data3 = 8'd49;
+//         3'b010: lcd_data3 = 8'd50;
+//         3'b011: lcd_data3 = 8'd51;
+//         3'b100: lcd_data3 = 8'd52;
+//         3'b101: lcd_data3 = 8'd53;
+//         default: lcd_data3 = 8'd48;
+//     endcase
 
-    if(strobe)
-        lcd_data2 = 8'd49;
-    else 
-        lcd_data2 = 8'd48;
+    // if(strobe)
+    //     lcd_data2 = 8'd49;
+    // else 
+    //     lcd_data2 = 8'd48;
 
-end
+// end
 
 
     always  @(*) begin
@@ -1498,9 +1498,9 @@ end
                 ENTRY_MODE: lcd_data <= 8'h06;
                 DISP_ON: lcd_data <= 8'h0C;  //Display ON, cursor OFF
                 ROW1_ADDR: lcd_data <= 8'h80; //Force cursor to beginning of first line
-                ROW1_0: lcd_data <= lcd_data2;
-                ROW1_1: lcd_data <= lcd_data1[7:0];
-                ROW1_2: lcd_data <= lcd_data1[15:8];
+                ROW1_0: lcd_data <= row_1 [127:120];
+                ROW1_1: lcd_data <= row_1 [119:112];
+                ROW1_2: lcd_data <= row_1 [111:104];
                 ROW1_3: lcd_data <= row_1 [103: 96];
                 ROW1_4: lcd_data <= row_1 [ 95: 88];
                 ROW1_5: lcd_data <= row_1 [ 87: 80];
@@ -1513,7 +1513,7 @@ end
                 ROW1_C: lcd_data <= row_1 [ 31: 24];
                 ROW1_D: lcd_data <= row_1 [ 23: 16];
                 ROW1_E: lcd_data <= row_1 [ 15: 8];
-                ROW1_F: lcd_data <= lcd_data3;
+                ROW1_F: lcd_data <= row_1 [ 7: 0];
 
                 ROW2_ADDR: lcd_data <= 8'hC0;      //Force cursor to beginning of second line
                 ROW2_0: lcd_data <= row_2 [127:120];
