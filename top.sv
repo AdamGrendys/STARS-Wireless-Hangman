@@ -525,7 +525,7 @@ endmodule
 
 module uart_Tx
 #(
-    parameter Clkperbaud = 1250
+    parameter Clkperbaud = 1041
 )
 
 (
@@ -680,7 +680,7 @@ endmodule
 
 module uart_Rx
 #(
-    parameter Clkperbaud = 1250
+    parameter Clkperbaud = 1041
 )
 
 (
