@@ -63,7 +63,7 @@ logic [7:0] lcd_data_player, lcd_data_host;
 logic [3:0] play_col, host_col;
 
 keypad_controller keypadplayer (.mode(pb[19]), .clk(hz10M), .nRst(~reset), .read_row(pb[7:4]), .cur_key(cur_key_player), .strobe(strobe_player), .scan_col(play_col), .enable(new_clk));
-keypad_fsm keypadFSMPlayer (.clk(hz10M), .nRst(~reset), .strobe(strobe_player), .cur_key(cur_key_player), .ready(ready), .data(msg), .game_end(gameEnd_player), .toggle_state(useless), .state(state2));
+keypad_fsm keypadFSMPlayer (.clk(hz10M), .nRst(~reset), .strobe(strobe_player), .cur_key(cur_key_player), .ready(ready), .data(msg), .game_end(gameEnd_player), .toggle_state(useless));
 
 disp_fsm dispFSM (.clk(hz10M), .nRst(~reset), .ready(ready), .msg(msg), .row1(play_row1), .row2(play_row2), .gameEnd(gameEnd_player));
 
@@ -79,7 +79,7 @@ lcd_controller lcdPlayer (.clk(hz10M), .rst(~reset), .row_1({final_row1[119:0], 
 // *********
 
 keypad_controller keypadHostt (.clk(hz10M), .mode(~pb[19]), .nRst(~reset), .read_row(pb[7:4]), .cur_key(cur_key_host), .strobe(strobe_host), .scan_col(host_col), .enable(new_clk));
-keypad_fsm keypadFSMHost (.clk(hz10M), .state(state1), .nRst(~reset), .strobe(strobe_host), .cur_key(cur_key_host), .ready(key_ready), .data(setLetter), .game_end(gameEnd_host), .toggle_state(toggle_state_host));
+keypad_fsm keypadFSMHost (.clk(hz10M), .nRst(~reset), .strobe(strobe_host), .cur_key(cur_key_host), .ready(key_ready), .data(setLetter), .game_end(gameEnd_host), .toggle_state(toggle_state_host));
 
 host_msg_reg host_message_reg (.clk(hz10M), .nRst(~reset), .key_ready(key_ready), .toggle_state(toggle_state_host), .setLetter(setLetter), .rec_ready(rec_ready_host), .temp_word(temp_word), .gameEnd_host(gameEnd_host));
 
@@ -566,32 +566,32 @@ module uart_Tx
                 next_state = DATAIN;
                 end else  begin 
                 next_bit_index = 0;
-                next_state = PARITY;
+                next_state = STOP;
                 end
                 end
             end 
-            PARITY: begin
-                next_bit_index = 0;
-                transmit_ready = 0;
+            // PARITY: begin
+            //     next_bit_index = 0;
+            //     transmit_ready = 0;
                 
-                if(pcount % 2 == 1) begin //Parity assignment 
-                tx_serial = 1;
-                pcount = count;
-                end
-                else begin
-                tx_serial = 0;
-                pcount = count;
-                end
+            //     if(pcount % 2 == 1) begin //Parity assignment 
+            //     tx_serial = 1;
+            //     pcount = count;
+            //     end
+            //     else begin
+            //     tx_serial = 0;
+            //     pcount = count;
+            //     end
                 
-                if(clk_count < Clkperbaud - 1) begin
-                next_clk_count = clk_count + 1;
-                next_state = PARITY;
-                end
-                else begin
-                next_clk_count = 0;
-                next_state = STOP; // state transition logic
-                end
-            end
+            //     if(clk_count < Clkperbaud - 1) begin
+            //     next_clk_count = clk_count + 1;
+            //     next_state = PARITY;
+            //     end
+            //     else begin
+            //     next_clk_count = 0;
+            //     next_state = STOP; // state transition logic
+            //     end
+            // end
             STOP: begin 
                 pcount = 0;
                 tx_serial = 1;
@@ -739,39 +739,39 @@ always_comb begin
                 next_state = DATAIN;
             end else begin
                 next_bit_index = 0;
-                next_state = PARITY;
+                next_state = STOP;
             end
             end
         end
-        PARITY: begin 
-            pbit =  rx_serial;
-            pcount = count;
-            rx_ready = 0;
-            temp_byte = rx_byte;
-            next_bit_index = 0;
+        // PARITY: begin 
+        //     pbit =  rx_serial;
+        //     pcount = count;
+        //     rx_ready = 0;
+        //     temp_byte = rx_byte;
+        //     next_bit_index = 0;
 
-            if(clk_count < Clkperbaud - 1) begin
-            next_clk_count = clk_count + 1;
-            next_state = PARITY;
-            next_err = 0;
-            end
-            else begin 
-            if ((pcount % 2 == 1) && (pbit == 0)) begin
-            next_err = 1;
-            next_clk_count = 0;
-            next_state = CLEAN; // state transition logic
-            end
-            else if((pcount % 2 == 0) && (pbit == 1)) begin
-            next_err = 1;
-            next_clk_count = 0;
-            next_state = CLEAN; // state transition logic
-            end
-            else 
-            next_err = 0;
-            next_clk_count = 0;
-            next_state = STOP;
-            end
-        end
+        //     if(clk_count < Clkperbaud - 1) begin
+        //     next_clk_count = clk_count + 1;
+        //     next_state = PARITY;
+        //     next_err = 0;
+        //     end
+        //     else begin 
+        //     if ((pcount % 2 == 1) && (pbit == 0)) begin
+        //     next_err = 1;
+        //     next_clk_count = 0;
+        //     next_state = CLEAN; // state transition logic
+        //     end
+        //     else if((pcount % 2 == 0) && (pbit == 1)) begin
+        //     next_err = 1;
+        //     next_clk_count = 0;
+        //     next_state = CLEAN; // state transition logic
+        //     end
+        //     else 
+        //     next_err = 0;
+        //     next_clk_count = 0;
+        //     next_state = STOP;
+        //     end
+        // end
         STOP: begin
             next_err = error_led;
             if(clk_count < Clkperbaud - 1) begin
