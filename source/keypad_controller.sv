@@ -7,6 +7,7 @@ module keypad_controller (
 );
   logic [3:0] Q0, Q1, Q1_delay;
   logic [3:0] scan_col_next, sel_col_next;
+  logic strobe_next;
 
   // Synchronizer and rising (positive) edge detector - 3 FFs
   always_ff @(posedge clk, negedge nRst) begin
@@ -17,25 +18,15 @@ module keypad_controller (
       Q1_delay <= 4'd0;
 
       // Note: Deactivating the scanning of columns should prevent key input
-      scan_col <= 4'b1111;
-
-      // Temporary output variables for testing
-      //sel_row <= 4'd0;
-      //sel_col <= 4'd0;
+      scan_col <= 4'b0000;
+      strobe<= 1'b0;
 
     end else begin
       // Pass through FFs for stability and edge detection
       Q0 <= read_row;
       Q1 <= Q0;
       Q1_delay <= Q1;
-
-      // Variables for testing purposes
-      // Strobe should prompt transition in finite state machine (FSM) module
-      // Only if there is an active column, on positive edge of button press (row)
-      //if ((strobe) & (|scan_col)) begin
-        //sel_row <= read_row;
-        //sel_col <= scan_col_next;
-      //end
+      strobe<= strobe_next;
 
       // Active column changes every clock cycle
       scan_col <= scan_col_next;
@@ -46,26 +37,31 @@ module keypad_controller (
     // Setting active column for button press
     // Rate of switching reflected by all indicator lights turned on
     scan_col_next = scan_col;
+    strobe_next = strobe;
     
     if(mode) begin
-      if ((|read_row)) begin// & (|scan_col))
+      if ((|read_row)) begin 
         // Maintain selected column while input button being pressed (non-zero row)
         scan_col_next = scan_col;
+        if(enable)
+            strobe_next = 1'b1;
+
       end
       else if (enable) begin
+        strobe_next = 1'b0;
         case (scan_col)
-          4'b1111:
-            scan_col_next = 4'b0111;
-          4'b0111:
-            scan_col_next = 4'b1011;
-          4'b1011:
-            scan_col_next = 4'b1101;
-          4'b1101:
-            scan_col_next = 4'b1110;
-          4'b1110:
-            scan_col_next = 4'b0111;
+          4'b0000:
+            scan_col_next = 4'b1000;
+          4'b1000:
+            scan_col_next = 4'b0100;
+          4'b0100:
+            scan_col_next = 4'b0010;
+          4'b0010:
+            scan_col_next = 4'b0001;
+          4'b0001:
+            scan_col_next = 4'b1000;
           default:
-            scan_col_next = 4'b1111;
+            scan_col_next = 4'b0000;
         endcase
       end
       else begin
@@ -76,7 +72,5 @@ module keypad_controller (
     end
   end
 
-  assign strobe = |((~Q1_delay) & (Q1));
-  assign cur_key = (|read_row & |(~scan_col)) ? ({read_row, ~scan_col}) : (8'd0);
-  // assign cur_key = (|read_row & |scan_col) ? ({read_row, scan_col}) : (8'd0);
+  assign cur_key = (|read_row & |scan_col) ? ({read_row, scan_col}) : (8'd0);
 endmodule

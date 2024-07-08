@@ -1,13 +1,8 @@
-/* Buffer File
-Descriuption: x
-*/
-
 module buffer (
     input logic [7:0] Rx_byte,
     input logic rx_ready, game_rdy, clk, nRst,
     output logic [7:0] guess
 );
-
     logic [7:0] temp_guess, next_byte;
 
     always_ff @(posedge clk, negedge nRst)

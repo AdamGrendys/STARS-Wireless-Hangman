@@ -1,7 +1,3 @@
-/* Message Register File
-Descriuption: x
-*/
-
 module host_msg_reg (
     input logic clk, nRst, toggle_state, key_ready, gameEnd_host,
     input logic [7:0] setLetter,
@@ -28,8 +24,6 @@ always_ff @(posedge clk, negedge nRst) begin
 end
 
 always_comb begin
-    
-
     case(Cstate)
         SET: begin 
             rec_ready = 0;

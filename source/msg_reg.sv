@@ -1,8 +1,6 @@
 /* Message Register File
 Descriuption: x
 */
-
-
 module msg_reg (
     input logic clk, nRst, ready, transmit_ready,
     input logic [7:0] data,
@@ -29,6 +27,8 @@ always_ff @(posedge clk, negedge nRst) begin
 end
 
 always_comb begin 
+    next_state = state;
+
     case (state)
         IDLE: begin 
             tx_byte = msg;
@@ -37,10 +37,13 @@ always_comb begin
             if (ready) begin
                 msg_rdy = data;
                 next_state = WAIT;
-            end 
+            end else
+                msg_rdy = msg;
         end
         WAIT: begin 
             tx_ctrl = 1;
+            tx_byte = msg;
+            blue = 0;
             msg_rdy = msg;
             if (transmit_ready)
                 next_state = TRANSMIT;
@@ -48,6 +51,7 @@ always_comb begin
                 next_state = WAIT;
         end
         TRANSMIT: begin
+            msg_rdy = msg;
             tx_byte = msg;
             tx_ctrl = 1;
             blue = 1;
@@ -56,6 +60,9 @@ always_comb begin
         default: begin
             next_state = IDLE;
             tx_byte = 8'b0;
+            blue = 0;
+            tx_ctrl = 0;
+            msg_rdy = 0;
         end
     endcase
 end

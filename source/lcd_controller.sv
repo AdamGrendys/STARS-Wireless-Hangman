@@ -1,9 +1,10 @@
-module lcd_controller #(parameter clk_div = 24_000)(
+module lcd_controller #(parameter clk_div = 20_000)( //100,000 -< 24k
     input clk,
     input rst,
     // Data to be displayed
     input [127:0] row_1,
     input [127:0] row_2,
+    input strobe,
    
     // LCD control signal
     output lcd_en,
@@ -16,9 +17,12 @@ module lcd_controller #(parameter clk_div = 24_000)(
 
     reg [7:0] currentState;
     reg [7:0] nextState;
-    reg [17:0] cnt_20ms;
-    reg [14:0] cnt_500hz;
+    reg [20:0] cnt_20ms;
+    reg [20:0] cnt_500hz;
     wire delay_done;
+
+    logic [15:0] lcd_data1;
+    logic [7:0] lcd_data2;
  
     localparam TIME_500HZ = clk_div;
     // Wait for 20 ms before intializing.
@@ -196,8 +200,8 @@ module lcd_controller #(parameter clk_div = 24_000)(
                 ROW1_B: lcd_data <= row_1 [ 39: 32];
                 ROW1_C: lcd_data <= row_1 [ 31: 24];
                 ROW1_D: lcd_data <= row_1 [ 23: 16];
-                ROW1_E: lcd_data <= row_1 [ 15:  8];
-                ROW1_F: lcd_data <= row_1 [  7:  0];
+                ROW1_E: lcd_data <= row_1 [ 15: 8];
+                ROW1_F: lcd_data <= row_1 [ 7: 0];
 
                 ROW2_ADDR: lcd_data <= 8'hC0;      //Force cursor to beginning of second line
                 ROW2_0: lcd_data <= row_2 [127:120];

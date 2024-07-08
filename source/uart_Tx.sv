@@ -1,11 +1,6 @@
-/* UART Transmitter File
-Descriuption: x
-*/
-
-
-module uart_tx
+module uart_Tx
 #(
-    parameter Clkperbaud = 1250
+    parameter Clkperbaud = 1041
 )
 
 (
@@ -133,8 +128,7 @@ module uart_tx
                 next_clk_count = 0;
                 next_state = CLEAN; // state transition logic
                 end
-
-
+                
                 next_state = CLEAN; // state transition logic
                 end
             CLEAN: begin 

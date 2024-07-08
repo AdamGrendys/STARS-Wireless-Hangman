@@ -1,6 +1,4 @@
-/* Main Filemsg_sent
-Descriuption: x
-*/
+// Main
 
 module top (
     // FPGA Ports
@@ -34,26 +32,11 @@ logic [4:0] indexCorrect;
 
 // LCD Outputs
 logic [127:0] play_row1, play_row2, host_row1, host_row2, final_row1, final_row2;
-
 logic [2:0] state1, state2;
 
 // ***********
 // Global 
 // ***********
-
-
-clock_divider clock_div (.clk (hz10M), .nRst (~reset), .clear (~reset), .max (30'd100000), .at_max (new_clk));
-
-// ***********
-// Player Side
-// ***********
-logic [127:0] temp2;
-assign temp2  =  {120'b0, pb[7:4], left[4:1]};
-
-logic [7:0] final_state;
-logic [7:0] lcd_data_player, lcd_data_host;
-logic [3:0] play_col, host_col;
-
 always_comb begin
     if (pb[19]) begin
         ss7 = lcd_data_player;
@@ -68,9 +51,16 @@ always_comb begin
         final_row2 = host_row2;
         final_state = 8'b01001000;
     end
-
-
 end
+
+clock_divider clock_div (.clk (hz10M), .nRst (~reset), .clear (~reset), .max (30'd100000), .at_max (new_clk));
+
+// ***********
+// Player Side
+// ***********
+logic [7:0] final_state;
+logic [7:0] lcd_data_player, lcd_data_host;
+logic [3:0] play_col, host_col;
 
 
 keypad_controller keypadplayer (.mode(pb[19]), .clk(hz10M), .nRst(~reset), .read_row(pb[7:4]), .cur_key(cur_key_player), .strobe(strobe_player), .scan_col(play_col), .enable(new_clk));
@@ -88,13 +78,6 @@ lcd_controller lcdPlayer (.clk(hz10M), .rst(~reset), .row_1({final_row1[119:0], 
 // *********
 // Host Side
 // *********
-
-logic [127:0] temp;
-assign temp  =  {120'b0, pb[7:4], left[4:1]};
-
-logic new_clk1;
-
-clock_divider clock_div1 (.clk (hz10M), .nRst (~reset), .clear (~reset), .max (30'd10000), .at_max (new_clk1));
 
 keypad_controller keypadHostt (.clk(hz10M), .mode(~pb[19]), .nRst(~reset), .read_row(pb[7:4]), .cur_key(cur_key_host), .strobe(strobe_host), .scan_col(host_col), .enable(new_clk));
 keypad_fsm keypadFSMHost (.clk(hz10M), .state(state1), .nRst(~reset), .strobe(strobe_host), .cur_key(cur_key_host), .ready(key_ready), .data(setLetter), .game_end(gameEnd_host), .toggle_state(toggle_state_host));

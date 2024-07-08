@@ -1,7 +1,3 @@
-/* Host display for game logic
-Description: 
-*/
-
 module host_disp (
     input logic clk, nRst,
     input logic [4:0] indexCorrect,
@@ -63,8 +59,8 @@ end
 
     case (Cstate)
         SET: begin
-            nextTop = {space5, space1, space1, setLetter, space5, space1, space1, space1};
-            nextBottom = {space5, space1, temp_word, space5};
+            nextTop = {space5, space1, space1, space1, setLetter, space5, space1, space1};
+            nextBottom = {space5, temp_word, space1, space5};
 
             if (toggle_state)
                 next_state = COMPARE;

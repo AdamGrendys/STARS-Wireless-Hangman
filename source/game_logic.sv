@@ -1,9 +1,3 @@
-/* Game Logic File
-Descriuption: Controls the states of the game where the host can confirm the word.
-Then the next state compares the user input with the different letters in the word.
-Finally, once the user either guesses the word, or gets 6 incorrect questions, the game
-ends. 
-*/
 module game_logic (
     input logic clk, nRst, gameEnd,
     input logic [7:0] guess,
@@ -62,7 +56,6 @@ module game_logic (
         mistake = 0;
         game_rdy = 0;
         pulse = 0;
-        
 
         case(state)
             SET: begin
@@ -77,7 +70,6 @@ module game_logic (
                     nextState = FIRST;
                 end else
                     nextState = SET;
-                    
             end
             FIRST: begin
                 game_rdy = 1;

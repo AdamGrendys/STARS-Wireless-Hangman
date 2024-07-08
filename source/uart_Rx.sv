@@ -1,13 +1,6 @@
-/* UART Reciever File
-Descriuption: x
-*/
-typedef enum logic [2:0] {
-IDLE = 3'b001, START = 3'b010, DATAIN = 3'b011, STOP = 3'b100, CLEAN = 3'b101, PARITY = 3'b110
-} curr_state;
-
-module uart_rx
+module uart_Rx
 #(
-    parameter Clkperbaud = 1250
+    parameter Clkperbaud = 1041
 )
 
 (
@@ -17,6 +10,11 @@ module uart_rx
     output logic error_led
 );
 
+
+typedef enum logic [2:0] {
+IDLE = 3'b001, START = 3'b010, DATAIN = 3'b011, STOP = 3'b100, CLEAN = 3'b101, PARITY = 3'b110
+} curr_state;
+
 logic [7:0] temp_byte;
 logic [2:0] bit_index, next_bit_index;  
 curr_state state, next_state;
@@ -24,6 +22,8 @@ logic [10:0] clk_count, next_clk_count;
 logic [3:0] pcount, count;
 logic pbit;
 logic next_err;
+
+
 always_ff @(posedge clk, negedge nRst) begin
     if (~nRst) begin
         rx_byte <= 0;
@@ -43,6 +43,8 @@ always_ff @(posedge clk, negedge nRst) begin
 end
 
 always_comb begin
+    temp_byte = rx_byte;
+
     pbit = 0;
     case (state)
         IDLE: begin
