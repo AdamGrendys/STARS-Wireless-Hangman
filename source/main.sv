@@ -566,32 +566,32 @@ module uart_Tx
                 next_state = DATAIN;
                 end else  begin 
                 next_bit_index = 0;
-                next_state = STOP;
+                next_state = PARITY;
                 end
                 end
             end 
-            // PARITY: begin
-            //     next_bit_index = 0;
-            //     transmit_ready = 0;
+            PARITY: begin
+                next_bit_index = 0;
+                transmit_ready = 0;
                 
-            //     if(pcount % 2 == 1) begin //Parity assignment 
-            //     tx_serial = 1;
-            //     pcount = count;
-            //     end
-            //     else begin
-            //     tx_serial = 0;
-            //     pcount = count;
-            //     end
+                if(pcount % 2 == 1) begin //Parity assignment 
+                tx_serial = 1;
+                pcount = count;
+                end
+                else begin
+                tx_serial = 0;
+                pcount = count;
+                end
                 
-            //     if(clk_count < Clkperbaud - 1) begin
-            //     next_clk_count = clk_count + 1;
-            //     next_state = PARITY;
-            //     end
-            //     else begin
-            //     next_clk_count = 0;
-            //     next_state = STOP; // state transition logic
-            //     end
-            // end
+                if(clk_count < Clkperbaud - 1) begin
+                next_clk_count = clk_count + 1;
+                next_state = PARITY;
+                end
+                else begin
+                next_clk_count = 0;
+                next_state = STOP; // state transition logic
+                end
+            end
             STOP: begin 
                 pcount = 0;
                 tx_serial = 1;

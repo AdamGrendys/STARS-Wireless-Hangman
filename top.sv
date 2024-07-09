@@ -566,32 +566,32 @@ module uart_Tx
                 next_state = DATAIN;
                 end else  begin 
                 next_bit_index = 0;
-                next_state = PARITY;
+                next_state = STOP;
                 end
                 end
             end 
-            PARITY: begin
-                next_bit_index = 0;
-                transmit_ready = 0;
+            // PARITY: begin
+            //     next_bit_index = 0;
+            //     transmit_ready = 0;
                 
-                if(pcount % 2 == 1) begin //Parity assignment 
-                tx_serial = 1;
-                pcount = count;
-                end
-                else begin
-                tx_serial = 0;
-                pcount = count;
-                end
+            //     if(pcount % 2 == 1) begin //Parity assignment 
+            //     tx_serial = 1;
+            //     pcount = count;
+            //     end
+            //     else begin
+            //     tx_serial = 0;
+            //     pcount = count;
+            //     end
                 
-                if(clk_count < Clkperbaud - 1) begin
-                next_clk_count = clk_count + 1;
-                next_state = PARITY;
-                end
-                else begin
-                next_clk_count = 0;
-                next_state = STOP; // state transition logic
-                end
-            end
+            //     if(clk_count < Clkperbaud - 1) begin
+            //     next_clk_count = clk_count + 1;
+            //     next_state = PARITY;
+            //     end
+            //     else begin
+            //     next_clk_count = 0;
+            //     next_state = STOP; // state transition logic
+            //     end
+            // end
             STOP: begin 
                 pcount = 0;
                 tx_serial = 1;
@@ -739,39 +739,39 @@ always_comb begin
                 next_state = DATAIN;
             end else begin
                 next_bit_index = 0;
-                next_state = PARITY;
+                next_state = STOP;
             end
             end
         end
-        PARITY: begin 
-            pbit =  rx_serial;
-            pcount = count;
-            rx_ready = 0;
-            temp_byte = rx_byte;
-            next_bit_index = 0;
+        // PARITY: begin 
+        //     pbit =  rx_serial;
+        //     pcount = count;
+        //     rx_ready = 0;
+        //     temp_byte = rx_byte;
+        //     next_bit_index = 0;
 
-            if(clk_count < Clkperbaud - 1) begin
-            next_clk_count = clk_count + 1;
-            next_state = PARITY;
-            next_err = 0;
-            end
-            else begin 
-            if ((pcount % 2 == 1) && (pbit == 0)) begin
-            next_err = 1;
-            next_clk_count = 0;
-            next_state = CLEAN; // state transition logic
-            end
-            else if((pcount % 2 == 0) && (pbit == 1)) begin
-            next_err = 1;
-            next_clk_count = 0;
-            next_state = CLEAN; // state transition logic
-            end
-            else 
-            next_err = 0;
-            next_clk_count = 0;
-            next_state = STOP;
-            end
-        end
+        //     if(clk_count < Clkperbaud - 1) begin
+        //     next_clk_count = clk_count + 1;
+        //     next_state = PARITY;
+        //     next_err = 0;
+        //     end
+        //     else begin 
+        //     if ((pcount % 2 == 1) && (pbit == 0)) begin
+        //     next_err = 1;
+        //     next_clk_count = 0;
+        //     next_state = CLEAN; // state transition logic
+        //     end
+        //     else if((pcount % 2 == 0) && (pbit == 1)) begin
+        //     next_err = 1;
+        //     next_clk_count = 0;
+        //     next_state = CLEAN; // state transition logic
+        //     end
+        //     else 
+        //     next_err = 0;
+        //     next_clk_count = 0;
+        //     next_state = STOP;
+        //     end
+        // end
         STOP: begin
             next_err = error_led;
             if(clk_count < Clkperbaud - 1) begin
