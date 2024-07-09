@@ -908,7 +908,7 @@ module game_logic (
     logic [2:0] correctCount, mistakeCount;
     logic [4:0] nextIndexCorrect;
     logic [2:0] rights, nRight;
-    logic tempRed, tempGreen, tempBlue;
+    logic tempRed, tempGreen;
     logic pulse;
 
     always_ff @(posedge clk, negedge nRst) begin
