@@ -759,12 +759,12 @@ always_comb begin
             if ((pcount % 2 == 1) && (pbit == 0)) begin
             next_err = 1;
             next_clk_count = 0;
-            next_state = CLEAN; // state transition logic
+            next_state = STOP; // state transition logic
             end
             else if((pcount % 2 == 0) && (pbit == 1)) begin
             next_err = 1;
             next_clk_count = 0;
-            next_state = CLEAN; // state transition logic
+            next_state = STOP; // state transition logic
             end
             else 
             next_err = 0;
