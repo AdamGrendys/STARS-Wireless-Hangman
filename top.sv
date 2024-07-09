@@ -23,7 +23,7 @@ logic [7:0] msg, tx_byte, cur_key_player;
 logic [3:0] scan_col_player;
 
 // Local Variable Declarations - Host 
-logic strobe_host, gameEnd_host, key_ready, rec_ready_host, toggle_state_host, mistake, rx_ready, red_busy, game_rdy;
+logic strobe_host, gameEnd_host, key_ready, rec_ready_host, toggle_state_host, mistake, rx_ready, game_rdy;
 logic [3:0] scan_col_host;
 logic [7:0] cur_key_host, setLetter, guess, letter, rx_byte;
 logic [39:0] temp_word; 
@@ -89,7 +89,7 @@ uart_Rx uart_receiver (.clk(hz10M), .nRst(~reset), .rx_serial(pb[18]), .rec_read
 buffer buffer (.clk(hz10M), .nRst(~reset), .Rx_byte(rx_byte), .rx_ready(rx_ready), .game_rdy(game_rdy), .guess(guess));
 
 game_logic gamelogic (.clk(hz10M), .nRst(~reset), .guess(guess), .setWord(temp_word), .toggle_state(toggle_state_host), .letter(letter), .red(red), .green(green),
-.mistake(mistake), .red_busy(red_busy), .game_rdy(game_rdy), .incorrect(incorrect), .correct(correct), .indexCorrect(indexCorrect), .gameEnd(gameEnd_host));
+.mistake(mistake), .game_rdy(game_rdy), .incorrect(incorrect), .correct(correct), .indexCorrect(indexCorrect), .gameEnd(gameEnd_host));
 
 host_disp hostdisp (.clk(hz10M), .nRst(~reset), .indexCorrect(indexCorrect), .letter(letter), .incorrect(incorrect), .correct(correct), .temp_word(temp_word), .setLetter(setLetter), .toggle_state(toggle_state_host), .gameEnd_host(gameEnd_host), .mistake(mistake), .top(host_row1), .bottom(host_row2));
 
@@ -895,7 +895,7 @@ module game_logic (
     input logic [39:0] setWord,
     input logic toggle_state,
     output logic [7:0] letter,
-    output logic red, green, mistake, red_busy, game_rdy,
+    output logic red, green, mistake, game_rdy,
     output logic [2:0] incorrect, correct,
     output logic [4:0] indexCorrect
 );
@@ -908,7 +908,7 @@ module game_logic (
     logic [2:0] correctCount, mistakeCount;
     logic [4:0] nextIndexCorrect;
     logic [2:0] rights, nRight;
-    logic tempRed, tempGreen;
+    logic tempRed, tempGreen, tempBlue;
     logic pulse;
 
     always_ff @(posedge clk, negedge nRst) begin
@@ -943,7 +943,7 @@ module game_logic (
         tempGreen = green;//for latch
         placehold = letter;//for latch
 
-        red_busy = 0;
+    
         mistake = 0;
         game_rdy = 0;
         pulse = 0;
@@ -972,7 +972,7 @@ module game_logic (
                 end               
             end
             L0: begin
-                red_busy = 1;
+          
                 game_rdy = 0;
                 if(letter == setWord[39:32] & indexCorrect[4] != 1)begin
                     nextIndexCorrect[4] = 1;
@@ -982,7 +982,7 @@ module game_logic (
                 nextState = L1;
             end
             L1: begin
-                red_busy = 1;
+           
                 game_rdy = 0;
                 if(letter == setWord[31:24] & indexCorrect[3] != 1)begin
                     nextIndexCorrect[3] = 1;
@@ -992,7 +992,7 @@ module game_logic (
                 nextState = L2;
             end
             L2: begin
-                red_busy = 1;
+            
                 game_rdy = 0;
                 if(letter == setWord[23:16] & indexCorrect[2] != 1)begin
                     nextIndexCorrect[2] = 1;
@@ -1002,7 +1002,7 @@ module game_logic (
                 nextState = L3;
             end
             L3: begin
-                red_busy = 1;
+         
                 game_rdy = 0;
                 if(letter == setWord[15:8] & indexCorrect[1] != 1)begin
                     nextIndexCorrect[1] = 1;
@@ -1012,7 +1012,7 @@ module game_logic (
                 nextState = L4;
             end
             L4: begin
-                red_busy = 1;
+           
                 game_rdy = 0;
                 if(letter == setWord[7:0] & indexCorrect[0] != 1)begin
                     nextIndexCorrect[0] = 1;
@@ -1032,7 +1032,7 @@ module game_logic (
                     mistakeCount = mistakeCount + 1;
                 end
                 end
-                red_busy = 0;
+      
                 game_rdy = 1;
                 nextState = IDLE;
             end
