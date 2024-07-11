@@ -24,7 +24,7 @@ logic [3:0] scan_col_player;
 
 // Local Variable Declarations - Host 
 logic strobe_host, gameEnd_host, key_ready, rec_ready_host, toggle_state_host, mistake, rx_ready, game_rdy;
-logic [3:0] scan_col_host;
+    logic [3:0] scan_col_host, col_temp, row_temp_player, row_temp_host;
 logic [7:0] cur_key_host, setLetter, guess, letter, rx_byte;
 logic [39:0] temp_word; 
 logic [2:0] incorrect, correct;
@@ -39,19 +39,29 @@ logic [2:0] state1, state2;
 // ***********
 always_comb begin
     if (pb[19]) begin
-        ss7 = lcd_data_player;
-        left[4:1] = play_col;
+        //ss7 = lcd_data_player;
+        //left[4:1] = play_col;
+        col_temp = = play_col;
         final_row1 = play_row1;
         final_row2 = play_row2;
         final_state = 8'b01010000;
+        row_temp_player = pb[7:4];
+        row_temp_host = 4'b0;
     end else begin
-        ss7 = lcd_data_host;
-        left[4:1] = host_col;
+        //ss7 = lcd_data_host;
+        //left[4:1] = host_col;
+        col_temp = play_col;
         final_row1 = host_row1;
         final_row2 = host_row2;
         final_state = 8'b01001000;
+        row_temp_host = pb[7:4];
+        row_temp_player = 4'b0;
     end
 end
+
+    assign ss7 = lcd_data_player;
+    assign left[4:1] = col_temp;
+    
 
 clock_divider clock_div (.clk (hz10M), .nRst (~reset), .clear (~reset), .max (30'd100000), .at_max (new_clk));
 
@@ -62,7 +72,7 @@ logic [7:0] final_state;
 logic [7:0] lcd_data_player, lcd_data_host;
 logic [3:0] play_col, host_col;
 
-keypad_controller keypadplayer (.mode(pb[19]), .clk(hz10M), .nRst(~reset), .read_row(pb[7:4]), .cur_key(cur_key_player), .strobe(strobe_player), .scan_col(play_col), .enable(new_clk));
+    keypad_controller keypadplayer (.mode(pb[19]), .clk(hz10M), .nRst(~reset), .read_row(row_temp_player), .cur_key(cur_key_player), .strobe(strobe_player), .scan_col(play_col), .enable(new_clk));
 keypad_fsm keypadFSMPlayer (.clk(hz10M), .nRst(~reset), .strobe(strobe_player), .cur_key(cur_key_player), .ready(ready), .data(msg), .game_end(gameEnd_player), .toggle_state(useless));
 
 disp_fsm dispFSM (.clk(hz10M), .nRst(~reset), .ready(ready), .msg(msg), .row1(play_row1), .row2(play_row2), .gameEnd(gameEnd_player));
@@ -78,7 +88,7 @@ lcd_controller lcdPlayer (.clk(hz10M), .rst(~reset), .row_1({final_row1[119:0], 
 // Host Side
 // *********
 
-keypad_controller keypadHostt (.clk(hz10M), .mode(~pb[19]), .nRst(~reset), .read_row(pb[7:4]), .cur_key(cur_key_host), .strobe(strobe_host), .scan_col(host_col), .enable(new_clk));
+    keypad_controller keypadHostt (.clk(hz10M), .mode(~pb[19]), .nRst(~reset), .read_row(row_temp_host), .cur_key(cur_key_host), .strobe(strobe_host), .scan_col(host_col), .enable(new_clk));
 keypad_fsm keypadFSMHost (.clk(hz10M), .nRst(~reset), .strobe(strobe_host), .cur_key(cur_key_host), .ready(key_ready), .data(setLetter), .game_end(gameEnd_host), .toggle_state(toggle_state_host));
 
 host_msg_reg host_message_reg (.clk(hz10M), .nRst(~reset), .key_ready(key_ready), .toggle_state(toggle_state_host), .setLetter(setLetter), .rec_ready(rec_ready_host), .temp_word(temp_word), .gameEnd_host(gameEnd_host));
