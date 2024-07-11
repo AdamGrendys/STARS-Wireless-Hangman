@@ -123,7 +123,7 @@ module clock_divider (
     at_max = (count == max);
     next_count = count;
 
-    if (clear)
+      if (~clear)
       next_count = 0;
 
     if (at_max)
