@@ -41,7 +41,7 @@ always_comb begin
     if (pb[19]) begin
         //ss7 = lcd_data_player;
         //left[4:1] = play_col;
-        col_temp = = play_col;
+        col_temp = play_col;
         final_row1 = play_row1;
         final_row2 = play_row2;
         final_state = 8'b01010000;
