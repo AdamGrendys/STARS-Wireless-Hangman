@@ -50,7 +50,7 @@ always_comb begin
     end else begin
         //ss7 = lcd_data_host;
         //left[4:1] = host_col;
-        col_temp = play_col;
+        col_temp = host_col;
         final_row1 = host_row1;
         final_row2 = host_row2;
         final_state = 8'b01001000;
